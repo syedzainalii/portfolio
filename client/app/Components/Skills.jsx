@@ -5,81 +5,68 @@ import {motion} from "motion/react"
 
 const skillCategories = [
   {
-    title: "Frontend Development",
+    title: "Programming",
     icon: "🎨",
-    bgColor: "border border-gray-400 border dark:border-gray-600  rounded-2xl p-10 cursor-pointer hover:bg-lightHover hover:-translate-y-1 duration-500 hover:shadow-[4px_4px_0_#000] break-words hyphens-auto dark:bg-darkHover dark:hover:shadow-[4px_4px_0_#fff] dark:hover:bg-darkHover/50",
+    bgColor: "border border-gray-400 border dark:border-gray-600  rounded-2xl cursor-pointer hover:bg-lightHover hover:-translate-y-1 duration-500 hover:shadow-[4px_4px_0_#000] break-words hyphens-auto dark:bg-darkHover dark:hover:shadow-[4px_4px_0_#fff] dark:hover:bg-darkHover/50",
     skills: [
       { name: "React/Next.js", level: 60, color: "#61DAFB" },
-      { name: "TypeScript", level: 0, color: "#3178C6" },
-      { name: "Angular", level: 0, color: "#DD0031" },
-      { name: "HTML/CSS", level: 40, color: "#E34F26" },
-      { name: "Tailwind CSS", level: 40, color: "#38B2AC" },
-      { name: "Material UI", level: 0, color: "#0081CB" },
+      { name: "TypeScript", level: 60, color: "#3178C6" },
+      { name: "Matlab", level: 60, color: "#DD0031" },
+      { name: "Numpy", level: 40, color: "#E34F26" },
+      { name: "Pandas", level: 40, color: "#38B2AC" },
+      { name: "Matlplotlib", level: 40, color: "#0081CB" },
     ],
   },
   {
-    title: "Backend Development",
+    title: "Simulation",
     icon: "⚙️",
-    bgColor: "border border-gray-400 border dark:border-gray-600  rounded-2xl p-10 cursor-pointer hover:bg-lightHover hover:-translate-y-1 duration-500 hover:shadow-[4px_4px_0_#000] break-words hyphens-auto dark:bg-darkHover dark:hover:shadow-[4px_4px_0_#fff] dark:hover:bg-darkHover/50",
+    bgColor: "border border-gray-400 border dark:border-gray-600  rounded-2xl cursor-pointer hover:bg-lightHover hover:-translate-y-1 duration-500 hover:shadow-[4px_4px_0_#000] break-words hyphens-auto dark:bg-darkHover dark:hover:shadow-[4px_4px_0_#fff] dark:hover:bg-darkHover/50",
     skills: [
-      { name: "Node.js", level: 70, color: "#339933" },
-      { name: "Numpy", level: 85, color: "#cfd304ff" },
-      { name: "NestJS", level: 80, color: "#E0234E" },
-      { name: "Panda", level: 80, color: "#3776AB" },
-      { name: "Matlab", level: 90, color: "#FF6C37" },
-      { name: "GraphQL", level: 75, color: "#E535AB" },
+      { name: "Ansys", level: 20, color: "#339933" },
+      { name: "Comsol Multiphysics", level: 60, color: "#cfd304ff" },
+      { name: "Abaqus", level: 80, color: "#E0234E" },
+      { name: "Simulink", level: 80, color: "#3776AB" },
     ],
   },
   {
-    title: "CAD/FEA",
+    title: "CAD",
     icon: "☁️",
-    bgColor: "border border-gray-400 border dark:border-gray-600  rounded-2xl p-10 cursor-pointer hover:bg-lightHover hover:-translate-y-1 duration-500 hover:shadow-[4px_4px_0_#000] break-words hyphens-auto dark:bg-darkHover dark:hover:shadow-[4px_4px_0_#fff] dark:hover:bg-darkHover/50",
+    bgColor: "border border-gray-400 border dark:border-gray-600  rounded-2xl cursor-pointer hover:bg-lightHover hover:-translate-y-1 duration-500 hover:shadow-[4px_4px_0_#000] break-words hyphens-auto dark:bg-darkHover dark:hover:shadow-[4px_4px_0_#fff] dark:hover:bg-darkHover/50",
     skills: [
-      { name: "Solidworks", level: 80, color: "#336791" },
-      { name: "Catia", level: 90, color: "#47A248" },
-      { name: "Ansys", level: 50, color: "#DC382D" },
-      { name: "Abaqus", level: 70, color: "#FF9900" },
-      { name: "Simulink", level: 10, color: "#0078D4" },
-      { name: "Solidworks Simulation", level: 50, color: "#2496ED" },
+      { name: "Solidworks", level: 70, color: "#336791" },
+      { name: "Catia", level: 20, color: "#47A248" },
+      { name: "AutoCAD", level: 60, color: "#DC382D" },
+    ],
+  },
+  {
+    title: "Project Management",
+    icon: "📱",
+    bgColor: "border border-gray-400 border dark:border-gray-600  rounded-2xl cursor-pointer hover:bg-lightHover hover:-translate-y-1 duration-500 hover:shadow-[4px_4px_0_#000] break-words hyphens-auto dark:bg-darkHover dark:hover:shadow-[4px_4px_0_#fff] dark:hover:bg-darkHover/50",
+    skills: [
+      { name: "Jira", level: 70, color: "#61DAFB" },
+      { name: "Wrike", level: 90, color: "#326CE5" },
+      { name: "Agile/Scrum", level: 60, color: "#D24939" },
+      { name: "Trello", level: 50, color: "#0079BF" },
     ],
   },
   {
     title: "Tools & Others",
     icon: "🛠️",
-    bgColor: "border border-gray-400 border dark:border-gray-600  rounded-2xl p-10 cursor-pointer hover:bg-lightHover hover:-translate-y-1 duration-500 hover:shadow-[4px_4px_0_#000] break-words hyphens-auto dark:bg-darkHover dark:hover:shadow-[4px_4px_0_#fff] dark:hover:bg-darkHover/50",
+    bgColor: "border border-gray-400 border dark:border-gray-600  rounded-2xl cursor-pointer hover:bg-lightHover hover:-translate-y-1 duration-500 hover:shadow-[4px_4px_0_#000] break-words hyphens-auto dark:bg-darkHover dark:hover:shadow-[4px_4px_0_#fff] dark:hover:bg-darkHover/50",
     skills: [
       { name: "Git/GitHub", level: 90, color: "#F05032" },
-      { name: "Jira", level: 60, color: "#2088FF" },
-      { name: "Wrike", level: 65, color: "#C21325" },
-      { name: "Agile/Scrum", level: 85, color: "#0052CC" },
-      { name: "Linux", level: 60, color: "#FCC624" },
-      { name: "Microsoft Office", level: 90, color: "#000000" },
-    ],
-  },
-  {
-    title: "Data Visualization",
-    icon: "📱",
-    bgColor: "border border-gray-400 border dark:border-gray-600  rounded-2xl p-10 cursor-pointer hover:bg-lightHover hover:-translate-y-1 duration-500 hover:shadow-[4px_4px_0_#000] break-words hyphens-auto dark:bg-darkHover dark:hover:shadow-[4px_4px_0_#fff] dark:hover:bg-darkHover/50",
-    skills: [
-      { name: "Matlplotlib", level: 70, color: "#61DAFB" },
-      { name: "Tableau", level: 90, color: "#326CE5" },
-      { name: "Power Bi", level: 60, color: "#D24939" },
-      { name: "abs", level: 0, color: "#7B42BC" },
-      { name: "aby", level: 0, color: "#009639" },
-      { name: "abc", level: 0, color: "#FF6B6B" },
+      { name: "Tableau", level: 70, color: "#2088FF" },
+      { name: "Power Bi", level: 20, color: "#C21325" },
+      { name: "Microsoft Office", level: 90, color: "#0052CC" },
+      { name: "Linux", level: 20, color: "#FCC624" },
     ],
   },
 ];
 
 export default function Skills() {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [isMounted, setIsMounted] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [direction, setDirection] = useState(null); // 'next' or 'prev'
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   const scrollPrev = useCallback(() => {
     if (isTransitioning) return;
@@ -110,8 +97,6 @@ export default function Skills() {
     }, 5000);
     return () => clearInterval(timer);
   }, [scrollNext]);
-
-  if (!isMounted) return null;
 
   const currentCategory = skillCategories[selectedIndex];
 
@@ -304,7 +289,7 @@ export default function Skills() {
             >
               <div
                 className={`bg-gradient-to-br ${skillCategories[prev2Index].bgColor} p-6 rounded-2xl
-                  backdrop-blur-sm border border-foreground/10 shadow-lg w-[320px]`}
+                  backdrop-blur-sm border border-foreground/10 shadow-lg w-[320px] h-[520px] flex flex-col overflow-hidden`}
               >
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-xl">{skillCategories[prev2Index].icon}</span>
@@ -312,7 +297,7 @@ export default function Skills() {
                     {skillCategories[prev2Index].title}
                   </h3>
                 </div>
-                <div className="space-y-3">
+                <div className="flex-1 min-h-0 overflow-y-auto space-y-3">
                   {skillCategories[prev2Index].skills.map((skill) => (
                     <div key={skill.name}>
                       <div className="flex justify-between mb-1">
@@ -359,7 +344,7 @@ export default function Skills() {
             >
               <div
                 className={`bg-gradient-to-br ${skillCategories[prev1Index].bgColor} p-7 rounded-2xl
-                  backdrop-blur-sm border border-foreground/10 shadow-xl w-[360px]`}
+                  backdrop-blur-sm border border-foreground/10 shadow-xl w-[360px] h-[520px] flex flex-col overflow-hidden`}
               >
                 <div className="flex items-center gap-3 mb-5">
                   <span className="text-2xl">{skillCategories[prev1Index].icon}</span>
@@ -367,7 +352,7 @@ export default function Skills() {
                     {skillCategories[prev1Index].title}
                   </h3>
                 </div>
-                <div className="space-y-3">
+                <div className="flex-1 min-h-0 overflow-y-auto space-y-3">
                   {skillCategories[prev1Index].skills.map((skill) => (
                     <div key={skill.name}>
                       <div className="flex justify-between mb-1.5">
@@ -395,7 +380,7 @@ export default function Skills() {
                 key={selectedIndex}
                 className={`bg-gradient-to-br ${currentCategory.bgColor} p-8 rounded-2xl
                   backdrop-blur-sm border border-foreground/10 shadow-2xl 
-                  w-[400px] transition-all duration-300 skills-center-card
+                  w-[400px] h-[520px] flex flex-col overflow-hidden transition-all duration-300 skills-center-card
                   hover:shadow-[0_20px_60px_rgba(0,0,0,0.3)]
                   ${direction === 'next' ? 'skills-rotate-out-left' : ''}
                   ${direction === 'prev' ? 'skills-rotate-out-right' : ''}
@@ -408,7 +393,7 @@ export default function Skills() {
                   </h3>
                 </div>
 
-                <div className="space-y-4">
+                <div className="flex-1 min-h-0 overflow-y-auto space-y-4">
                   {currentCategory.skills.map((skill, skillIndex) => (
                     <div
                       key={`${selectedIndex}-${skill.name}`}
@@ -456,7 +441,7 @@ export default function Skills() {
             >
               <div
                 className={`bg-gradient-to-br ${skillCategories[next1Index].bgColor} p-7 rounded-2xl
-                  backdrop-blur-sm border border-foreground/10 shadow-xl w-[360px]`}
+                  backdrop-blur-sm border border-foreground/10 shadow-xl w-[360px] h-[520px] flex flex-col overflow-hidden`}
               >
                 <div className="flex items-center gap-3 mb-5">
                   <span className="text-2xl">{skillCategories[next1Index].icon}</span>
@@ -464,7 +449,7 @@ export default function Skills() {
                     {skillCategories[next1Index].title}
                   </h3>
                 </div>
-                <div className="space-y-3">
+                <div className="flex-1 min-h-0 overflow-y-auto space-y-3">
                   {skillCategories[next1Index].skills.map((skill) => (
                     <div key={skill.name}>
                       <div className="flex justify-between mb-1.5">
@@ -507,7 +492,7 @@ export default function Skills() {
             >
               <div
                 className={`bg-gradient-to-br ${skillCategories[next2Index].bgColor} p-6 rounded-2xl
-                  backdrop-blur-sm border border-foreground/10 shadow-lg w-[320px]`}
+                  backdrop-blur-sm border border-foreground/10 shadow-lg w-[320px] h-[520px] flex flex-col overflow-hidden`}
               >
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-xl">{skillCategories[next2Index].icon}</span>
@@ -515,7 +500,7 @@ export default function Skills() {
                     {skillCategories[next2Index].title}
                   </h3>
                 </div>
-                <div className="space-y-3">
+                <div className="flex-1 min-h-0 overflow-y-auto space-y-3">
                   {skillCategories[next2Index].skills.map((skill) => (
                     <div key={skill.name}>
                       <div className="flex justify-between mb-1">
