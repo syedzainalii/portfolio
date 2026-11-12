@@ -16,7 +16,7 @@ const skillCategories = [
       { name: "Pandas", level: 40, color: "#38B2AC" },
       { name: "Matlplotlib", level: 40, color: "#0081CB" },
     ],
-  },
+  }, 
   {
     title: "Simulation",
     icon: "⚙️",
