@@ -449,19 +449,6 @@ export const certificationData = [
             'https://coursera.org/share/73b3735a29d94775ba3e734fca487fa1',
     },
     {
-        id: 3,
-        title: 'Data Science Professional',
-        issuer: 'NED UET',
-        category: 'data-science',
-        skills:
-            'Python, Machine Learning, Data Analysis, Statistics, Data Visualization',
-        date: 'March, 2025',
-        icon: 'chart-line',
-        iconBg: 'data-science',
-        issuerIcon: 'university',
-        certificateUrl: '#',
-    },
-    {
         id: 4,
         title: 'Create and manage a project dashboard with Wrike',
         issuer: 'Coursera',
@@ -493,7 +480,6 @@ export const certificationFilters = [
     { id: 'all', label: 'All Certifications' },
     { id: 'devops', label: 'DevOps & Development' },
     { id: 'project-management', label: 'Project Management' },
-    { id: 'data-science', label: 'Data Science' },
 ];
 
 export const contactContent = {
