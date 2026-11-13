@@ -6,7 +6,6 @@ import Image from "next/image";
 import { motion, useReducedMotion } from "motion/react";
 import { ChevronDown, MapPin } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
-import SectionPageLink from "./SectionPageLink";
 
 // Names for the logos in `toolsData`. Keep this in the SAME ORDER as toolsData in assets.js
 const TOOL_NAMES = [
@@ -303,7 +302,6 @@ const About = ({ preview = false }) => {
         </motion.div>
       </div>
 
-      {preview && <SectionPageLink href="/about" label="View all" />}
     </section>
   );
 };

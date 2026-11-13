@@ -36,7 +36,6 @@ const Navbar = ({isDarkMode, setIsDarkMode}) => {
     // Shared styles for the navigation links to keep code clean
     const navLinks = [
         { href: "/", label: "Home" },
-        { href: "/about", label: "About me" },
         { href: "/skills", label: "Skills" },
         { href: "/project", label: "Projects" },
         { href: "/experience", label: "Experience" },
