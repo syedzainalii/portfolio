@@ -398,6 +398,7 @@ export const experienceData = [
         role: 'Internship',
         company: 'Sui Southren Gas Company LTD',
         period: 'March - April (2024)',
+        report: '/mmp%20intern%20report.pdf',
         location: 'Karachi, Pakistan',
         logo: '🏭',
         description:
@@ -416,6 +417,25 @@ export const experienceData = [
             'Quality Testing',
             'Surface Treatment',
         ],
+    },
+    {
+        id: 2,
+        role: 'Planning & Development Intern',
+        company: 'Sui Southern Gas Company Limited (SSGC)',
+        period: 'One-month internship',
+        report: '/pnd%20Intern%20Report.pdf',
+        location: 'Karachi, Pakistan',
+        logo: '🏗️',
+        description:
+            'One-month internship in SSGC’s Planning & Development (P&D) Department, gaining an understanding of the pipeline project lifecycle from feasibility and engineering planning through procurement, construction, and quality assurance.',
+        achievements: [
+            'Studied the pipeline project lifecycle, from gas-supply notification and feasibility through design, approvals, procurement, construction, and commissioning',
+            'Learned how pipeline routes and specifications are planned and how General Arrangement Drawings (GADs), Bills of Quantities (BOQs), and Schedules of Requirements (SORs) support budgeting and procurement',
+            'Reviewed transmission pipeline construction and quality practices, including welding, non-destructive testing (NDT), coating checks, and hydrostatic testing',
+            'Built familiarity with pipeline standards covered in the report, including ASME B31.8, API 5L, and API 1104',
+            'Recommended digital twins, centralized document management, and collaboration tools to improve asset management and project workflows',
+        ],
+        technologies: [],
     },
 ];
 

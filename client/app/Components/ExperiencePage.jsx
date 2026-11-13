@@ -35,8 +35,21 @@ export default function ExperiencePage() {
               <p className="mt-5 leading-7 text-gray-600 dark:text-white/65">
                 {experience.description}
               </p>
+              {experience.report && (
+                <a
+                  href={experience.report}
+                  download
+                  className="mt-4 inline-flex text-sm font-medium underline underline-offset-4"
+                >
+                  Download full report
+                </a>
+              )}
 
-              <div className="mt-8 grid gap-8 md:grid-cols-2">
+              <div
+                className={`mt-8 grid gap-8 ${
+                  experience.technologies.length > 0 ? "md:grid-cols-2" : ""
+                }`}
+              >
                 <div>
                   <h3 className="font-semibold">Achievements</h3>
                   <ul className="mt-3 space-y-2 text-sm leading-6 text-gray-600 dark:text-white/65">
@@ -45,19 +58,21 @@ export default function ExperiencePage() {
                     ))}
                   </ul>
                 </div>
-                <div>
-                  <h3 className="font-semibold">Technologies &amp; Skills</h3>
-                  <ul className="mt-3 flex flex-wrap gap-2">
-                    {experience.technologies.map((technology) => (
-                      <li
-                        key={technology}
-                        className="border border-black/10 px-3 py-1.5 text-xs dark:border-white/15"
-                      >
-                        {technology}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                {experience.technologies.length > 0 && (
+                  <div>
+                    <h3 className="font-semibold">Technologies &amp; Skills</h3>
+                    <ul className="mt-3 flex flex-wrap gap-2">
+                      {experience.technologies.map((technology) => (
+                        <li
+                          key={technology}
+                          className="border border-black/10 px-3 py-1.5 text-xs dark:border-white/15"
+                        >
+                          {technology}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </section>
           </li>
