@@ -9,9 +9,9 @@ export default function WorkPage() {
       <header className="mb-12 flex flex-col gap-6 border-b border-black/10 pb-8 sm:flex-row sm:items-end sm:justify-between dark:border-white/15">
         <div>
           <p className="font-mono text-xs uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400">
-            Portfolio / Selected Work
+            Portfolio / Selected Projects
           </p>
-          <h1 className="mt-4 font-Ovo text-4xl sm:text-6xl">Project Archive</h1>
+          <h1 className="mt-4 font-Ovo text-4xl sm:text-6xl">Projects</h1>
         </div>
         <p className="max-w-sm text-sm leading-6 text-gray-600 dark:text-white/65">
           A collection of CAD, simulation, web, data visualization, and video projects.

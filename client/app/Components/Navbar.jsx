@@ -39,7 +39,7 @@ const Navbar = ({isDarkMode, setIsDarkMode}) => {
         { href: "/about", label: "About me" },
         { href: "/skills", label: "Skills" },
         { href: "/services", label: "Services" },
-        { href: "/work", label: "My Work" },
+        { href: "/work", label: "Projects" },
         { href: "/experience", label: "Experience" },
         { href: "/certification", label: "Certification" },
         { href: "/contact", label: "Contact me" },
