@@ -1,586 +1,393 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import {motion} from "motion/react"
+import { useCallback, useEffect, useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
+import {
+  Box,
+  ChevronLeft,
+  ChevronRight,
+  ClipboardList,
+  Code,
+  Cpu,
+  Wrench,
+} from "lucide-react";
 import SectionPageLink from "./SectionPageLink";
+
+// Set to true to show raw percentages instead of level labels
+const SHOW_PERCENT = false;
+const CARD_HEIGHT = 460;
+const AUTOPLAY_MS = 6000;
 
 const skillCategories = [
   {
     title: "Programming",
-    icon: "🎨",
-    bgColor: "border border-gray-400 border dark:border-gray-600  rounded-2xl cursor-pointer hover:bg-lightHover hover:-translate-y-1 duration-500 hover:shadow-[4px_4px_0_#000] break-words hyphens-auto dark:bg-darkHover dark:hover:shadow-[4px_4px_0_#fff] dark:hover:bg-darkHover/50",
+    icon: Code,
+    accent: "#38bdf8",
     skills: [
-      { name: "React/Next.js", level: 60, color: "#61DAFB" },
-      { name: "TypeScript", level: 60, color: "#3178C6" },
-      { name: "Matlab", level: 60, color: "#DD0031" },
-      { name: "Numpy", level: 40, color: "#E34F26" },
-      { name: "Pandas", level: 40, color: "#38B2AC" },
-      { name: "Matlplotlib", level: 40, color: "#0081CB" },
+      { name: "React/Next.js", level: 60 },
+      { name: "TypeScript", level: 60 },
+      { name: "Matlab", level: 60 },
+      { name: "Numpy", level: 40 },
+      { name: "Pandas", level: 40 },
+      { name: "Matplotlib", level: 40 },
     ],
-  }, 
+  },
   {
     title: "Simulation",
-    icon: "⚙️",
-    bgColor: "border border-gray-400 border dark:border-gray-600  rounded-2xl cursor-pointer hover:bg-lightHover hover:-translate-y-1 duration-500 hover:shadow-[4px_4px_0_#000] break-words hyphens-auto dark:bg-darkHover dark:hover:shadow-[4px_4px_0_#fff] dark:hover:bg-darkHover/50",
+    icon: Cpu,
+    accent: "#fb923c",
     skills: [
-      { name: "Ansys", level: 20, color: "#339933" },
-      { name: "Comsol Multiphysics", level: 60, color: "#cfd304ff" },
-      { name: "Abaqus", level: 80, color: "#E0234E" },
-      { name: "Simulink", level: 80, color: "#3776AB" },
+      { name: "Ansys", level: 20 },
+      { name: "Comsol Multiphysics", level: 60 },
+      { name: "Abaqus", level: 80 },
+      { name: "Simulink", level: 80 },
     ],
   },
   {
     title: "CAD",
-    icon: "☁️",
-    bgColor: "border border-gray-400 border dark:border-gray-600  rounded-2xl cursor-pointer hover:bg-lightHover hover:-translate-y-1 duration-500 hover:shadow-[4px_4px_0_#000] break-words hyphens-auto dark:bg-darkHover dark:hover:shadow-[4px_4px_0_#fff] dark:hover:bg-darkHover/50",
+    icon: Box,
+    accent: "#34d399",
     skills: [
-      { name: "Solidworks", level: 70, color: "#336791" },
-      { name: "Catia", level: 20, color: "#47A248" },
-      { name: "AutoCAD", level: 60, color: "#DC382D" },
+      { name: "Solidworks", level: 70 },
+      { name: "Catia", level: 20 },
+      { name: "AutoCAD", level: 60 },
     ],
   },
   {
     title: "Project Management",
-    icon: "📱",
-    bgColor: "border border-gray-400 border dark:border-gray-600  rounded-2xl cursor-pointer hover:bg-lightHover hover:-translate-y-1 duration-500 hover:shadow-[4px_4px_0_#000] break-words hyphens-auto dark:bg-darkHover dark:hover:shadow-[4px_4px_0_#fff] dark:hover:bg-darkHover/50",
+    icon: ClipboardList,
+    accent: "#a78bfa",
     skills: [
-      { name: "Jira", level: 70, color: "#61DAFB" },
-      { name: "Wrike", level: 90, color: "#326CE5" },
-      { name: "Agile/Scrum", level: 60, color: "#D24939" },
-      { name: "Trello", level: 50, color: "#0079BF" },
+      { name: "Jira", level: 70 },
+      { name: "Wrike", level: 90 },
+      { name: "Agile/Scrum", level: 60 },
+      { name: "Trello", level: 50 },
     ],
   },
   {
     title: "Tools & Others",
-    icon: "🛠️",
-    bgColor: "border border-gray-400 border dark:border-gray-600  rounded-2xl cursor-pointer hover:bg-lightHover hover:-translate-y-1 duration-500 hover:shadow-[4px_4px_0_#000] break-words hyphens-auto dark:bg-darkHover dark:hover:shadow-[4px_4px_0_#fff] dark:hover:bg-darkHover/50",
+    icon: Wrench,
+    accent: "#fbbf24",
     skills: [
-      { name: "Git/GitHub", level: 90, color: "#F05032" },
-      { name: "Tableau", level: 70, color: "#2088FF" },
-      { name: "Power Bi", level: 20, color: "#C21325" },
-      { name: "Microsoft Office", level: 90, color: "#0052CC" },
-      { name: "Linux", level: 20, color: "#FCC624" },
+      { name: "Git/GitHub", level: 90 },
+      { name: "Tableau", level: 70 },
+      { name: "Power Bi", level: 20 },
+      { name: "Microsoft Office", level: 90 },
+      { name: "Linux", level: 20 },
     ],
   },
 ];
 
-export default function Skills({ preview = false }) {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [direction, setDirection] = useState(null); // 'next' or 'prev'
+const COUNT = skillCategories.length;
 
-  const scrollPrev = useCallback(() => {
-    if (isTransitioning) return;
-    setDirection('prev');
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setSelectedIndex((prev) => (prev === 0 ? skillCategories.length - 1 : prev - 1));
-      setDirection(null);
-    }, 600);
-    setTimeout(() => setIsTransitioning(false), 600);
-  }, [isTransitioning]);
+// Visual pose by distance from the center card
+const POSE = [
+  { scale: 1, opacity: 1, rotate: 0 },
+  { scale: 0.86, opacity: 0.55, rotate: 18 },
+  { scale: 0.66, opacity: 0.25, rotate: 28 },
+];
 
-  const scrollNext = useCallback(() => {
-    if (isTransitioning) return;
-    setDirection('next');
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setSelectedIndex((prev) => (prev === skillCategories.length - 1 ? 0 : prev + 1));
-      setDirection(null);
-    }, 600);
-    setTimeout(() => setIsTransitioning(false), 600);
-  }, [isTransitioning]);
+// xs = horizontal distance (px) of the card at offset 0 / 1 / 2 from the center.
+// Calculated so the visible gap between neighbouring cards is equal.
+function getLayout(w) {
+  if (w < 640) {
+    const cardW = Math.min(300, Math.round(w * 0.78));
+    return { cardW, xs: [0, Math.round(cardW * 0.86), 0], visible: 1 };
+  }
+  if (w < 1280) return { cardW: 320, xs: [0, 310, 0], visible: 1 };
+  return { cardW: 340, xs: [0, 325, 579], visible: 2 };
+}
 
-  // Auto-advance carousel
+function useLayout() {
+  const [layout, setLayout] = useState(() => getLayout(1440));
   useEffect(() => {
-    const timer = setInterval(() => {
-      scrollNext();
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [scrollNext]);
+    const update = () => setLayout(getLayout(window.innerWidth));
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+  return layout;
+}
 
-  const currentCategory = skillCategories[selectedIndex];
+// Circular distance of card i from the selected card: -2 ... 2
+function offsetOf(i, selected) {
+  const half = Math.floor(COUNT / 2);
+  return ((i - selected + COUNT + half) % COUNT) - half;
+}
 
-  const getPrevIndex = (current, offset) => {
-    return (current - offset + skillCategories.length) % skillCategories.length;
-  };
+function levelOf(n) {
+  if (n >= 85) return { label: "Expert", pips: 5 };
+  if (n >= 70) return { label: "Advanced", pips: 4 };
+  if (n >= 55) return { label: "Proficient", pips: 3 };
+  if (n >= 35) return { label: "Intermediate", pips: 2 };
+  return { label: "Basic", pips: 1 };
+}
 
-  const getNextIndex = (current, offset) => {
-    return (current + offset) % skillCategories.length;
-  };
-
-  const prev2Index = getPrevIndex(selectedIndex, 2);
-  const prev1Index = getPrevIndex(selectedIndex, 1);
-  const next1Index = getNextIndex(selectedIndex, 1);
-  const next2Index = getNextIndex(selectedIndex, 2);
+function SkillCard({ category, offset, wrapped, layout, reduceMotion, onSelect }) {
+  const abs = Math.abs(offset);
+  const dir = Math.sign(offset);
+  const pose = POSE[Math.min(abs, 2)];
+  const hidden = abs > layout.visible;
+  const active = offset === 0;
+  const Icon = category.icon;
+  const { accent } = category;
 
   return (
-    <>
-      <style dangerouslySetInnerHTML={{__html: `
-        @keyframes fadeInScale {
-          from {
-            opacity: 0;
-            transform: scale(0.9);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1);
-          }
-        }
-
-        @keyframes slideInRight {
-          from {
-            opacity: 0;
-            transform: translateX(-20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
-        @keyframes progressBar {
-          from {
-            width: 0;
-          }
-        }
-
-        @keyframes rotateOutLeft {
-          0% {
-            transform: scale(1) rotateY(0deg);
-            opacity: 1;
-          }
-          100% {
-            transform: scale(0.7) rotateY(-90deg);
-            opacity: 0;
-          }
-        }
-
-        @keyframes rotateOutRight {
-          0% {
-            transform: scale(1) rotateY(0deg);
-            opacity: 1;
-          }
-          100% {
-            transform: scale(0.7) rotateY(90deg);
-            opacity: 0;
-          }
-        }
-
-        @keyframes rotateInFromLeft {
-          0% {
-            transform: scale(0.7) rotateY(90deg);
-            opacity: 0;
-          }
-          100% {
-            transform: scale(1) rotateY(0deg);
-            opacity: 1;
-          }
-        }
-
-        @keyframes rotateInFromRight {
-          0% {
-            transform: scale(0.7) rotateY(-90deg);
-            opacity: 0;
-          }
-          100% {
-            transform: scale(1) rotateY(0deg);
-            opacity: 1;
-          }
-        }
-
-        .skills-animate-card {
-          animation: fadeInScale 0.5s ease-out;
-        }
-
-        .skills-rotate-out-left {
-          animation: rotateOutLeft 0.6s ease-in-out forwards;
-        }
-
-        .skills-rotate-out-right {
-          animation: rotateOutRight 0.6s ease-in-out forwards;
-        }
-
-        .skills-rotate-in-left {
-          animation: rotateInFromLeft 0.6s ease-in-out forwards;
-        }
-
-        .skills-rotate-in-right {
-          animation: rotateInFromRight 0.6s ease-in-out forwards;
-        }
-
-        .skills-animate-skill {
-          animation: slideInRight 0.3s ease-out;
-          animation-fill-mode: both;
-        }
-
-        .skills-animate-progress {
-          animation: progressBar 1s ease-out;
-          animation-fill-mode: both;
-        }
-
-        .skills-card-container {
-          perspective: 2000px;
-        }
-
-        .skills-side-card {
-          transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-          transform-style: preserve-3d;
-        }
-
-        .skills-side-card:hover {
-          transform: translateY(-4px) scale(1.02) !important;
-          opacity: 0.65 !important;
-          z-index: 5 !important;
-        }
-
-        .skills-center-card:hover {
-          transform: translateY(-4px) scale(1.02) !important;
-        }
-
-        .skills-center-card {
-          transform-style: preserve-3d;
-        }
-      `}} />
-      
+    <motion.div
+      aria-hidden={!active}
+      onClick={() => {
+        if (!active && !hidden) onSelect();
+      }}
+      initial={false}
+      animate={{
+        x: dir * layout.xs[Math.min(abs, 2)],
+        scale: pose.scale,
+        rotateY: -dir * pose.rotate,
+        opacity: hidden ? 0 : pose.opacity,
+      }}
+      transition={
+        wrapped || reduceMotion
+          ? { duration: 0 }
+          : { type: "spring", stiffness: 170, damping: 24, mass: 0.9 }
+      }
+      style={{
+        width: layout.cardW,
+        height: CARD_HEIGHT,
+        zIndex: 10 - abs,
+        pointerEvents: hidden ? "none" : "auto",
+      }}
+      className={`absolute inset-x-0 top-0 mx-auto ${active ? "" : "cursor-pointer"}`}
+    >
       <div
+        className={`relative h-full overflow-hidden rounded-3xl border bg-white p-6 transition-shadow duration-500 dark:bg-darkHover ${
+          active
+            ? "border-black/15 shadow-2xl dark:border-white/20"
+            : "border-black/10 shadow-lg dark:border-white/10"
+        }`}
+      >
+        {/* Accent glow at the top of the card */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background: `radial-gradient(120% 55% at 50% 0%, ${accent}${
+              active ? "33" : "1f"
+            }, transparent 70%)`,
+          }}
+        />
 
-      
-      id="skills"
-      className='w-full px-[12%] py10'>
-        
-        <h4 
-
-        
-        className='text-center mb-1 text-xl font-Ovo'>My Expertise</h4>
-        
-        <h2  
-        className='text-center text-5xl font-Ovo'>My Technical Skills</h2>
-        
-        <p 
-
-        
-        className='text-center max-w-2xl mx-auto mt-5 mb-2 font-Ovo'>
-          Explore my comprehensive skill set across various technologies and frameworks </p>
-      
-      <div className="relative h-[650px] flex flex-col items-center overflow-visible py-8">
-        <div className="w-full max-w-7xl relative skills-card-container">
-          <div className="relative flex items-center justify-center gap-4 py-4">
-            
-
-<motion.div 
-              initial={{opacity: 0, x: -50}}
-              whileInView={{opacity: 0.2, x: 0}}
-              transition={{duration: 0.6, delay: 0.8}}
-              onClick={() => {
-                if (!isTransitioning) {
-                  setDirection('prev');
-                  setIsTransitioning(true);
-                  setTimeout(() => {
-                    setSelectedIndex(prev2Index);
-                    setDirection(null);
-                  }, 600);
-                  setTimeout(() => setIsTransitioning(false), 600);
-                }
-              }}
-              className={`skills-side-card cursor-pointer z-0 transition-all duration-500`}
-              style={{
-                transform: 'scale(0.7) translateX(-20px)',
-                opacity: 0.2
-              }}
-            >
-              <div
-                className={`bg-gradient-to-br ${skillCategories[prev2Index].bgColor} p-6 rounded-2xl
-                  backdrop-blur-sm border border-foreground/10 shadow-lg w-[320px] h-[520px] flex flex-col overflow-hidden`}
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <span className="text-xl">{skillCategories[prev2Index].icon}</span>
-                  <h3 className="text-lg font-semibold text-foreground">
-                    {skillCategories[prev2Index].title}
-                  </h3>
-                </div>
-                <div className="flex-1 min-h-0 overflow-y-auto space-y-3">
-                  {skillCategories[prev2Index].skills.map((skill) => (
-                    <div key={skill.name}>
-                      <div className="flex justify-between mb-1">
-                        <span className="font-medium text-foreground text-sm">{skill.name}</span>
-                        <span className="text-foreground/80 text-sm">{skill.level}%</span>
-                      </div>
-                      <motion.div 
-                    initial={{y:-20, opacity: 0 }}
-                    whileInView={{y:0, opacity:1 }}
-                    transition={{duration:0.5, delay:0.3}}
-                      className="h-1.5 bg-foreground/20 rounded-full overflow-hidden">
-                        <div
-                          className="h-full rounded-full"
-                          style={{
-                            width: `${skill.level}%`,
-                            backgroundColor: skill.color,
-                          }}
-                        />
-                      </motion.div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Near Left Card (-1) */}
-            <div 
-              onClick={() => {
-                if (!isTransitioning) {
-                  setDirection('prev');
-                  setIsTransitioning(true);
-                  setTimeout(() => {
-                    setSelectedIndex(prev1Index);
-                    setDirection(null);
-                  }, 600);
-                  setTimeout(() => setIsTransitioning(false), 600);
-                }
-              }}
-              className={`skills-side-card cursor-pointer z-[2] transition-all duration-500`}
-              style={{
-                transform: 'scale(0.85)',
-                opacity: 0.5
-              }}
-            >
-              <div
-                className={`bg-gradient-to-br ${skillCategories[prev1Index].bgColor} p-7 rounded-2xl
-                  backdrop-blur-sm border border-foreground/10 shadow-xl w-[360px] h-[520px] flex flex-col overflow-hidden`}
-              >
-                <div className="flex items-center gap-3 mb-5">
-                  <span className="text-2xl">{skillCategories[prev1Index].icon}</span>
-                  <h3 className="text-lg font-semibold text-foreground">
-                    {skillCategories[prev1Index].title}
-                  </h3>
-                </div>
-                <div className="flex-1 min-h-0 overflow-y-auto space-y-3">
-                  {skillCategories[prev1Index].skills.map((skill) => (
-                    <div key={skill.name}>
-                      <div className="flex justify-between mb-1.5">
-                        <span className="font-medium text-foreground">{skill.name}</span>
-                        <span className="text-foreground/80">{skill.level}%</span>
-                      </div>
-                      <div className="h-2 bg-foreground/20 rounded-full overflow-hidden">
-                        <div
-                          className="h-full rounded-full"
-                          style={{
-                            width: `${skill.level}%`,
-                            backgroundColor: skill.color,
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Current Card (Center - Active) */}
-            <div className="relative z-10">
-              <div
-                key={selectedIndex}
-                className={`bg-gradient-to-br ${currentCategory.bgColor} p-8 rounded-2xl
-                  backdrop-blur-sm border border-foreground/10 shadow-2xl 
-                  w-[400px] h-[520px] flex flex-col overflow-hidden transition-all duration-300 skills-center-card
-                  hover:shadow-[0_20px_60px_rgba(0,0,0,0.3)]
-                  ${direction === 'next' ? 'skills-rotate-out-left' : ''}
-                  ${direction === 'prev' ? 'skills-rotate-out-right' : ''}
-                  ${!direction ? 'skills-rotate-in-left' : ''}`}
-              >
-                <div className="flex items-center gap-3 mb-6">
-                  <span className="text-3xl">{currentCategory.icon}</span>
-                  <h3 className="text-xl font-semibold text-foreground">
-                    {currentCategory.title}
-                  </h3>
-                </div>
-
-                <div className="flex-1 min-h-0 overflow-y-auto space-y-4">
-                  {currentCategory.skills.map((skill, skillIndex) => (
-                    <div
-                      key={`${selectedIndex}-${skill.name}`}
-                      className="skills-animate-skill"
-                      style={{ animationDelay: `${skillIndex * 0.1}s` }}
-                    >
-                      <div className="flex justify-between mb-2">
-                        <span className="font-medium text-foreground">{skill.name}</span>
-                        <span className="text-foreground/80">{skill.level}%</span>
-                      </div>
-                      <div className="h-2 bg-foreground/20 rounded-full overflow-hidden">
-                        <div
-                          className="h-full rounded-full skills-animate-progress"
-                          style={{
-                            width: `${skill.level}%`,
-                            backgroundColor: skill.color,
-                            animationDelay: `${0.2 + skillIndex * 0.1}s`
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Near Right Card (+1) */}
-            <div 
-              onClick={() => {
-                if (!isTransitioning) {
-                  setDirection('next');
-                  setIsTransitioning(true);
-                  setTimeout(() => {
-                    setSelectedIndex(next1Index);
-                    setDirection(null);
-                  }, 600);
-                  setTimeout(() => setIsTransitioning(false), 600);
-                }
-              }}
-              className={`skills-side-card cursor-pointer z-[2] transition-all duration-500`}
-              style={{
-                transform: 'scale(0.85)',
-                opacity: 0.5
-              }}
-            >
-              <div
-                className={`bg-gradient-to-br ${skillCategories[next1Index].bgColor} p-7 rounded-2xl
-                  backdrop-blur-sm border border-foreground/10 shadow-xl w-[360px] h-[520px] flex flex-col overflow-hidden`}
-              >
-                <div className="flex items-center gap-3 mb-5">
-                  <span className="text-2xl">{skillCategories[next1Index].icon}</span>
-                  <h3 className="text-lg font-semibold text-foreground">
-                    {skillCategories[next1Index].title}
-                  </h3>
-                </div>
-                <div className="flex-1 min-h-0 overflow-y-auto space-y-3">
-                  {skillCategories[next1Index].skills.map((skill) => (
-                    <div key={skill.name}>
-                      <div className="flex justify-between mb-1.5">
-                        <span className="font-medium text-foreground">{skill.name}</span>
-                        <span className="text-foreground/80">{skill.level}%</span>
-                      </div>
-                      <div className="h-2 bg-foreground/20 rounded-full overflow-hidden">
-                        <div
-                          className="h-full rounded-full"
-                          style={{
-                            width: `${skill.level}%`,
-                            backgroundColor: skill.color,
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Far Right Card (+2) */}
-            <div 
-              onClick={() => {
-                if (!isTransitioning) {
-                  setDirection('next');
-                  setIsTransitioning(true);
-                  setTimeout(() => {
-                    setSelectedIndex(next2Index);
-                    setDirection(null);
-                  }, 600);
-                  setTimeout(() => setIsTransitioning(false), 600);
-                }
-              }}
-              className={`skills-side-card cursor-pointer z-0 transition-all duration-500`}
-              style={{
-                transform: 'scale(0.7) translateX(20px)',
-                opacity: 0.2
-              }}
-            >
-              <div
-                className={`bg-gradient-to-br ${skillCategories[next2Index].bgColor} p-6 rounded-2xl
-                  backdrop-blur-sm border border-foreground/10 shadow-lg w-[320px] h-[520px] flex flex-col overflow-hidden`}
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <span className="text-xl">{skillCategories[next2Index].icon}</span>
-                  <h3 className="text-lg font-semibold text-foreground">
-                    {skillCategories[next2Index].title}
-                  </h3>
-                </div>
-                <div className="flex-1 min-h-0 overflow-y-auto space-y-3">
-                  {skillCategories[next2Index].skills.map((skill) => (
-                    <div key={skill.name}>
-                      <div className="flex justify-between mb-1">
-                        <span className="font-medium text-foreground text-sm">{skill.name}</span>
-                        <span className="text-foreground/80 text-sm">{skill.level}%</span>
-                      </div>
-                      <div className="h-1.5 bg-foreground/20 rounded-full overflow-hidden">
-                        <div
-                          className="h-full rounded-full"
-                          style={{
-                            width: `${skill.level}%`,
-                            backgroundColor: skill.color,
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+        <div className="relative flex items-center gap-3">
+          <span
+            className="grid h-11 w-11 place-items-center rounded-xl"
+            style={{ backgroundColor: `${accent}26`, color: accent }}
+          >
+            <Icon className="h-5 w-5" />
+          </span>
+          <div>
+            <h3 className="text-lg font-semibold leading-6">{category.title}</h3>
+            <p className="text-xs leading-5 text-gray-500 dark:text-white/50">
+              {category.skills.length} skills
+            </p>
           </div>
         </div>
 
-        {/* Dots Indicator */}
-        <div className="flex justify-center gap-2 mt-6">
-          {skillCategories.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => {
-                if (!isTransitioning) {
-                  const newDirection = index > selectedIndex ? 'next' : 'prev';
-                  setDirection(newDirection);
-                  setIsTransitioning(true);
-                  setTimeout(() => {
-                    setSelectedIndex(index);
-                    setDirection(null);
-                  }, 600);
-                  setTimeout(() => setIsTransitioning(false), 600);
-                }
-              }}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                index === selectedIndex
-                  ? "bg-foreground w-8"
-                  : "bg-foreground/30 hover:bg-foreground/50 w-2"
-              }`}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
-        </div>
+        <ul className="relative mt-6 space-y-4">
+          {category.skills.map((skill, si) => {
+            const lvl = levelOf(skill.level);
+            return (
+              <li key={skill.name}>
+                <div className="flex items-baseline justify-between gap-3">
+                  <span className="text-sm font-medium leading-5">{skill.name}</span>
+                  <span className="text-xs leading-5 text-gray-500 dark:text-white/55">
+                    {SHOW_PERCENT ? `${skill.level}%` : lvl.label}
+                  </span>
+                </div>
+                <div className="mt-1.5 flex gap-1" aria-hidden>
+                  {[0, 1, 2, 3, 4].map((p) =>
+                    p < lvl.pips ? (
+                      <motion.span
+                        // key changes when the card becomes active, so the fill replays
+                        key={`${active}-${p}`}
+                        initial={{ scaleX: active ? 0 : 1 }}
+                        animate={{ scaleX: 1 }}
+                        transition={{
+                          duration: 0.4,
+                          delay: active ? 0.2 + si * 0.06 + p * 0.05 : 0,
+                        }}
+                        className="h-1.5 flex-1 origin-left rounded-full"
+                        style={{ backgroundColor: accent }}
+                      />
+                    ) : (
+                      <span
+                        key={p}
+                        className="h-1.5 flex-1 rounded-full bg-black/10 dark:bg-white/10"
+                      />
+                    )
+                  )}
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </motion.div>
+  );
+}
 
-        {/* Navigation Buttons */}
-        <div className="flex justify-center gap-4 mt-4">
+export default function Skills({ preview = false }) {
+  // `prev` lets us detect cards that wrap from one edge to the other
+  const [pos, setPos] = useState({ index: 0, prev: 0 });
+  const [paused, setPaused] = useState(false);
+  const layout = useLayout();
+  const reduceMotion = useReducedMotion();
+
+  const { index, prev } = pos;
+  const current = skillCategories[index];
+
+  const jump = useCallback(
+    (to) => setPos((p) => ({ index: to, prev: p.index })),
+    []
+  );
+  const go = useCallback(
+    (dir) => setPos((p) => ({ index: (p.index + dir + COUNT) % COUNT, prev: p.index })),
+    []
+  );
+
+  // Autoplay: pauses on hover/focus, off for reduced-motion users
+  useEffect(() => {
+    if (paused || reduceMotion) return;
+    const id = setTimeout(() => go(1), AUTOPLAY_MS);
+    return () => clearTimeout(id);
+  }, [index, paused, reduceMotion, go]);
+
+  const onKeyDown = (e) => {
+    if (e.key === "ArrowLeft") go(-1);
+    if (e.key === "ArrowRight") go(1);
+  };
+
+  return (
+    <section id="skills" className="w-full px-[12%] py-10">
+      <h4 className="mb-2 text-center text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 sm:text-sm">
+        My Expertise
+      </h4>
+      <h2 className="text-center font-Ovo text-3xl sm:text-5xl">My Technical Skills</h2>
+      <p className="mx-auto mb-4 mt-5 max-w-2xl text-center font-Ovo">
+        Explore my comprehensive skill set across various technologies and frameworks
+      </p>
+
+      <div
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        onFocus={() => setPaused(true)}
+        onBlur={() => setPaused(false)}
+      >
+        {/* Stage */}
+        <motion.div
+          role="group"
+          aria-roledescription="carousel"
+          aria-label="Skill categories"
+          tabIndex={0}
+          onKeyDown={onKeyDown}
+          drag="x"
+          dragSnapToOrigin
+          dragElastic={0.12}
+          onDragEnd={(_, info) => {
+            if (info.offset.x < -60 || info.velocity.x < -400) go(1);
+            else if (info.offset.x > 60 || info.velocity.x > 400) go(-1);
+          }}
+          className="relative mx-auto mt-6 w-full cursor-grab select-none outline-none active:cursor-grabbing focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-4 rounded-3xl"
+          style={{ height: CARD_HEIGHT + 40, perspective: 1600, touchAction: "pan-y" }}
+        >
+          {/* Soft glow that follows the active category color */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20 blur-3xl transition-colors duration-700"
+            style={{ backgroundColor: current.accent }}
+          />
+
+          {skillCategories.map((category, i) => {
+            const offset = offsetOf(i, index);
+            const wrapped = Math.abs(offset - offsetOf(i, prev)) > 2;
+            return (
+              <SkillCard
+                key={category.title}
+                category={category}
+                offset={offset}
+                wrapped={wrapped}
+                layout={layout}
+                reduceMotion={reduceMotion}
+                onSelect={() => jump(i)}
+              />
+            );
+          })}
+        </motion.div>
+
+        <p className="sr-only" aria-live="polite">
+          {current.title}, {index + 1} of {COUNT}
+        </p>
+
+        {/* Controls */}
+        <div className="mt-2 flex items-center justify-center gap-3">
           <button
-            onClick={scrollPrev}
-            disabled={isTransitioning}
-            className="p-2 rounded-full bg-foreground/20 hover:bg-foreground/30 transition-all
-              disabled:opacity-50 disabled:cursor-not-allowed hover:scale-110 active:scale-95"
-            aria-label="Previous slide"
+            onClick={() => go(-1)}
+            aria-label="Previous category"
+            className="grid h-11 w-11 place-items-center rounded-full border border-black/15 transition duration-300 hover:bg-black hover:text-white active:scale-95 dark:border-white/20 dark:hover:bg-white dark:hover:text-black"
           >
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
+            <ChevronLeft className="h-5 w-5" />
           </button>
-          <button
-            onClick={scrollNext}
-            disabled={isTransitioning}
-            className="p-2 rounded-full bg-foreground/20 hover:bg-foreground/30 transition-all
-              disabled:opacity-50 disabled:cursor-not-allowed hover:scale-110 active:scale-95"
-            aria-label="Next slide"
+
+          <div
+            role="tablist"
+            aria-label="Skill categories"
+            className="hidden items-center gap-1 rounded-full border border-black/10 bg-black/[0.03] p-1 dark:border-white/15 dark:bg-white/5 sm:flex"
           >
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
+            {skillCategories.map((c, i) => {
+              const isActive = i === index;
+              return (
+                <button
+                  key={c.title}
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => jump(i)}
+                  className="relative rounded-full px-4 py-1.5 text-sm font-medium leading-6"
+                >
+                  {isActive && (
+                    <motion.span
+                      layoutId="skills-tab"
+                      className="absolute inset-0 rounded-full bg-black dark:bg-white"
+                      transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                    />
+                  )}
+                  <span
+                    className={`relative z-10 transition-colors duration-300 ${
+                      isActive
+                        ? "text-white dark:text-black"
+                        : "text-gray-600 hover:text-black dark:text-white/70 dark:hover:text-white"
+                    }`}
+                  >
+                    {c.title}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Compact label for phones */}
+          <p className="min-w-[10rem] text-center text-sm font-medium tabular-nums sm:hidden">
+            {current.title} · {index + 1}/{COUNT}
+          </p>
+
+          <button
+            onClick={() => go(1)}
+            aria-label="Next category"
+            className="grid h-11 w-11 place-items-center rounded-full border border-black/15 transition duration-300 hover:bg-black hover:text-white active:scale-95 dark:border-white/20 dark:hover:bg-white dark:hover:text-black"
+          >
+            <ChevronRight className="h-5 w-5" />
           </button>
         </div>
       </div>
+
       {preview && <SectionPageLink href="/skills" label="View all" />}
-      </div>
-    </>
+    </section>
   );
 }
