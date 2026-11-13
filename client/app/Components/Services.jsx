@@ -19,7 +19,7 @@ const Services = ({ preview = false }) => {
   const [active, setActive] = useState(0)
 
   return (
-    <section id="services" className="w-full px-6 sm:px-10 lg:px-[12%] py-10">
+    <section id="services" className="w-full px-6 sm:px-10 lg:px-[5%] py-10">
       {/* Header */}
       <div className="flex items-end justify-between gap-6 mb-10">
         <div>

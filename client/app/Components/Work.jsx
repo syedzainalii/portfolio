@@ -57,7 +57,7 @@ const Work = ({ preview = false }) => {
     <section
       id="work"
       ref={sectionRef}
-      className="w-full px-6 py-20 sm:px-10 lg:px-[12%]"
+      className="w-full px-6 py-20 sm:px-10 lg:px-[5%]"
     >
       {/* Heading */}
       <h4 className="mb-2 text-center text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 sm:text-sm">

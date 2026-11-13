@@ -25,7 +25,7 @@ function getSkillLevel(level) {
 
 export default function SkillsPage() {
   return (
-    <article className="px-6 py-16 sm:px-10 lg:px-[12%]">
+    <article className="px-6 py-16 sm:px-10 lg:px-[5%]">
       <header className="mb-12 grid gap-6 border-b border-black/10 pb-8 dark:border-white/15 sm:grid-cols-[1fr_auto] sm:items-end">
         <div>
           <p className="font-mono text-xs uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400">

@@ -68,7 +68,7 @@ const About = ({ preview = false }) => {
   const tools = toolsData.map((src, i) => ({ src, name: TOOL_NAMES[i] ?? "Tool" }));
 
   return (
-    <section id="about" className="w-full overflow-x-hidden px-6 py-20 sm:px-10 lg:px-[12%]">
+    <section id="about" className="w-full overflow-x-hidden px-6 py-20 sm:px-10 lg:px-[5%]">
       <style
         dangerouslySetInnerHTML={{
           __html: `

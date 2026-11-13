@@ -10,7 +10,7 @@ export default function SiteShell({ children }) {
   return (
     <div className="min-h-screen font-outfit overflow-x-hidden flex flex-col">
       <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
-      <main className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 max-w-screen-2xl flex-1">
+      <main className="w-full flex-1">
         {children}
       </main>
       <Footer isDarkMode={isDarkMode} />

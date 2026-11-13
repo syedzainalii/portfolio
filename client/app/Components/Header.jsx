@@ -248,7 +248,7 @@ const Header = () => {
   return (
     <section
       id="top"
-      className="relative flex min-h-screen w-full flex-col justify-center overflow-hidden px-6 pb-10 pt-32 sm:px-10 lg:px-[12%]"
+      className="relative flex min-h-screen w-full flex-col justify-center overflow-hidden px-6 pb-10 pt-32 sm:px-10 lg:px-[5%]"
     >
       <MeshBackground dark={isDarkMode} reduce={reduce} />
 

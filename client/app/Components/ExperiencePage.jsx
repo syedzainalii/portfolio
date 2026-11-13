@@ -2,7 +2,7 @@ import { experienceData } from "@/assets/assets";
 
 export default function ExperiencePage() {
   return (
-    <article className="px-6 py-16 sm:px-10 lg:px-[12%]">
+    <article className="px-6 py-16 sm:px-10 lg:px-[5%]">
       <header className="mb-12 border-b border-black/10 pb-8 dark:border-white/15">
         <p className="font-mono text-xs uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400">
           Experience / Timeline

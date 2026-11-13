@@ -7,7 +7,7 @@ import { motion } from "motion/react"
 const ServiceDetailClient = ({ service }) => {
 
   return (
-    <div className="w-full px-[12%] py-20">
+    <div className="w-full px-6 py-20 sm:px-10 lg:px-[5%]">
       {/* Back Button */}
       <motion.div
         initial={{ opacity: 0, x: -20 }}

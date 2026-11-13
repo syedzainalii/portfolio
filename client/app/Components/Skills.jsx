@@ -214,7 +214,7 @@ export default function Skills({ preview = false }) {
   };
 
   return (
-    <section id="skills" className="w-full px-[12%] py-10">
+    <section id="skills" className="w-full px-6 sm:px-10 lg:px-[5%] py-10">
       <h4 className="mb-2 text-center text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 sm:text-sm">
         My Expertise
       </h4>

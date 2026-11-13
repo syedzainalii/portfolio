@@ -52,7 +52,7 @@ const Navbar = ({isDarkMode, setIsDarkMode}) => {
                 <Image src={assets.header_bg_color} alt="" className='w-full' priority />
             </div>
 
-            <nav className={`w-full fixed px-5 lg:px-8 xl:px-[8%] py-4 flex items-center justify-between z-50 transition-all duration-300 ${isScroll 
+            <nav className={`w-full fixed px-5 lg:px-8 xl:px-[5%] py-4 flex items-center justify-between z-50 transition-all duration-300 ${isScroll
                 ? "bg-white bg-opacity-50 backdrop-blur-lg shadow-sm dark:bg-darkTheme dark:shadow-white/20" 
                 : ""}`}>
                 

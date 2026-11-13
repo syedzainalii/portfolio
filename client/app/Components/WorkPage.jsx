@@ -5,7 +5,7 @@ import { workData } from "@/assets/assets";
 
 export default function WorkPage() {
   return (
-    <article className="px-6 py-16 sm:px-10 lg:px-[12%]">
+    <article className="px-6 py-16 sm:px-10 lg:px-[5%]">
       <header className="mb-12 flex flex-col gap-6 border-b border-black/10 pb-8 sm:flex-row sm:items-end sm:justify-between dark:border-white/15">
         <div>
           <p className="font-mono text-xs uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400">
