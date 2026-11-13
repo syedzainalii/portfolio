@@ -1,22 +1,21 @@
-import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
+import { Outfit as OutfitFont, Ovo as OvoFont } from "next/font/google";
 import "./globals.css";
-import ThemeProvider from "./Components/ThemeProvider";
 
-const spaceGrotesk = Space_Grotesk({
+const outfit = OutfitFont({
   subsets: ["latin"], 
   weight: ["400", "500", "600", "700"],
-  variable: "--font-space-grotesk",
+  variable: '--font-outfit',
 });
 
-const jetBrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-jetbrains-mono",
+const ovo = OvoFont({
+  subsets: ["latin"], 
+  weight: ["400"],
+  variable: '--font-ovo',
 });
 
 export const metadata = {
   title: "Syed Zain Ali | Portfolio",
-  description: "Mechanical engineering, CAD, simulation, data visualization, and web development portfolio.",
+  description: "Web Developer Portfolio",
 };
 
 export const viewport = {
@@ -26,22 +25,12 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(() => {
-              const savedTheme = localStorage.getItem("theme");
-              const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-              const isDark = savedTheme === "dark" || (savedTheme !== "light" && prefersDark);
-              document.documentElement.classList.toggle("dark", isDark);
-              document.documentElement.dataset.theme = isDark ? "dark" : "light";
-            })();`,
-          }}
-        />
-      </head>
-      <body className={`${spaceGrotesk.variable} ${jetBrainsMono.variable} antialiased leading-7`}>
-        <ThemeProvider>{children}</ThemeProvider>
+    <html lang="en" className="scroll-smooth">
+      <body
+        className={`${outfit.variable} ${ovo.variable} font-outfit antialiased 
+        leading-8 overflow-x-hidden bg-white text-black dark:bg-darkTheme dark:text-white`}
+      >
+        {children}
       </body>
     </html>
   );

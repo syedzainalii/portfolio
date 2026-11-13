@@ -1,5 +1,4 @@
 'use client'
-import { useTheme } from "./Components/ThemeProvider";
 import Navbar from "./Components/Navbar";
 import Header from "./Components/Header";
 import About from "./Components/About";
@@ -7,15 +6,35 @@ import Services from "./Components/Services";
 import Work from "./Components/Work";
 import Contact from "./Components/Contact";
 import Footer from "./Components/Footer";
+import { useState, useEffect } from "react";
 import Skills from "./Components/Skills";
 import Experience from "./Components/Experience";
 import Certification from "./Components/Certification";
 
 export default function Home() {
-  const { isDarkMode, setIsDarkMode } = useTheme();
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && 
+        window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      setIsDarkMode(true)
+    } else {
+      setIsDarkMode(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.theme = 'dark';
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.theme = '';
+    }
+  }, [isDarkMode])
 
   return (
-    <div id="top" className="min-h-screen overflow-x-hidden">
+    <div className="min-h-screen font-outfit overflow-x-hidden">
       <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode}/>
       
 
