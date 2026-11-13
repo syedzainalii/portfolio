@@ -22,9 +22,8 @@ const TOOL_NAMES = [
   "Microsoft Office",
 ];
 
-const tiles = [
-  "relative overflow-hidden rounded-3xl border border-black/10 bg-white dark:border-white/15 dark:bg-darkHover",
-];
+const tile =
+  "relative overflow-hidden rounded-3xl border border-black/10 bg-white dark:border-white/15 dark:bg-darkHover";
 
 function Label({ children }) {
   return (
@@ -36,8 +35,15 @@ function Label({ children }) {
 
 function ToolPill({ src, name }) {
   return (
-    <li className="flex shrink-0 items-center gap-3 rounded-full border border-black/10 py-1.5 pl-1.5 pr-5 dark:border-white/15">
-      <span className="grid h-9 w-9 place-items-center rounded-full bg-white p-1.5 ring-1 ring-black/5">
+    <li
+      className="group flex shrink-0 items-center gap-3 rounded-full border border-black/10 bg-white/60 py-1.5 pl-1.5 pr-5
+        transition-all duration-300
+        hover:-translate-y-0.5 hover:border-amber-500/70 hover:shadow-[0_8px_22px_-6px_rgba(180,115,0,0.55)]
+        dark:border-white/15 dark:bg-white/5
+        dark:hover:border-amber-500/60 dark:hover:shadow-[0_8px_26px_-6px_rgba(202,138,4,0.6)]
+        motion-reduce:transition-none"
+    >
+      <span className="grid h-9 w-9 place-items-center rounded-full bg-white p-1.5 ring-1 ring-black/5 transition-shadow duration-300 group-hover:ring-amber-500/40">
         <Image src={src} alt="" className="h-full w-full object-contain" />
       </span>
       <span className="whitespace-nowrap text-sm font-medium leading-6">{name}</span>
@@ -84,7 +90,7 @@ const About = ({ preview = false }) => {
         {/* ===== Portrait ===== */}
         <motion.div
           {...reveal()}
-          className={`${tiles[0]} min-h-[24rem] shadow-xl lg:col-span-4 lg:row-span-2`}
+          className={`${tile} min-h-[24rem] shadow-xl lg:col-span-4 lg:row-span-2`}
         >
           <Image
             src={assets.user_image}
@@ -113,7 +119,7 @@ const About = ({ preview = false }) => {
         </motion.div>
 
         {/* ===== Bio ===== */}
-        <motion.div {...reveal(0.05)} className={`${tiles[0]} p-6 shadow-lg sm:p-8 lg:col-span-8`}>
+        <motion.div {...reveal(0.05)} className={`${tile} p-6 shadow-lg sm:p-8 lg:col-span-8`}>
           <Label>Profile</Label>
           {lead && (
             <p className="mt-4 font-Ovo text-lg leading-8 text-gray-800 dark:text-white/90 sm:text-xl sm:leading-9">
@@ -159,7 +165,7 @@ const About = ({ preview = false }) => {
         </motion.div>
 
         {/* ===== Specifications ===== */}
-        <motion.div {...reveal(0.1)} className={`${tiles[0]} shadow-lg lg:col-span-8`}>
+        <motion.div {...reveal(0.1)} className={`${tile} shadow-lg lg:col-span-8`}>
           <dl className="grid sm:grid-cols-2">
             {infoList.map(({ icon, iconDark, title, description }, index) => {
               const lines = String(description)
@@ -201,24 +207,37 @@ const About = ({ preview = false }) => {
           </dl>
         </motion.div>
 
-        {/* ===== Tools strip ===== */}
+        {/* ===== Tools strip (dark yellow glow) ===== */}
         <motion.div
           {...reveal(0.1)}
-          className={`${tiles[0]} about-marquee-host px-0 py-5 shadow-lg lg:col-span-12`}
+          className={`${tile} about-marquee-host py-5 lg:col-span-12
+            shadow-[0_18px_50px_-18px_rgba(180,115,0,0.5)]
+            dark:border-amber-500/20
+            dark:shadow-[0_18px_60px_-16px_rgba(202,138,4,0.45)]`}
         >
-          <p className="px-6 pb-4 sm:px-8">
+          {/* Dark yellow glow along the top edge */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-500/70 to-transparent"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 -top-10 h-24 bg-[radial-gradient(60%_100%_at_50%_0%,rgba(202,138,4,0.22),transparent)]"
+          />
+
+          <p className="relative px-6 pb-4 sm:px-8">
             <Label>Tools I use</Label>
           </p>
 
           {reduce ? (
-            <ul className="flex gap-3 overflow-x-auto px-6 pb-1 sm:px-8">
+            <ul className="relative flex gap-3 overflow-x-auto px-6 pb-3 pt-1 sm:px-8">
               {tools.map((t) => (
                 <ToolPill key={t.name} src={t.src} name={t.name} />
               ))}
             </ul>
           ) : (
             <div
-              className="overflow-hidden"
+              className="relative overflow-hidden py-2"
               style={{
                 maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
                 WebkitMaskImage:
