@@ -308,7 +308,7 @@ export const serviceIntro =
 
 export const infoList = [
     { icon: assets.edu_icon, iconDark: assets.edu_icon_dark, title: 'Education', description: 'B.E. Mechanical Engineering from NED UET' },
-    { icon: assets.experience_icon, iconDark: assets.experience_icon_dark, title: 'Electives', description: 'AI & IoT \n Plant Maintenance \n Project Management' },
+    { icon: assets.experience_icon, iconDark: assets.experience_icon_dark, title: 'Electives', description: 'AI & IoT \n Plant Maintenance \n Project Management ' },
     { icon: assets.activity_icon, iconDark: assets.activity_icon_dark, title: 'Activities', description: 'Group Leader - AI & IOT Exhibition' },
     { icon: assets.language_icon, iconDark: assets.language_icon_dark, title: 'Languages', description: ' English - Full Professional Proficiency \n Urdu/Hindi - Native Proficiency'},
 ];
