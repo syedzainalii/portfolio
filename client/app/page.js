@@ -1,4 +1,11 @@
 import Header from "./Components/Header";
+import About from "./Components/About";
+import Skills from "./Components/Skills";
+import Services from "./Components/Services";
+import Work from "./Components/Work";
+import Experience from "./Components/Experience";
+import Certification from "./Components/Certification";
+import Contact from "./Components/Contact";
 
 export const metadata = {
   title: { absolute: "Home | Syed Zain Ali" },
@@ -7,6 +14,15 @@ export const metadata = {
 
 export default function Home() {
   return (
-    <Header />
+    <>
+      <Header />
+      <About preview />
+      <Skills preview />
+      <Services preview />
+      <Work preview />
+      <Experience preview />
+      <Certification preview />
+      <Contact preview />
+    </>
   );
 }

@@ -12,8 +12,9 @@ import {
   FaCalendarAlt,
   FaProjectDiagram
 } from 'react-icons/fa';
+import SectionPageLink from './SectionPageLink';
 
-const Certification = () => {
+const Certification = ({ preview = false }) => {
   const [activeFilter, setActiveFilter] = useState('all');
 
   const certifications = [
@@ -124,6 +125,7 @@ const Certification = () => {
 
   return (
     <section
+      id="certification"
       className="min-h-screen bg-white text-gray-900 dark:text-white dark:bg-darkTheme duration-300 p-4 md:p-8"
     >
       <div className="max-w-7xl mx-auto py-12">
@@ -213,6 +215,7 @@ const Certification = () => {
             );
           })}
         </div>
+        {preview && <SectionPageLink href="/certification" label="View all" />}
       </div>
     </section>
   );

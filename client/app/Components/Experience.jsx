@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import SectionPageLink from "./SectionPageLink";
 
 const experiences = [
   {
@@ -29,11 +30,11 @@ const experiences = [
   },
 ];
 
-export default function Experience() {
+export default function Experience({ preview = false }) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <div className="w-full px-[12%] py-10">
+    <div id="experience" className="w-full px-[12%] py-10">
       {/* Heading */}
       <h4 className="text-center mb-1 text-xl font-Ovo">
         My Journey
@@ -215,6 +216,7 @@ export default function Experience() {
             </span>
           </a>
         </div>
+        {preview && <SectionPageLink href="/experience" label="View all" />}
       </div>
     </div>
   );

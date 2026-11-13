@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import {motion} from "motion/react"
+import SectionPageLink from "./SectionPageLink";
 
 const skillCategories = [
   {
@@ -63,7 +64,7 @@ const skillCategories = [
   },
 ];
 
-export default function Skills() {
+export default function Skills({ preview = false }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [direction, setDirection] = useState(null); // 'next' or 'prev'
@@ -245,6 +246,7 @@ export default function Skills() {
       <div
 
       
+      id="skills"
       className='w-full px-[12%] py10'>
         
         <h4 
@@ -577,6 +579,7 @@ export default function Skills() {
           </button>
         </div>
       </div>
+      {preview && <SectionPageLink href="/skills" label="View all" />}
       </div>
     </>
   );

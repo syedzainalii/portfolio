@@ -4,9 +4,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
-const Services = () => {
+const Services = ({ preview = false }) => {
   return (
     <div 
+        id="services"
         className='w-full px-[12%] py-10'
     >
         <h4 className='text-center mb-1 text-xl font-Ovo'>
@@ -23,7 +24,7 @@ const Services = () => {
 
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 my-10'>
             {serviceData.map(({icon, title, description, link}, index) => (
-                <Link href={`/services/${link}`} key={index} className="flex group">
+                <Link href={preview ? "/services" : `/services/${link}`} key={index} className="flex group">
                     <div 
                         className='border border-gray-400 dark:border-gray-600 rounded-2xl p-8 cursor-pointer 
                                    hover:bg-lightHover hover:shadow-[4px_4px_0_#000] 

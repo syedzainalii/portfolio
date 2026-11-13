@@ -3,8 +3,9 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 import { assets } from '@/assets/assets'
+import SectionPageLink from './SectionPageLink'
 
-const Contact = () => {
+const Contact = ({ preview = false }) => {
   const [result, setResult] = useState("");
 
   const onSubmit = async (event) => {
@@ -32,6 +33,7 @@ const Contact = () => {
 
   return (
     <div
+      id="contact"
       className='w-full px-[12%] py-10 bg-[url("/footer-bg-color.png")] bg-no-repeat bg-center bg-[length:90%_auto] dark:bg-none'
     > 
       <h4 className='text-center mb-1 text-xl font-Ovo'>
@@ -84,6 +86,7 @@ const Contact = () => {
 
         <p className='mt-4 text-center'>{result}</p> 
       </form>
+      {preview && <SectionPageLink href="/contact" label="View all" />}
     </div>
   )
 }

@@ -4,11 +4,13 @@ import { assets, infoList, toolsData } from '@/assets/assets'
 import React from 'react'
 import Image from 'next/image'
 import { useTheme } from './ThemeProvider'
+import SectionPageLink from './SectionPageLink'
 
-const About = () => {
+const About = ({ preview = false }) => {
   const { isDarkMode } = useTheme();
   return (
     <div 
+      id="about"
       className='w-full px-6 sm:px-10 lg:px-[12%] py-10 overflow-x-hidden'
     >
       <h4 className='text-center mb-1 text-xl font-Ovo'>
@@ -80,6 +82,7 @@ const About = () => {
           </ul>
         </div>
       </div>
+      {preview && <SectionPageLink href="/about" label="View all" />}
     </div>
   )
 }
