@@ -21,7 +21,7 @@ export default function WorkPage() {
       <div className="space-y-5">
         {workData.map((project, index) => (
           <Link
-            href={`/work/${project.slug}`}
+            href={`/project/${project.slug}`}
             key={project.slug}
             className="group grid overflow-hidden border border-black/10 transition-colors hover:border-amber-500 dark:border-white/15 dark:hover:border-amber-400 sm:grid-cols-[minmax(12rem,0.8fr)_1.2fr]"
           >

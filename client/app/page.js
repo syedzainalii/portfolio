@@ -18,9 +18,9 @@ export default function Home() {
       <Header />
       <About preview />
       <Skills preview />
-      <Services preview />
       <Work preview />
       <Experience preview />
+      <Services preview />
       <Certification preview />
       <Contact preview />
     </>

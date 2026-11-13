@@ -11,7 +11,7 @@ export default function ProjectDetail({ project }) {
   return (
     <article className="min-h-screen px-6 py-12 sm:px-10 lg:px-[12%]">
       <Link
-        href="/work"
+        href="/project"
         className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-amber-600 dark:text-white/65 dark:hover:text-amber-400"
       >
         <ArrowLeft className="h-4 w-4" />
@@ -71,14 +71,14 @@ export default function ProjectDetail({ project }) {
       <section className="mt-16">
         <div className="mb-6 flex items-end justify-between border-b border-black/10 pb-4 dark:border-white/15">
           <h2 className="font-Ovo text-2xl sm:text-3xl">More projects</h2>
-          <Link href="/work" className="text-sm underline underline-offset-4">
+          <Link href="/project" className="text-sm underline underline-offset-4">
             View archive
           </Link>
         </div>
         <div className="grid gap-4 md:grid-cols-3">
           {otherProjects.map((otherProject) => (
             <Link
-              href={`/work/${otherProject.slug}`}
+              href={`/project/${otherProject.slug}`}
               key={otherProject.slug}
               className="group border border-black/10 p-4 transition-colors hover:border-amber-500 dark:border-white/15 dark:hover:border-amber-400"
             >

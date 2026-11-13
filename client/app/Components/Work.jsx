@@ -77,7 +77,7 @@ const Work = ({ preview = false }) => {
       >
         {/* ===== Viewport ===== */}
         <Link
-          href={`/work/${current.slug}`}
+          href={`/project/${current.slug}`}
           aria-label={`Open ${current.title}`}
           tabIndex={-1}
           onPointerEnter={(e) => {
@@ -178,7 +178,7 @@ const Work = ({ preview = false }) => {
             return (
               <li key={project.title}>
                 <Link
-                  href={`/work/${project.slug}`}
+                  href={`/project/${project.slug}`}
                   onPointerEnter={(e) => e.pointerType === "mouse" && setActive(i)}
                   onFocus={() => setActive(i)}
                   onClick={(e) => {
@@ -273,7 +273,7 @@ const Work = ({ preview = false }) => {
         </ul>
       </div>
 
-      {preview && <SectionPageLink href="/work" label="Show more" />}
+      {preview && <SectionPageLink href="/project" label="Show more" />}
     </section>
   );
 };
