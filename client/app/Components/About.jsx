@@ -36,17 +36,18 @@ function Label({ children }) {
 function ToolPill({ src, name }) {
   return (
     <li
-      className="group flex shrink-0 items-center gap-3 rounded-full border border-black/10 bg-white/60 py-1.5 pl-1.5 pr-5
+      className="group flex shrink-0 items-center gap-2 rounded-full border border-black/10 bg-white/60 py-1 pl-1 pr-3
+        xl:w-full
         transition-all duration-300
         hover:-translate-y-0.5 hover:border-amber-500/70 hover:shadow-[0_8px_22px_-6px_rgba(180,115,0,0.55)]
         dark:border-white/15 dark:bg-white/5
         dark:hover:border-amber-500/60 dark:hover:shadow-[0_8px_26px_-6px_rgba(202,138,4,0.6)]
         motion-reduce:transition-none"
     >
-      <span className="grid h-9 w-9 place-items-center rounded-full bg-white p-1.5 ring-1 ring-black/5 transition-shadow duration-300 group-hover:ring-amber-500/40">
+      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white p-1.5 ring-1 ring-black/5 transition-shadow duration-300 group-hover:ring-amber-500/40">
         <Image src={src} alt="" className="h-full w-full object-contain" />
       </span>
-      <span className="whitespace-nowrap text-sm font-medium leading-6">{name}</span>
+      <span className="min-w-0 text-sm font-medium leading-5">{name}</span>
     </li>
   );
 }
@@ -72,10 +73,17 @@ const About = ({ preview = false }) => {
       <style
         dangerouslySetInnerHTML={{
           __html: `
-            @keyframes about-marquee { to { transform: translateX(-50%); } }
-            .about-marquee { animation: about-marquee 38s linear infinite; }
-            .about-marquee-host:hover .about-marquee,
-            .about-marquee-host:focus-within .about-marquee { animation-play-state: paused; }
+            @keyframes about-tools-horizontal { to { transform: translateX(-50%); } }
+            @keyframes about-tools-vertical { to { transform: translateY(-50%); } }
+            .about-tools-marquee-x { animation: about-tools-horizontal 38s linear infinite; }
+            .about-tools-marquee-y { animation: about-tools-vertical 32s linear infinite; }
+            .about-tools-marquee-host:hover .about-tools-marquee-x,
+            .about-tools-marquee-host:hover .about-tools-marquee-y,
+            .about-tools-marquee-host:focus-within .about-tools-marquee-x,
+            .about-tools-marquee-host:focus-within .about-tools-marquee-y { animation-play-state: paused; }
+            @media (prefers-reduced-motion: reduce) {
+              .about-tools-marquee-x, .about-tools-marquee-y { animation: none; }
+            }
           `,
         }}
       />
@@ -86,11 +94,11 @@ const About = ({ preview = false }) => {
       </h4>
       <h2 className="text-center font-Ovo text-4xl sm:text-5xl">About Me</h2>
 
-      <div className="mx-auto mt-12 grid max-w-6xl gap-5 lg:grid-cols-12">
+      <div className="mx-auto mt-12 grid w-full gap-5 xl:grid-cols-12">
         {/* ===== Portrait ===== */}
         <motion.div
           {...reveal()}
-          className={`${tile} min-h-[24rem] shadow-xl lg:col-span-4 lg:row-span-2`}
+          className={`${tile} min-h-[24rem] shadow-xl xl:col-span-3 xl:row-span-2`}
         >
           <Image
             src={assets.user_image}
@@ -119,7 +127,7 @@ const About = ({ preview = false }) => {
         </motion.div>
 
         {/* ===== Bio ===== */}
-        <motion.div {...reveal(0.05)} className={`${tile} p-6 shadow-lg sm:p-8 lg:col-span-8`}>
+        <motion.div {...reveal(0.05)} className={`${tile} p-6 shadow-lg sm:p-8 xl:col-span-6`}>
           <Label>Profile</Label>
           {lead && (
             <p className="mt-4 font-Ovo text-lg leading-8 text-gray-800 dark:text-white/90 sm:text-xl sm:leading-9">
@@ -165,7 +173,7 @@ const About = ({ preview = false }) => {
         </motion.div>
 
         {/* ===== Specifications ===== */}
-        <motion.div {...reveal(0.1)} className={`${tile} shadow-lg lg:col-span-8`}>
+        <motion.div {...reveal(0.1)} className={`${tile} shadow-lg xl:col-span-6`}>
           <dl className="grid sm:grid-cols-2">
             {infoList.map(({ icon, iconDark, title, description }, index) => {
               const lines = String(description)
@@ -207,10 +215,10 @@ const About = ({ preview = false }) => {
           </dl>
         </motion.div>
 
-        {/* ===== Tools strip (dark yellow glow) ===== */}
+        {/* ===== Tools list (dark yellow glow) ===== */}
         <motion.div
           {...reveal(0.1)}
-          className={`${tile} about-marquee-host py-5 lg:col-span-12
+          className={`${tile} about-tools-marquee-host p-5 xl:flex xl:flex-col xl:col-span-3 xl:row-span-2 xl:col-start-10 xl:row-start-1
             shadow-[0_18px_50px_-18px_rgba(180,115,0,0.5)]
             dark:border-amber-500/20
             dark:shadow-[0_18px_60px_-16px_rgba(202,138,4,0.45)]`}
@@ -225,31 +233,70 @@ const About = ({ preview = false }) => {
             className="pointer-events-none absolute inset-x-0 -top-10 h-24 bg-[radial-gradient(60%_100%_at_50%_0%,rgba(202,138,4,0.22),transparent)]"
           />
 
-          <p className="relative px-6 pb-4 sm:px-8">
+          <p className="relative pb-4">
             <Label>Tools I use</Label>
           </p>
 
           {reduce ? (
-            <ul className="relative flex gap-3 overflow-x-auto px-6 pb-3 pt-1 sm:px-8">
-              {tools.map((t) => (
-                <ToolPill key={t.name} src={t.src} name={t.name} />
-              ))}
-            </ul>
-          ) : (
-            <div
-              className="relative overflow-hidden py-2"
-              style={{
-                maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
-                WebkitMaskImage:
-                  "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
-              }}
-            >
-              <ul className="about-marquee flex w-max gap-3 pr-3">
-                {[...tools, ...tools].map((t, i) => (
-                  <ToolPill key={`${t.name}-${i}`} src={t.src} name={t.name} />
+            <>
+              <ul className="relative flex gap-3 overflow-x-auto pb-2 pt-1 xl:hidden">
+                {tools.map((t) => (
+                  <ToolPill key={t.name} src={t.src} name={t.name} />
                 ))}
               </ul>
-            </div>
+              <ul className="relative hidden min-h-0 w-full flex-1 flex-col gap-2 overflow-y-auto xl:flex">
+                {tools.map((t) => (
+                  <ToolPill key={t.name} src={t.src} name={t.name} />
+                ))}
+              </ul>
+            </>
+          ) : (
+            <>
+              <div
+                className="relative overflow-hidden py-2 xl:hidden"
+                style={{
+                  maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
+                  WebkitMaskImage:
+                    "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
+                }}
+              >
+                <div className="about-tools-marquee-x flex w-max">
+                  {[0, 1].map((copy) => (
+                    <ul
+                      key={copy}
+                      aria-hidden={copy === 1}
+                      className="flex shrink-0 gap-3 pr-3"
+                    >
+                      {tools.map((t) => (
+                        <ToolPill key={`${t.name}-${copy}`} src={t.src} name={t.name} />
+                      ))}
+                    </ul>
+                  ))}
+                </div>
+              </div>
+              <div
+                className="relative hidden min-h-0 flex-1 overflow-hidden py-2 xl:block"
+                style={{
+                  maskImage: "linear-gradient(to bottom, transparent, black 8%, black 92%, transparent)",
+                  WebkitMaskImage:
+                    "linear-gradient(to bottom, transparent, black 8%, black 92%, transparent)",
+                }}
+              >
+                <div className="about-tools-marquee-y flex flex-col">
+                  {[0, 1].map((copy) => (
+                    <ul
+                      key={copy}
+                      aria-hidden={copy === 1}
+                      className="flex w-full shrink-0 flex-col gap-2 pb-2"
+                    >
+                      {tools.map((t) => (
+                        <ToolPill key={`${t.name}-${copy}`} src={t.src} name={t.name} />
+                      ))}
+                    </ul>
+                  ))}
+                </div>
+              </div>
+            </>
           )}
         </motion.div>
       </div>
