@@ -1,15 +1,14 @@
 "use client";
 
 import { aboutParagraphs, assets, infoList, toolsData } from "@/assets/assets";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { motion, useReducedMotion } from "motion/react";
+import { ChevronDown, MapPin } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
 import SectionPageLink from "./SectionPageLink";
 
-const pad = (n) => String(n).padStart(2, "0");
-
-// Names for the logos in `toolsData`. Keep this list in the SAME ORDER as toolsData in assets.js
+// Names for the logos in `toolsData`. Keep this in the SAME ORDER as toolsData in assets.js
 const TOOL_NAMES = [
   "SolidWorks",
   "Dassault Systèmes",
@@ -23,6 +22,10 @@ const TOOL_NAMES = [
   "Microsoft Office",
 ];
 
+const tiles = [
+  "relative overflow-hidden rounded-3xl border border-black/10 bg-white dark:border-white/15 dark:bg-darkHover",
+];
+
 function Label({ children }) {
   return (
     <p className="font-mono text-[11px] uppercase leading-5 tracking-[0.2em] text-amber-600 dark:text-amber-400">
@@ -31,9 +34,23 @@ function Label({ children }) {
   );
 }
 
+function ToolPill({ src, name }) {
+  return (
+    <li className="flex shrink-0 items-center gap-3 rounded-full border border-black/10 py-1.5 pl-1.5 pr-5 dark:border-white/15">
+      <span className="grid h-9 w-9 place-items-center rounded-full bg-white p-1.5 ring-1 ring-black/5">
+        <Image src={src} alt="" className="h-full w-full object-contain" />
+      </span>
+      <span className="whitespace-nowrap text-sm font-medium leading-6">{name}</span>
+    </li>
+  );
+}
+
 const About = ({ preview = false }) => {
   const { isDarkMode } = useTheme();
   const reduce = useReducedMotion();
+  const [open, setOpen] = useState(false);
+
+  const [lead, ...rest] = aboutParagraphs;
 
   const reveal = (delay = 0) => ({
     initial: reduce ? false : { opacity: 0, y: 24 },
@@ -42,175 +59,180 @@ const About = ({ preview = false }) => {
     transition: { duration: 0.6, delay, ease: "easeOut" },
   });
 
-  const [lead, ...rest] = aboutParagraphs;
+  const tools = toolsData.map((src, i) => ({ src, name: TOOL_NAMES[i] ?? "Tool" }));
 
   return (
-    <section
-      id="about"
-      className="w-full overflow-x-hidden px-6 py-20 sm:px-10 lg:px-[12%]"
-    >
+    <section id="about" className="w-full overflow-x-hidden px-6 py-20 sm:px-10 lg:px-[12%]">
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            @keyframes about-marquee { to { transform: translateX(-50%); } }
+            .about-marquee { animation: about-marquee 38s linear infinite; }
+            .about-marquee-host:hover .about-marquee,
+            .about-marquee-host:focus-within .about-marquee { animation-play-state: paused; }
+          `,
+        }}
+      />
+
       {/* Heading */}
       <h4 className="mb-2 text-center text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 sm:text-sm">
         Introduction
       </h4>
       <h2 className="text-center font-Ovo text-4xl sm:text-5xl">About Me</h2>
 
-      <div className="mt-14 grid items-start gap-12 lg:grid-cols-12 lg:gap-14">
-        {/* ===== Portrait (sticks while you read) ===== */}
-        <motion.div {...reveal()} className="lg:sticky lg:top-28 lg:col-span-4">
-          <div className="mx-auto w-64 sm:w-80 lg:w-full">
-            {/* Dimension line */}
-            <div
-              aria-hidden
-              className="mb-3 flex items-center gap-2 font-mono text-[10px] uppercase leading-4 tracking-[0.25em] text-gray-500 dark:text-white/45"
-            >
-              <span className="h-2.5 w-px bg-current" />
-              <span className="h-px flex-1 bg-current opacity-60" />
-              <span>Scale 1:1</span>
-              <span className="h-px flex-1 bg-current opacity-60" />
-              <span className="h-2.5 w-px bg-current" />
-            </div>
+      <div className="mx-auto mt-12 grid max-w-6xl gap-5 lg:grid-cols-12">
+        {/* ===== Portrait ===== */}
+        <motion.div
+          {...reveal()}
+          className={`${tiles[0]} min-h-[24rem] shadow-xl lg:col-span-4 lg:row-span-2`}
+        >
+          <Image
+            src={assets.user_image}
+            alt="Syed Zain Ali"
+            fill
+            sizes="(min-width: 1024px) 24rem, 100vw"
+            className="object-cover object-top"
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
+          />
 
-            <div className="relative aspect-[4/5]">
-              <div
-                aria-hidden
-                className="absolute -inset-5 rounded-[2.5rem] bg-amber-400/20 blur-3xl dark:bg-amber-400/10"
-              />
+          {/* Corner brackets */}
+          <span aria-hidden className="absolute left-4 top-4 h-6 w-6 border-l-2 border-t-2 border-amber-400" />
+          <span aria-hidden className="absolute right-4 top-4 h-6 w-6 border-r-2 border-t-2 border-amber-400" />
 
-              <div className="relative h-full overflow-hidden rounded-3xl border border-black/10 bg-gray-200 shadow-2xl dark:border-white/15 dark:bg-darkHover">
-                <Image
-                  src={assets.user_image}
-                  alt="Syed Zain Ali"
-                  fill
-                  sizes="(min-width: 1024px) 24rem, 20rem"
-                  className="object-cover object-top"
-                />
-
-                {/* Scan line */}
-                {!reduce && (
-                  <motion.span
-                    aria-hidden
-                    className="absolute inset-x-0 h-px bg-amber-400 shadow-[0_0_14px_2px_rgba(251,191,36,0.7)]"
-                    initial={{ top: "0%" }}
-                    animate={{ top: ["0%", "100%"] }}
-                    transition={{
-                      duration: 3.6,
-                      ease: "linear",
-                      repeat: Infinity,
-                      repeatDelay: 2.4,
-                    }}
-                  />
-                )}
-              </div>
-
-              {/* Corner brackets */}
-              <span aria-hidden className="absolute -left-2 -top-2 h-7 w-7 border-l-2 border-t-2 border-amber-400" />
-              <span aria-hidden className="absolute -right-2 -top-2 h-7 w-7 border-r-2 border-t-2 border-amber-400" />
-              <span aria-hidden className="absolute -bottom-2 -left-2 h-7 w-7 border-b-2 border-l-2 border-amber-400" />
-              <span aria-hidden className="absolute -bottom-2 -right-2 h-7 w-7 border-b-2 border-r-2 border-amber-400" />
-            </div>
-
-            <p className="mt-4 text-center font-mono text-[10px] uppercase leading-4 tracking-[0.25em] text-gray-500 dark:text-white/45">
-              Fig. 02 — Syed Zain Ali
+          {/* Name label */}
+          <div className="absolute inset-x-4 bottom-4 rounded-2xl border border-white/20 bg-black/35 p-4 backdrop-blur-md">
+            <p className="text-lg font-semibold leading-6 text-white">Syed Zain Ali</p>
+            <p className="mt-1 flex items-center gap-1.5 text-xs leading-5 text-white/75">
+              <MapPin className="h-3.5 w-3.5" />
+              Karachi, Pakistan
             </p>
           </div>
         </motion.div>
 
-        {/* ===== Content ===== */}
-        <div className="lg:col-span-8">
-          {/* Bio */}
-          <motion.div {...reveal(0.05)}>
-            <Label>Profile</Label>
-            {lead && (
-              <p className="mt-4 font-Ovo text-xl leading-9 text-gray-800 dark:text-white/90 sm:text-2xl">
-                {lead}
-              </p>
-            )}
-            <div className="mt-6 space-y-4 font-Ovo text-base leading-8 text-gray-600 dark:text-white/70 sm:text-lg">
-              {rest.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
-              ))}
-            </div>
-          </motion.div>
+        {/* ===== Bio ===== */}
+        <motion.div {...reveal(0.05)} className={`${tiles[0]} p-6 shadow-lg sm:p-8 lg:col-span-8`}>
+          <Label>Profile</Label>
+          {lead && (
+            <p className="mt-4 font-Ovo text-lg leading-8 text-gray-800 dark:text-white/90 sm:text-xl sm:leading-9">
+              {lead}
+            </p>
+          )}
 
-          {/* Specifications */}
-          <motion.div {...reveal(0.05)} className="mt-14">
-            <Label>Specifications</Label>
-            <dl className="mt-4 overflow-hidden rounded-2xl border border-black/10 dark:border-white/15">
-              {infoList.map(({ icon, iconDark, title, description }, index) => {
-                const lines = String(description)
-                  .split("\n")
-                  .map((l) => l.trim())
-                  .filter(Boolean);
-
-                return (
+          {rest.length > 0 && (
+            <>
+              <div
+                className={`grid transition-all duration-500 ease-out motion-reduce:transition-none ${
+                  open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                }`}
+              >
+                <div className="overflow-hidden">
                   <div
-                    key={title}
-                    className="group relative grid gap-3 border-b border-black/10 p-5 last:border-b-0 dark:border-white/15 sm:grid-cols-[11rem_1fr] sm:gap-6 sm:p-6"
+                    id="about-more"
+                    className="space-y-4 pt-5 font-Ovo text-base leading-8 text-gray-600 dark:text-white/70"
                   >
-                    {/* Hover accent */}
-                    <span
-                      aria-hidden
-                      className="absolute inset-y-0 left-0 w-1 origin-top scale-y-0 bg-amber-400 transition-transform duration-300 group-hover:scale-y-100 motion-reduce:transition-none"
-                    />
-                    <div
-                      aria-hidden
-                      className="absolute inset-0 -z-0 bg-black/[0.02] opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-white/[0.04]"
-                    />
+                    {rest.map((paragraph) => (
+                      <p key={paragraph}>{paragraph}</p>
+                    ))}
+                  </div>
+                </div>
+              </div>
 
-                    <dt className="relative flex items-center gap-3">
-                      <span className="font-mono text-xs tabular-nums text-gray-400 dark:text-white/35">
-                        {pad(index + 1)}
-                      </span>
-                      <Image
-                        src={isDarkMode ? iconDark : icon}
-                        alt=""
-                        className="w-6 shrink-0"
-                      />
-                      <span className="font-semibold leading-6">{title}</span>
-                    </dt>
+              <button
+                onClick={() => setOpen((v) => !v)}
+                aria-expanded={open}
+                aria-controls="about-more"
+                className="group mt-5 inline-flex items-center gap-2 text-sm font-medium"
+              >
+                <span className="relative">
+                  {open ? "Show less" : "Read full story"}
+                  <span className="absolute -bottom-1 left-0 h-px w-full bg-current opacity-30 transition-opacity duration-300 group-hover:opacity-100" />
+                </span>
+                <ChevronDown
+                  className={`h-4 w-4 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+                />
+              </button>
+            </>
+          )}
+        </motion.div>
 
-                    <dd className="relative">
-                      <ul className="space-y-1 text-sm leading-6 text-gray-600 dark:text-white/70">
+        {/* ===== Specifications ===== */}
+        <motion.div {...reveal(0.1)} className={`${tiles[0]} shadow-lg lg:col-span-8`}>
+          <dl className="grid sm:grid-cols-2">
+            {infoList.map(({ icon, iconDark, title, description }, index) => {
+              const lines = String(description)
+                .split("\n")
+                .map((l) => l.trim())
+                .filter(Boolean);
+              // Long lists (like Electives) read better on a single wrapped line
+              const compact = lines.length > 3;
+
+              return (
+                <div
+                  key={title}
+                  className={`group relative p-5 sm:p-6 ${
+                    index % 2 === 0 ? "sm:border-r" : ""
+                  } ${index < 2 ? "border-b" : index === 2 ? "border-b sm:border-b-0" : ""} border-black/10 dark:border-white/15`}
+                >
+                  <span
+                    aria-hidden
+                    className="absolute inset-y-4 left-0 w-0.5 origin-top scale-y-0 rounded-full bg-amber-400 transition-transform duration-300 group-hover:scale-y-100 motion-reduce:transition-none"
+                  />
+                  <dt className="flex items-center gap-3">
+                    <Image src={isDarkMode ? iconDark : icon} alt="" className="w-6 shrink-0" />
+                    <span className="font-semibold leading-6">{title}</span>
+                  </dt>
+                  <dd className="mt-2 text-sm leading-6 text-gray-600 dark:text-white/70">
+                    {compact ? (
+                      lines.join("  ·  ")
+                    ) : (
+                      <ul className="space-y-0.5">
                         {lines.map((line) => (
-                          <li key={line} className="flex gap-2">
-                            <span aria-hidden className="text-amber-500">
-                              ›
-                            </span>
-                            {line}
-                          </li>
+                          <li key={line}>{line}</li>
                         ))}
                       </ul>
-                    </dd>
-                  </div>
-                );
-              })}
-            </dl>
-          </motion.div>
+                    )}
+                  </dd>
+                </div>
+              );
+            })}
+          </dl>
+        </motion.div>
 
-          {/* Toolbox */}
-          <motion.div {...reveal(0.05)} className="mt-14">
-            <Label>Toolbox</Label>
-            <ul className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-5">
-              {toolsData.map((tool, index) => {
-                const name = TOOL_NAMES[index] ?? "Tool";
-                return (
-                  <li
-                    key={name + index}
-                    className="group flex flex-col items-center gap-2 rounded-2xl border border-black/10 p-3 transition-all duration-300 hover:-translate-y-1 hover:border-amber-400 hover:shadow-lg dark:border-white/15 motion-reduce:transition-none"
-                  >
-                    <span className="grid aspect-square w-12 place-items-center rounded-xl bg-white p-2.5 shadow-sm ring-1 ring-black/5 sm:w-14">
-                      <Image src={tool} alt={name} className="h-full w-full object-contain" />
-                    </span>
-                    <span className="text-center text-[11px] font-medium leading-4 text-gray-600 transition-colors duration-300 group-hover:text-black dark:text-white/65 dark:group-hover:text-white">
-                      {name}
-                    </span>
-                  </li>
-                );
-              })}
+        {/* ===== Tools strip ===== */}
+        <motion.div
+          {...reveal(0.1)}
+          className={`${tiles[0]} about-marquee-host px-0 py-5 shadow-lg lg:col-span-12`}
+        >
+          <p className="px-6 pb-4 sm:px-8">
+            <Label>Tools I use</Label>
+          </p>
+
+          {reduce ? (
+            <ul className="flex gap-3 overflow-x-auto px-6 pb-1 sm:px-8">
+              {tools.map((t) => (
+                <ToolPill key={t.name} src={t.src} name={t.name} />
+              ))}
             </ul>
-          </motion.div>
-        </div>
+          ) : (
+            <div
+              className="overflow-hidden"
+              style={{
+                maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
+                WebkitMaskImage:
+                  "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
+              }}
+            >
+              <ul className="about-marquee flex w-max gap-3 pr-3">
+                {[...tools, ...tools].map((t, i) => (
+                  <ToolPill key={`${t.name}-${i}`} src={t.src} name={t.name} />
+                ))}
+              </ul>
+            </div>
+          )}
+        </motion.div>
       </div>
 
       {preview && <SectionPageLink href="/about" label="View all" />}
