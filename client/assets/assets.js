@@ -127,26 +127,31 @@ export const workData = [
         title: 'CAD Modeling',
         description: 'Modelling 3D Designs',
         bgImage: '/work-1.png',
+        tools: ['SolidWorks', 'CATIA'],
     },
     {
         title: 'FEA Simulation',
         description: 'Structural Analysis',
         bgImage: '/work-2.png',
+        tools: ['Abaqus', 'ANSYS'],
     },
     {
         title: 'Frontend Project',
         description: 'Web Design',
         bgImage: '/work-3.png',
+        tools: ['Next.js', 'Tailwind'],
     },
     {
         title: 'Data Visualization',
         description: 'Analysing Data',
         bgImage: '/work-4.png',
+        tools: ['Tableau', 'Power BI'],
     },
     {
         title: 'Video Editing',
         description: 'Promotional Video',
         bgImage: '/work-5.png',
+        tools: ['Premiere Pro', 'After Effects'],
     },
 ];
 
