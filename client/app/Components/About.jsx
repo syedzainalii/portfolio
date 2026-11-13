@@ -98,7 +98,7 @@ const About = ({ preview = false }) => {
         {/* ===== Portrait ===== */}
         <motion.div
           {...reveal()}
-          className={`${tile} min-h-[24rem] shadow-xl xl:col-span-3 xl:row-span-2`}
+          className={`${tile} min-h-[24rem] shadow-xl xl:col-span-3 xl:min-h-[22rem] xl:max-h-[30rem] 2xl:max-h-[28rem]`}
         >
           <Image
             src={assets.user_image}
@@ -126,99 +126,101 @@ const About = ({ preview = false }) => {
           </div>
         </motion.div>
 
-        {/* ===== Bio ===== */}
-        <motion.div {...reveal(0.05)} className={`${tile} p-6 shadow-lg sm:p-8 xl:col-span-6`}>
-          <Label>Profile</Label>
-          {lead && (
-            <p className="mt-4 font-Ovo text-lg leading-8 text-gray-800 dark:text-white/90 sm:text-xl sm:leading-9">
-              {lead}
-            </p>
-          )}
+        <div className="flex flex-col gap-4 xl:col-span-6">
+          {/* ===== Bio ===== */}
+          <motion.div {...reveal(0.05)} className={`${tile} p-4 shadow-lg`}>
+            <Label>Profile</Label>
+            {lead && (
+              <p className="mt-3 font-Ovo text-base leading-6 text-gray-800 dark:text-white/90">
+                {lead}
+              </p>
+            )}
 
-          {rest.length > 0 && (
-            <>
-              <div
-                className={`grid transition-all duration-500 ease-out motion-reduce:transition-none ${
-                  open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-                }`}
-              >
-                <div className="overflow-hidden">
-                  <div
-                    id="about-more"
-                    className="space-y-4 pt-5 font-Ovo text-base leading-8 text-gray-600 dark:text-white/70"
-                  >
-                    {rest.map((paragraph) => (
-                      <p key={paragraph}>{paragraph}</p>
-                    ))}
+            {rest.length > 0 && (
+              <>
+                <div
+                  className={`grid transition-all duration-500 ease-out motion-reduce:transition-none ${
+                    open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                  }`}
+                >
+                  <div className="overflow-hidden">
+                    <div
+                      id="about-more"
+                      className="space-y-4 pt-5 font-Ovo text-base leading-8 text-gray-600 dark:text-white/70"
+                    >
+                      {rest.map((paragraph) => (
+                        <p key={paragraph}>{paragraph}</p>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <button
-                onClick={() => setOpen((v) => !v)}
-                aria-expanded={open}
-                aria-controls="about-more"
-                className="group mt-5 inline-flex items-center gap-2 text-sm font-medium"
-              >
-                <span className="relative">
-                  {open ? "Show less" : "Read full story"}
-                  <span className="absolute -bottom-1 left-0 h-px w-full bg-current opacity-30 transition-opacity duration-300 group-hover:opacity-100" />
-                </span>
-                <ChevronDown
-                  className={`h-4 w-4 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
-                />
-              </button>
-            </>
-          )}
-        </motion.div>
-
-        {/* ===== Specifications ===== */}
-        <motion.div {...reveal(0.1)} className={`${tile} shadow-lg xl:col-span-6`}>
-          <dl className="grid sm:grid-cols-2">
-            {infoList.map(({ icon, iconDark, title, description }, index) => {
-              const lines = String(description)
-                .split("\n")
-                .map((l) => l.trim())
-                .filter(Boolean);
-              // Long lists (like Electives) read better on a single wrapped line
-              const compact = lines.length > 3;
-
-              return (
-                <div
-                  key={title}
-                  className={`group relative p-5 sm:p-6 ${
-                    index % 2 === 0 ? "sm:border-r" : ""
-                  } ${index < 2 ? "border-b" : index === 2 ? "border-b sm:border-b-0" : ""} border-black/10 dark:border-white/15`}
+                <button
+                  onClick={() => setOpen((v) => !v)}
+                  aria-expanded={open}
+                  aria-controls="about-more"
+                  className="group mt-2 inline-flex items-center gap-2 text-sm font-medium"
                 >
-                  <span
-                    aria-hidden
-                    className="absolute inset-y-4 left-0 w-0.5 origin-top scale-y-0 rounded-full bg-amber-400 transition-transform duration-300 group-hover:scale-y-100 motion-reduce:transition-none"
+                  <span className="relative">
+                    {open ? "Show less" : "Read full story"}
+                    <span className="absolute -bottom-1 left-0 h-px w-full bg-current opacity-30 transition-opacity duration-300 group-hover:opacity-100" />
+                  </span>
+                  <ChevronDown
+                    className={`h-4 w-4 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
                   />
-                  <dt className="flex items-center gap-3">
-                    <Image src={isDarkMode ? iconDark : icon} alt="" className="w-6 shrink-0" />
-                    <span className="font-semibold leading-6">{title}</span>
-                  </dt>
-                  <dd className="mt-2 text-sm leading-6 text-gray-600 dark:text-white/70">
-                    {compact ? (
-                      lines.join("  ·  ")
-                    ) : (
-                      <ul className="space-y-0.5">
-                        {lines.map((line) => (
-                          <li key={line}>{line}</li>
-                        ))}
-                      </ul>
-                    )}
-                  </dd>
-                </div>
-              );
-            })}
-          </dl>
-        </motion.div>
+                </button>
+              </>
+            )}
+          </motion.div>
+
+          {/* ===== Specifications ===== */}
+          <motion.div {...reveal(0.1)} className={`${tile} shadow-lg`}>
+            <dl className="grid sm:grid-cols-2">
+              {infoList.map(({ icon, iconDark, title, description }, index) => {
+                const lines = String(description)
+                  .split("\n")
+                  .map((l) => l.trim())
+                  .filter(Boolean);
+                // Long lists (like Electives) read better on a single wrapped line
+                const compact = lines.length > 3;
+
+                return (
+                  <div
+                    key={title}
+                    className={`group relative p-3 ${
+                      index % 2 === 0 ? "sm:border-r" : ""
+                    } ${index < 2 ? "border-b" : index === 2 ? "border-b sm:border-b-0" : ""} border-black/10 dark:border-white/15`}
+                  >
+                    <span
+                      aria-hidden
+                      className="absolute inset-y-4 left-0 w-0.5 origin-top scale-y-0 rounded-full bg-amber-400 transition-transform duration-300 group-hover:scale-y-100 motion-reduce:transition-none"
+                    />
+                    <dt className="flex items-center gap-3">
+                      <Image src={isDarkMode ? iconDark : icon} alt="" className="w-6 shrink-0" />
+                      <span className="font-semibold leading-6">{title}</span>
+                    </dt>
+                    <dd className="mt-1 text-sm leading-5 text-gray-600 dark:text-white/70">
+                      {compact ? (
+                        lines.join("  ·  ")
+                      ) : (
+                        <ul className="space-y-0.5">
+                          {lines.map((line) => (
+                            <li key={line}>{line}</li>
+                          ))}
+                        </ul>
+                      )}
+                    </dd>
+                  </div>
+                );
+              })}
+            </dl>
+          </motion.div>
+        </div>
 
         {/* ===== Tools list (dark yellow glow) ===== */}
         <motion.div
           {...reveal(0.1)}
-          className={`${tile} about-tools-marquee-host p-5 xl:flex xl:flex-col xl:col-span-3 xl:row-span-2 xl:col-start-10 xl:row-start-1
+          className={`${tile} about-tools-marquee-host p-4 sm:p-5 xl:flex xl:flex-col xl:col-span-3 xl:max-h-[30rem] 2xl:max-h-[28rem]
             shadow-[0_18px_50px_-18px_rgba(180,115,0,0.5)]
             dark:border-amber-500/20
             dark:shadow-[0_18px_60px_-16px_rgba(202,138,4,0.45)]`}
