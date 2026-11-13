@@ -11,7 +11,7 @@ const About = ({ isDarkMode }) => {
       <h4 className='text-center mb-1 text-xl font-Ovo'>
         Introduction
       </h4>
-
+ 
       <h2 className='text-center text-4xl sm:text-5xl font-Ovo'>
         About Me
       </h2>
