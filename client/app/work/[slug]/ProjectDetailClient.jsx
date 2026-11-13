@@ -1,123 +1,97 @@
-'use client'
-import { assets } from '@/assets/assets'
-import Image from 'next/image'
-import Link from 'next/link'
-import { motion } from 'motion/react'
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowLeft, ArrowUpRight } from "lucide-react";
+import { workData } from "@/assets/assets";
 
 export default function ProjectDetail({ project }) {
-    return (
-        <div className='min-h-screen w-full px-[12%] py-20'>
-            {/* --- Navigation --- */}
-            <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-            >
-                <Link 
-                    href="/work" 
-                    className='inline-flex items-center gap-2 mb-10 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-all font-Ovo'
-                >
-                    <Image src={assets.right_arrow} alt='' className='w-4 rotate-180 dark:invert' />
-                    Back to Portfolio
-                </Link>
-            </motion.div>
+  const otherProjects = workData.filter((item) => item.slug !== project.slug).slice(0, 3);
 
-            {/* --- Project Hero --- */}
-            <div className='max-w-5xl mx-auto'>
-                <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className='relative w-full h-[300px] md:h-[500px] rounded-3xl overflow-hidden border border-gray-200 dark:border-white/10 mb-10 shadow-lg'
-                >
-                    <Image 
-                        src={project.bgImage} 
-                        alt={project.title} 
-                        fill 
-                        className='object-cover'
-                        priority
-                    />
-                    <div className='absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-8 md:p-12'>
-                        <div>
-                            <h1 className='text-4xl md:text-6xl font-Ovo text-white font-medium mb-4'>
-                                {project.title}
-                            </h1>
-                            <p className='text-white/80 text-lg md:text-xl max-w-2xl'>
-                                {project.description}
-                            </p>
-                        </div>
-                    </div>
-                </motion.div>
+  return (
+    <article className="min-h-screen px-6 py-12 sm:px-10 lg:px-[12%]">
+      <Link
+        href="/work"
+        className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-amber-600 dark:text-white/65 dark:hover:text-amber-400"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        Project archive
+      </Link>
 
-                {/* --- Project Details Content --- */}
-                <div className='grid grid-cols-1 md:grid-cols-3 gap-12'>
-                    
-                    {/* Left Column: Detailed Info */}
-                    <motion.div 
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className='md:col-span-2 space-y-10'
-                    >
-                        <section>
-                            <h2 className='text-2xl font-Ovo font-semibold mb-4 dark:text-white'>Project Overview</h2>
-                            <p className='text-gray-700 dark:text-white/70 leading-relaxed text-lg'>
-                                This project involved comprehensive work in {project.title}. 
-                                My approach focused on technical accuracy, efficiency, and meeting specific industry standards. 
-                                Whether it&apos;s complex 3D geometry or high-performance frontend code, the goal was to deliver a 
-                                solution that is both functional and scalable.
-                            </p>
-                        </section>
-
-                        <section className='bg-lightHover dark:bg-darkHover p-8 rounded-2xl border border-gray-100 dark:border-white/5'>
-                            <h3 className='text-xl font-Ovo font-semibold mb-4 dark:text-white'>Key Challenges & Solutions</h3>
-                            <ul className='space-y-4'>
-                                <li className='flex gap-3 text-gray-700 dark:text-white/70'>
-                                    <span className='text-black dark:text-white font-bold'>•</span>
-                                    Integrated complex requirements into a streamlined workflow.
-                                </li>
-                                <li className='flex gap-3 text-gray-700 dark:text-white/70'>
-                                    <span className='text-black dark:text-white font-bold'>•</span>
-                                    Optimized performance for better user experience/simulation results.
-                                </li>
-                                <li className='flex gap-3 text-gray-700 dark:text-white/70'>
-                                    <span className='text-black dark:text-white font-bold'>•</span>
-                                    Ensured cross-platform compatibility and rigorous testing.
-                                </li>
-                            </ul>
-                        </section>
-                    </motion.div>
-
-                    {/* Right Column: Meta Info */}
-                    <motion.div 
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.3 }}
-                        className='space-y-8'
-                    >
-                        <div className='p-6 border border-gray-200 dark:border-white/10 rounded-2xl'>
-                            <h4 className='font-bold mb-4 dark:text-white uppercase text-xs tracking-widest'>Core Competencies</h4>
-                            <div className='flex flex-wrap gap-2'>
-                                <span className='px-4 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-full text-sm dark:text-white/80 border border-gray-200 dark:border-white/5'>Innovation</span>
-                                <span className='px-4 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-full text-sm dark:text-white/80 border border-gray-200 dark:border-white/5'>Precision</span>
-                                <span className='px-4 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-full text-sm dark:text-white/80 border border-gray-200 dark:border-white/5'>Strategy</span>
-                            </div>
-                        </div>
-
-                        <div className='p-8 bg-black dark:bg-white rounded-2xl text-center shadow-xl'>
-                            <h4 className='text-white dark:text-black font-Ovo text-xl mb-4'>Like what you see?</h4>
-                            <p className='text-white/70 dark:text-black/60 text-sm mb-6'>
-                                I&apos;m available for similar projects and technical consultations.
-                            </p>
-                            <Link 
-                                href="/contact"
-                                className='block w-full py-3 rounded-full bg-white dark:bg-black text-black dark:text-white font-medium hover:scale-105 transition-transform'
-                            >
-                                Hire Me
-                            </Link>
-                        </div>
-                    </motion.div>
-                </div>
-            </div>
+      <header className="mt-8 grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+        <div>
+          <p className="font-mono text-xs uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400">
+            Project / {project.slug}
+          </p>
+          <h1 className="mt-4 font-Ovo text-4xl sm:text-6xl">{project.title}</h1>
+          <p className="mt-4 max-w-xl text-lg leading-7 text-gray-600 dark:text-white/65">
+            {project.description}
+          </p>
         </div>
-    )
+
+        <div className="relative aspect-[4/3] overflow-hidden border border-black/10 bg-slate-900 dark:border-white/15">
+          <Image
+            src={project.bgImage}
+            alt={project.title}
+            fill
+            priority
+            sizes="(min-width: 1024px) 60vw, 100vw"
+            className="object-cover"
+          />
+          <span className="absolute bottom-4 left-4 bg-black/70 px-3 py-2 font-mono text-xs text-white">
+            {project.slug}
+          </span>
+        </div>
+      </header>
+
+      <section className="mt-10 grid gap-8 border-y border-black/10 py-8 dark:border-white/15 sm:grid-cols-[1fr_auto] sm:items-center">
+        <div>
+          <p className="font-mono text-xs uppercase tracking-[0.25em] text-gray-500">
+            Tools used
+          </p>
+          <ul className="mt-4 flex flex-wrap gap-2">
+            {project.tools?.map((tool) => (
+              <li
+                key={tool}
+                className="border border-black/15 px-3 py-1.5 text-sm dark:border-white/20"
+              >
+                {tool}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <Link
+          href="/contact"
+          className="inline-flex items-center gap-2 text-sm font-medium hover:text-amber-600 dark:hover:text-amber-400"
+        >
+          Discuss a project <ArrowUpRight className="h-4 w-4" />
+        </Link>
+      </section>
+
+      <section className="mt-16">
+        <div className="mb-6 flex items-end justify-between border-b border-black/10 pb-4 dark:border-white/15">
+          <h2 className="font-Ovo text-2xl sm:text-3xl">More projects</h2>
+          <Link href="/work" className="text-sm underline underline-offset-4">
+            View archive
+          </Link>
+        </div>
+        <div className="grid gap-4 md:grid-cols-3">
+          {otherProjects.map((otherProject) => (
+            <Link
+              href={`/work/${otherProject.slug}`}
+              key={otherProject.slug}
+              className="group border border-black/10 p-4 transition-colors hover:border-amber-500 dark:border-white/15 dark:hover:border-amber-400"
+            >
+              <p className="font-mono text-xs text-gray-500">{otherProject.slug}</p>
+              <h3 className="mt-2 font-Ovo text-lg">{otherProject.title}</h3>
+              <p className="mt-2 text-sm text-gray-600 dark:text-white/65">
+                {otherProject.description}
+              </p>
+              <ArrowUpRight className="mt-4 h-4 w-4 text-amber-600 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1 dark:text-amber-400" />
+            </Link>
+          ))}
+        </div>
+      </section>
+    </article>
+  );
 }

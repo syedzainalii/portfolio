@@ -1,4 +1,4 @@
-import Services from "../Components/Services";
+import ServicesPageView from "../Components/ServicesPage";
 
 export const metadata = {
   title: "Services",
@@ -9,7 +9,7 @@ export const metadata = {
 export default function ServicesPage() {
   return (
     <div className="pt-20">
-      <Services />
+      <ServicesPageView />
     </div>
   );
 }

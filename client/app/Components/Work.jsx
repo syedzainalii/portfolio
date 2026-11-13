@@ -10,8 +10,6 @@ import SectionPageLink from "./SectionPageLink";
 
 const AUTOPLAY_MS = 5000;
 
-const toSlug = (title) => title.toLowerCase().replace(/\s+/g, "-");
-
 const Work = ({ preview = false }) => {
   const projects = preview ? workData.slice(0, 4) : workData;
   const total = projects.length;
@@ -79,7 +77,7 @@ const Work = ({ preview = false }) => {
       >
         {/* ===== Viewport ===== */}
         <Link
-          href={`/work/${toSlug(current.title)}`}
+          href={`/work/${current.slug}`}
           aria-label={`Open ${current.title}`}
           tabIndex={-1}
           onPointerEnter={(e) => {
@@ -180,7 +178,7 @@ const Work = ({ preview = false }) => {
             return (
               <li key={project.title}>
                 <Link
-                  href={`/work/${toSlug(project.title)}`}
+                  href={`/work/${project.slug}`}
                   onPointerEnter={(e) => e.pointerType === "mouse" && setActive(i)}
                   onFocus={() => setActive(i)}
                   onClick={(e) => {

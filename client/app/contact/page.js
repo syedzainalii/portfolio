@@ -1,4 +1,4 @@
-import Contact from "../Components/Contact";
+import ContactPageView from "../Components/ContactPage";
 
 export const metadata = {
   title: "Contact",
@@ -9,7 +9,7 @@ export const metadata = {
 export default function ContactPage() {
   return (
     <div className="pt-20">
-      <Contact />
+      <ContactPageView />
     </div>
   );
 }

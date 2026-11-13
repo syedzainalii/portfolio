@@ -1,6 +1,6 @@
 "use client";
 
-import { assets, infoList, toolsData } from '@/assets/assets'
+import { aboutParagraphs, assets, infoList, toolsData } from '@/assets/assets'
 import React from 'react'
 import Image from 'next/image'
 import { useTheme } from './ThemeProvider'
@@ -35,22 +35,9 @@ const About = ({ preview = false }) => {
         {/* Text Content Area */}
         <div className='flex-1'>
           <div className='mb-6 font-Ovo text-gray-700 dark:text-white/90 text-base sm:text-lg leading-relaxed text-left'>
-            <p className='mb-4'>
-              I&apos;m a student of NED University of Engineering and Technology, pursuing Bachelor of Engineering in Mechanical Engineering,
-              with training in injection molding, machining, and assembly processes. Gained hands-on experience at Sui Southern Gas 
-              Company Limited (SSGC) Meter Manufacturing Plant, engaging with quality control, plastic molding, and painting 
-              processes that ensure high production standards. 
-            </p>
-            <p className='mb-4'>
-              Certified in Google IT Automation with Python and Project Management, bringing complementary skills in automation 
-              and organizational efficiency. Motivated to leverage technical expertise and project management knowledge to 
-              contribute to innovative engineering solutions and process improvements.
-            </p>
-            <p className='mb-4'>
-              Recently, I worked in IOT & AI Exhibition as a Group Leader, where I led a team to develop innovative projects 
-              showcasing the applications of Internet of Things (IoT) and Artificial Intelligence (AI). This experience enhanced 
-              my leadership skills and deepened my understanding of cutting-edge technologies.
-            </p>
+            {aboutParagraphs.map((paragraph) => (
+              <p className='mb-4' key={paragraph}>{paragraph}</p>
+            ))}
           </div>
 
           <ul className='grid grid-cols-auto sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mt-10 w-full'> 

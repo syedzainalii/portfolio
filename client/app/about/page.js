@@ -1,4 +1,4 @@
-import About from "../Components/About";
+import AboutPageView from "../Components/AboutPage";
 
 export const metadata = {
   title: "About",
@@ -9,7 +9,7 @@ export const metadata = {
 export default function AboutPage() {
   return (
     <div className="pt-20">
-      <About />
+      <AboutPageView />
     </div>
   );
 }

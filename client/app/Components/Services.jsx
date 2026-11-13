@@ -1,5 +1,5 @@
 "use client"
-import { serviceData } from '@/assets/assets'
+import { serviceData, serviceIntro } from '@/assets/assets'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useState } from 'react'
@@ -30,8 +30,7 @@ const Services = ({ preview = false }) => {
             My Services
           </h2>
           <p className="mt-4 max-w-xl text-sm sm:text-base text-gray-600 dark:text-white/70">
-            Mechanical engineering services including CAD modeling, FEA analysis,
-            and programming.
+            {serviceIntro}
           </p>
         </div>
 

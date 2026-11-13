@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
+import { skillCategories } from "@/assets/assets";
 import {
   Box,
   ChevronLeft,
@@ -17,66 +18,13 @@ import SectionPageLink from "./SectionPageLink";
 const SHOW_PERCENT = false;
 const CARD_HEIGHT = 460;
 const AUTOPLAY_MS = 6000;
-
-const skillCategories = [
-  {
-    title: "Programming",
-    icon: Code,
-    accent: "#38bdf8",
-    skills: [
-      { name: "React/Next.js", level: 60 },
-      { name: "TypeScript", level: 60 },
-      { name: "Matlab", level: 60 },
-      { name: "Numpy", level: 40 },
-      { name: "Pandas", level: 40 },
-      { name: "Matplotlib", level: 40 },
-    ],
-  },
-  {
-    title: "Simulation",
-    icon: Cpu,
-    accent: "#fb923c",
-    skills: [
-      { name: "Ansys", level: 20 },
-      { name: "Comsol Multiphysics", level: 60 },
-      { name: "Abaqus", level: 80 },
-      { name: "Simulink", level: 80 },
-    ],
-  },
-  {
-    title: "CAD",
-    icon: Box,
-    accent: "#34d399",
-    skills: [
-      { name: "Solidworks", level: 70 },
-      { name: "Catia", level: 20 },
-      { name: "AutoCAD", level: 60 },
-    ],
-  },
-  {
-    title: "Project Management",
-    icon: ClipboardList,
-    accent: "#a78bfa",
-    skills: [
-      { name: "Jira", level: 70 },
-      { name: "Wrike", level: 90 },
-      { name: "Agile/Scrum", level: 60 },
-      { name: "Trello", level: 50 },
-    ],
-  },
-  {
-    title: "Tools & Others",
-    icon: Wrench,
-    accent: "#fbbf24",
-    skills: [
-      { name: "Git/GitHub", level: 90 },
-      { name: "Tableau", level: 70 },
-      { name: "Power Bi", level: 20 },
-      { name: "Microsoft Office", level: 90 },
-      { name: "Linux", level: 20 },
-    ],
-  },
-];
+const skillIcons = {
+  box: Box,
+  "clipboard-list": ClipboardList,
+  code: Code,
+  cpu: Cpu,
+  wrench: Wrench,
+};
 
 const COUNT = skillCategories.length;
 
@@ -129,7 +77,7 @@ function SkillCard({ category, offset, wrapped, layout, reduceMotion, onSelect }
   const pose = POSE[Math.min(abs, 2)];
   const hidden = abs > layout.visible;
   const active = offset === 0;
-  const Icon = category.icon;
+  const Icon = skillIcons[category.icon];
   const { accent } = category;
 
   return (

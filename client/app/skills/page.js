@@ -1,4 +1,4 @@
-import Skills from "../Components/Skills";
+import SkillsPageView from "../Components/SkillsPage";
 
 export const metadata = {
   title: "Skills",
@@ -9,7 +9,7 @@ export const metadata = {
 export default function SkillsPage() {
   return (
     <div className="pt-20">
-      <Skills />
+      <SkillsPageView />
     </div>
   );
 }

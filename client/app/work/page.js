@@ -1,4 +1,4 @@
-import Work from "../Components/Work";
+import WorkPageView from "../Components/WorkPage";
 
 export const metadata = {
   title: "My Work",
@@ -9,7 +9,7 @@ export const metadata = {
 export default function WorkPage() {
   return (
     <div className="pt-4">
-      <Work />
+      <WorkPageView />
     </div>
   );
 }

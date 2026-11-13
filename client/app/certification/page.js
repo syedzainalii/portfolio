@@ -1,4 +1,4 @@
-import Certification from "../Components/Certification";
+import CertificationPageView from "../Components/CertificationPage";
 
 export const metadata = {
   title: "Certification",
@@ -9,7 +9,7 @@ export const metadata = {
 export default function CertificationPage() {
   return (
     <div className="pt-20">
-      <Certification />
+      <CertificationPageView />
     </div>
   );
 }

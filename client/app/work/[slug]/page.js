@@ -2,13 +2,13 @@ import { workData } from "@/assets/assets";
 import { notFound } from "next/navigation";
 import ProjectDetailClient from "./ProjectDetailClient";
 
-function getSlug(title) {
-  return title.toLowerCase().replace(/\s+/g, "-");
+export function generateStaticParams() {
+  return workData.map(({ slug }) => ({ slug }));
 }
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const project = workData.find((item) => getSlug(item.title) === slug);
+  const project = workData.find((item) => item.slug === slug);
 
   return {
     title: project?.title || "Project",
@@ -18,7 +18,7 @@ export async function generateMetadata({ params }) {
 
 export default async function ProjectDetailPage({ params }) {
   const { slug } = await params;
-  const project = workData.find((item) => getSlug(item.title) === slug);
+  const project = workData.find((item) => item.slug === slug);
 
   if (!project) {
     notFound();

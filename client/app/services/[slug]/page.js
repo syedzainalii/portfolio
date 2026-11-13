@@ -2,6 +2,10 @@ import { serviceData } from "@/assets/assets";
 import { notFound } from "next/navigation";
 import ServiceDetailClient from "./ServiceDetailClient";
 
+export function generateStaticParams() {
+  return serviceData.map(({ link }) => ({ slug: link }));
+}
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const service = serviceData.find((item) => item.link === slug);

@@ -1,4 +1,4 @@
-import Experience from "../Components/Experience";
+import ExperiencePageView from "../Components/ExperiencePage";
 
 export const metadata = {
   title: "Experience",
@@ -9,7 +9,7 @@ export const metadata = {
 export default function ExperiencePage() {
   return (
     <div className="pt-20">
-      <Experience />
+      <ExperiencePageView />
     </div>
   );
 }

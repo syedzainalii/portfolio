@@ -124,30 +124,35 @@ export const assets = {
 
 export const workData = [
     {
+        slug: 'cad-modeling',
         title: 'CAD Modeling',
         description: 'Modelling 3D Designs',
         bgImage: '/work-1.png',
         tools: ['SolidWorks', 'CATIA'],
     },
     {
+        slug: 'fea-simulation',
         title: 'FEA Simulation',
         description: 'Structural Analysis',
         bgImage: '/work-2.png',
         tools: ['Abaqus', 'ANSYS'],
     },
     {
+        slug: 'frontend-project',
         title: 'Frontend Project',
         description: 'Web Design',
         bgImage: '/work-3.png',
         tools: ['Next.js', 'Tailwind'],
     },
     {
+        slug: 'data-visualization',
         title: 'Data Visualization',
         description: 'Analysing Data',
         bgImage: '/work-4.png',
         tools: ['Tableau', 'Power BI'],
     },
     {
+        slug: 'video-editing',
         title: 'Video Editing',
         description: 'Promotional Video',
         bgImage: '/work-5.png',
@@ -298,6 +303,9 @@ export const serviceData = [
     },
 ];
 
+export const serviceIntro =
+    'Mechanical engineering services including CAD modeling, FEA analysis, and programming.';
+
 export const infoList = [
     { icon: assets.edu_icon, iconDark: assets.edu_icon_dark, title: 'Education', description: 'B.E. Mechanical Engineering from NED UET' },
     { icon: assets.experience_icon, iconDark: assets.experience_icon_dark, title: 'Electives', description: 'Ai & Iot \n Mechatronics \n Data Sciences \n IT Automation with Python  \n Project Management' },
@@ -317,3 +325,191 @@ export const toolsData = [
     assets.wrike,
     assets.microsoft
 ];
+
+export const aboutParagraphs = [
+    "I'm a student of NED University of Engineering and Technology, pursuing Bachelor of Engineering in Mechanical Engineering, with training in injection molding, machining, and assembly processes. Gained hands-on experience at Sui Southern Gas Company Limited (SSGC) Meter Manufacturing Plant, engaging with quality control, plastic molding, and painting processes that ensure high production standards.",
+    "Certified in Google IT Automation with Python and Project Management, bringing complementary skills in automation and organizational efficiency. Motivated to leverage technical expertise and project management knowledge to contribute to innovative engineering solutions and process improvements.",
+    "Recently, I worked in IOT & AI Exhibition as a Group Leader, where I led a team to develop innovative projects showcasing the applications of Internet of Things (IoT) and Artificial Intelligence (AI). This experience enhanced my leadership skills and deepened my understanding of cutting-edge technologies.",
+];
+
+export const skillCategories = [
+    {
+        title: 'Programming',
+        icon: 'code',
+        accent: '#38bdf8',
+        skills: [
+            { name: 'React/Next.js', level: 60 },
+            { name: 'TypeScript', level: 60 },
+            { name: 'Matlab', level: 60 },
+            { name: 'Numpy', level: 40 },
+            { name: 'Pandas', level: 40 },
+            { name: 'Matplotlib', level: 40 },
+        ],
+    },
+    {
+        title: 'Simulation',
+        icon: 'cpu',
+        accent: '#fb923c',
+        skills: [
+            { name: 'Ansys', level: 20 },
+            { name: 'Comsol Multiphysics', level: 60 },
+            { name: 'Abaqus', level: 80 },
+            { name: 'Simulink', level: 80 },
+        ],
+    },
+    {
+        title: 'CAD',
+        icon: 'box',
+        accent: '#34d399',
+        skills: [
+            { name: 'Solidworks', level: 70 },
+            { name: 'Catia', level: 20 },
+            { name: 'AutoCAD', level: 60 },
+        ],
+    },
+    {
+        title: 'Project Management',
+        icon: 'clipboard-list',
+        accent: '#a78bfa',
+        skills: [
+            { name: 'Jira', level: 70 },
+            { name: 'Wrike', level: 90 },
+            { name: 'Agile/Scrum', level: 60 },
+            { name: 'Trello', level: 50 },
+        ],
+    },
+    {
+        title: 'Tools & Others',
+        icon: 'wrench',
+        accent: '#fbbf24',
+        skills: [
+            { name: 'Git/GitHub', level: 90 },
+            { name: 'Tableau', level: 70 },
+            { name: 'Power Bi', level: 20 },
+            { name: 'Microsoft Office', level: 90 },
+            { name: 'Linux', level: 20 },
+        ],
+    },
+];
+
+export const experienceData = [
+    {
+        id: 1,
+        role: 'Internship',
+        company: 'Sui Southren Gas Company LTD',
+        period: 'March - April (2024)',
+        location: 'Karachi, Pakistan',
+        logo: '🏭',
+        description:
+            'One-month internship at Sui Southern Gas Company (SSGC), gaining hands-on experience in gas meter manufacturing, quality control, assembly, calibration, and industrial SOPs',
+        achievements: [
+            'Gained hands-on exposure to gas meter manufacturing and assembly',
+            'Assisted in quality control inspections and testing procedures',
+            'Learned calibration techniques as per EN 1359 standards',
+            'Understood industrial SOPs, safety protocols, and plant workflows',
+            'Improved teamwork and problem-solving in an industrial environment',
+        ],
+        technologies: [
+            'CNC',
+            'Injection molding',
+            'Meter Calibration',
+            'Quality Testing',
+            'Surface Treatment',
+        ],
+    },
+];
+
+export const certificationData = [
+    {
+        id: 1,
+        title: 'Google IT Automation with Python Professional',
+        issuer: 'Google',
+        category: 'devops',
+        skills:
+            'Git/GitHub, Automation, Programming Principles, Technical Communication, Web Services, Email Automation, Puppet (Configuration Management Tool), Infrastructure As A Service (IaaS), Bash (Scripting Language)',
+        date: 'September, 2024',
+        icon: 'code',
+        iconBg: 'devops',
+        issuerIcon: 'user-tie',
+        certificateUrl:
+            'https://coursera.org/share/cabb455b98d491888ccd3d6cb831b1fb',
+    },
+    {
+        id: 2,
+        title: 'Google Project Management',
+        issuer: 'Google',
+        category: 'project-management',
+        skills:
+            'Interviewing Skills, Risk Management, Requirements Analysis, Stakeholder Analysis, Project Scoping, Agile, Scrum, Tracking Systems, Project Closure.',
+        date: 'September, 2024',
+        icon: 'project-diagram',
+        iconBg: 'project-management',
+        issuerIcon: 'user-tie',
+        certificateUrl:
+            'https://coursera.org/share/73b3735a29d94775ba3e734fca487fa1',
+    },
+    {
+        id: 3,
+        title: 'Data Science Professional',
+        issuer: 'NED UET',
+        category: 'data-science',
+        skills:
+            'Python, Machine Learning, Data Analysis, Statistics, Data Visualization',
+        date: 'March, 2025',
+        icon: 'chart-line',
+        iconBg: 'data-science',
+        issuerIcon: 'university',
+        certificateUrl: '#',
+    },
+    {
+        id: 4,
+        title: 'Create and manage a project dashboard with Wrike',
+        issuer: 'Coursera',
+        category: 'project-management',
+        skills: 'Creating dashboard',
+        date: 'November, 2024',
+        icon: 'server',
+        iconBg: 'project-management',
+        issuerIcon: 'aws',
+        certificateUrl:
+            'https://coursera.org/share/2f320383d2280285cdd9e1c02ef90a06',
+    },
+    {
+        id: 5,
+        title: 'Automate tasks and processes with Jira',
+        issuer: 'Coursera',
+        category: 'project-management',
+        skills: 'Automating Tasks',
+        date: 'November, 2024',
+        icon: 'server',
+        iconBg: 'project-management',
+        issuerIcon: 'aws',
+        certificateUrl:
+            'https://coursera.org/share/421d1a1670b7014ddbe9684f69f06259',
+    },
+];
+
+export const certificationFilters = [
+    { id: 'all', label: 'All Certifications' },
+    { id: 'devops', label: 'DevOps & Development' },
+    { id: 'project-management', label: 'Project Management' },
+    { id: 'data-science', label: 'Data Science' },
+];
+
+export const contactContent = {
+    eyebrow: 'Contact with me',
+    title: 'Get in Touch',
+    description:
+        'Feel free to reach out if you have any questions or are interested in my services.',
+    namePlaceholder: 'Enter your name',
+    emailPlaceholder: 'Enter your email',
+    messagePlaceholder: 'Enter your message',
+};
+
+export const contactDetails = {
+    email: 'syedzainali4372@outlook.com',
+    phone: '+92 300 2678500',
+    location: 'Karachi, Pakistan',
+    linkedin: 'https://www.linkedin.com/in/syedzainalii/',
+    github: 'https://github.com/syedzainalii/',
+};

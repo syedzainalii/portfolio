@@ -1,37 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { experienceData } from "@/assets/assets";
 import SectionPageLink from "./SectionPageLink";
-
-const experiences = [
-  {
-    id: 1,
-    role: "Internship",
-    company: "Sui Southren Gas Company LTD",
-    period: "March - April (2024)",
-    location: "Karachi, Pakistan",
-    logo: "🏭",
-    description:
-      "One-month internship at Sui Southern Gas Company (SSGC), gaining hands-on experience in gas meter manufacturing, quality control, assembly, calibration, and industrial SOPs",
-    achievements: [
-      "Gained hands-on exposure to gas meter manufacturing and assembly",
-      "Assisted in quality control inspections and testing procedures",
-      "Learned calibration techniques as per EN 1359 standards",
-      "Understood industrial SOPs, safety protocols, and plant workflows",
-      "Improved teamwork and problem-solving in an industrial environment",
-    ],
-    technologies: [
-      "CNC",
-      "Injection molding",
-      "Meter Calibration",
-      "Quality Testing",
-      "Surface Treatment",
-    ],
-  },
-];
 
 export default function Experience({ preview = false }) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const experiences = experienceData;
 
   return (
     <div id="experience" className="w-full px-[12%] py-10">

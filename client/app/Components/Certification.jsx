@@ -12,87 +12,23 @@ import {
   FaCalendarAlt,
   FaProjectDiagram
 } from 'react-icons/fa';
+import { certificationData, certificationFilters } from '@/assets/assets';
 import SectionPageLink from './SectionPageLink';
+
+const certificationIcons = {
+  aws: FaAws,
+  'chart-line': FaChartLine,
+  code: FaCode,
+  'project-diagram': FaProjectDiagram,
+  server: FaServer,
+  'user-tie': FaUserTie,
+  university: FaUniversity,
+};
 
 const Certification = ({ preview = false }) => {
   const [activeFilter, setActiveFilter] = useState('all');
-
-  const certifications = [
-    {
-      id: 1,
-      title: "Google IT Automation with Python Professional",
-      issuer: "Google",
-      category: "devops",
-      skills:
-        "Git/GitHub, Automation, Programming Principles, Technical Communication, Web Services, Email Automation, Puppet (Configuration Management Tool), Infrastructure As A Service (IaaS), Bash (Scripting Language)",
-      date: "September, 2024",
-      icon: FaCode,
-      iconBg: "devops",
-      issuerIcon: FaUserTie,
-      certificateUrl:
-        "https://coursera.org/share/cabb455b98d491888ccd3d6cb831b1fb"
-    },
-    {
-      id: 2,
-      title: "Google Project Management",
-      issuer: "Google",
-      category: "project-management",
-      skills:
-        "Interviewing Skills, Risk Management, Requirements Analysis, Stakeholder Analysis, Project Scoping, Agile, Scrum, Tracking Systems, Project Closure.",
-      date: "September, 2024",
-      icon: FaProjectDiagram,
-      iconBg: "project-management",
-      issuerIcon: FaUserTie,
-      certificateUrl:
-        "https://coursera.org/share/73b3735a29d94775ba3e734fca487fa1"
-    },
-    {
-      id: 3,
-      title: "Data Science Professional",
-      issuer: "NED UET",
-      category: "data-science",
-      skills:
-        "Python, Machine Learning, Data Analysis, Statistics, Data Visualization",
-      date: "March, 2025",
-      icon: FaChartLine,
-      iconBg: "data-science",
-      issuerIcon: FaUniversity,
-      certificateUrl: "#"
-    },
-    {
-      id: 4,
-      title: "Create and manage a project dashboard with Wrike",
-      issuer: "Coursera",
-      category: "project-management",
-      skills: "Creating dashboard",
-      date: "November, 2024",
-      icon: FaServer,
-      iconBg: "project-management",
-      issuerIcon: FaAws,
-      certificateUrl:
-        "https://coursera.org/share/2f320383d2280285cdd9e1c02ef90a06"
-    },
-    {
-      id: 5,
-      title: "Automate tasks and processes with Jira",
-      issuer: "Coursera",
-      category: "project-management",
-      skills: "Automating Tasks",
-      date: "November, 2024",
-      icon: FaServer,
-      iconBg: "project-management",
-      issuerIcon: FaAws,
-      certificateUrl:
-        "https://coursera.org/share/421d1a1670b7014ddbe9684f69f06259"
-    }
-  ];
-
-  const filters = [
-    { id: 'all', label: 'All Certifications' },
-    { id: 'devops', label: 'DevOps & Development' },
-    { id: 'project-management', label: 'Project Management' },
-    { id: 'data-science', label: 'Data Science' }
-  ];
+  const certifications = certificationData;
+  const filters = certificationFilters;
 
   const filteredCertifications =
     activeFilter === 'all'
@@ -160,8 +96,8 @@ const Certification = ({ preview = false }) => {
         {/* Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredCertifications.map(cert => {
-            const IconComponent = cert.icon;
-            const IssuerIcon = cert.issuerIcon;
+            const IconComponent = certificationIcons[cert.icon];
+            const IssuerIcon = certificationIcons[cert.issuerIcon];
 
             return (
               <div
