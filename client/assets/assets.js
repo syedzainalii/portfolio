@@ -91,7 +91,7 @@ export const assets = {
     right_arrow_bold_dark,
     activity_icon,
     activity_icon_dark,
-    ansys, 
+    ansys,
     solidworks,
     matlab,
     dassault,
@@ -131,7 +131,7 @@ export const workData = [
     {
         title: 'FEA Simulation',
         description: 'Structural Analysis',
-        bgImage: '/work-2.png', 
+        bgImage: '/work-2.png',
     },
     {
         title: 'Frontend Project',
@@ -150,12 +150,22 @@ export const workData = [
     },
 ];
 
+/*
+  `image`: background for the expanding service panels.
+  - Temporary: reusing the existing images in /public (work-1.png ... work-5.png).
+  - Later: put your own renders in /public/services/ and change the paths,
+    e.g. image: '/services/cad-modeling.jpg'
+  - Set image: null to show the gradient fallback (Backend Programming does this for now).
+  `tools`: chips shown on the expanded panel (the component shows the first 4).
+*/
 export const serviceData = [
-    { 
-        icon: assets.cad_modeling, 
-        title: 'CAD Modeling', 
-        description: 'Creating 3D models and technical drawings...', 
+    {
+        icon: assets.cad_modeling,
+        title: 'CAD Modeling',
+        description: 'Creating 3D models and technical drawings...',
         link: 'cad-modeling',
+        image: '/work-1.png',
+        tools: ['SolidWorks', 'CATIA', 'AutoCAD'],
         detailedDescription: 'I provide comprehensive CAD modeling services using industry-standard software like SolidWorks and Dassault Systèmes tools. Whether you need product design, mechanical parts, or complex assemblies, I deliver precise and manufacturable 3D models.',
         includes: [
             '3D parametric modeling',
@@ -171,11 +181,13 @@ export const serviceData = [
             { title: 'Final Delivery', description: 'Providing models in required formats with documentation' }
         ]
     },
-    { 
-        icon: assets.fea_simulation, 
-        title: 'FEA Simulation', 
-        description: 'Performing Finite Element Analysis for structural simulation...', 
+    {
+        icon: assets.fea_simulation,
+        title: 'FEA Simulation',
+        description: 'Performing Finite Element Analysis for structural simulation...',
         link: 'fea-simulation',
+        image: '/work-2.png',
+        tools: ['ANSYS', 'Abaqus', 'COMSOL'],
         detailedDescription: 'Comprehensive FEA services using ANSYS to validate and optimize your designs. I perform stress analysis, thermal analysis, modal analysis, and more to ensure your products meet safety and performance requirements.',
         includes: [
             'Static structural analysis',
@@ -191,11 +203,13 @@ export const serviceData = [
             { title: 'Reporting', description: 'Delivering comprehensive analysis reports' }
         ]
     },
-    { 
-        icon: assets.backend_programming, 
-        title: 'Backend Programming', 
-        description: 'Solving complex problems through efficient backend solutions...', 
+    {
+        icon: assets.backend_programming,
+        title: 'Backend Programming',
+        description: 'Solving complex problems through efficient backend solutions...',
         link: 'backend-programming',
+        image: null,
+        tools: ['Python', 'MATLAB', 'NumPy', 'Pandas'],
         detailedDescription: 'I develop custom backend solutions, automation scripts, and APIs tailored to engineering and business needs. Specializing in Python, MATLAB, and modern web technologies.',
         includes: [
             'Custom automation scripts',
@@ -211,11 +225,13 @@ export const serviceData = [
             { title: 'Support', description: 'Ongoing maintenance and updates' }
         ]
     },
-    { 
-        icon: assets.website_designing, 
-        title: 'Web design', 
-        description: 'Developing websites and web applications...', 
+    {
+        icon: assets.website_designing,
+        title: 'Web design',
+        description: 'Developing websites and web applications...',
         link: 'web-design',
+        image: '/work-3.png',
+        tools: ['Next.js', 'React', 'TypeScript', 'Tailwind'],
         detailedDescription: 'Creating modern, responsive websites and web applications that deliver exceptional user experiences. From landing pages to full-stack applications, I build solutions that work.',
         includes: [
             'Responsive web design',
@@ -231,11 +247,13 @@ export const serviceData = [
             { title: 'Launch', description: 'Deploying and monitoring the live site' }
         ]
     },
-    { 
-        icon: assets.data_visualization, 
-        title: 'Data Visualization', 
-        description: 'Bringing data to life through interactive visualizations...', 
+    {
+        icon: assets.data_visualization,
+        title: 'Data Visualization',
+        description: 'Bringing data to life through interactive visualizations...',
         link: 'data-visualization',
+        image: '/work-4.png',
+        tools: ['Tableau', 'Power BI', 'Matplotlib'],
         detailedDescription: 'Transform complex data into clear, actionable insights using Tableau, Power BI, and custom visualization solutions. I help you make data-driven decisions with confidence.',
         includes: [
             'Interactive dashboards',
@@ -251,11 +269,13 @@ export const serviceData = [
             { title: 'Training', description: 'Helping your team use the tools effectively' }
         ]
     },
-    { 
-        icon: assets.video_editing, 
-        title: 'Video Editing', 
-        description: 'Editing and producing high-quality video content...', 
+    {
+        icon: assets.video_editing,
+        title: 'Video Editing',
+        description: 'Editing and producing high-quality video content...',
         link: 'video-editing',
+        image: '/work-5.png',
+        tools: ['Premiere Pro', 'After Effects', 'DaVinci Resolve'],
         detailedDescription: 'Professional video editing services for promotional content, tutorials, presentations, and more. I create engaging videos that capture attention and deliver your message effectively.',
         includes: [
             'Video cutting and trimming',
@@ -275,15 +295,15 @@ export const serviceData = [
 
 export const infoList = [
     { icon: assets.edu_icon, iconDark: assets.edu_icon_dark, title: 'Education', description: 'B.E. Mechanical Engineering from NED UET' },
-    { icon: assets.experience_icon, iconDark: assets.experience_icon_dark, title: 'Electives', description: 'Ai & Iot \n Mechatronics \n Data Sciences \IT Automation with Python  \n Project Management' },
+    { icon: assets.experience_icon, iconDark: assets.experience_icon_dark, title: 'Electives', description: 'Ai & Iot \n Mechatronics \n Data Sciences \n IT Automation with Python  \n Project Management' },
     { icon: assets.activity_icon, iconDark: assets.activity_icon_dark, title: 'Activities', description: 'Group Leader - AI & IOT Exhibition' },
     { icon: assets.language_icon, iconDark: assets.language_icon_dark, title: 'Languages', description: ' English - Full Professional Proficiency \n Urdu - Native Proficiency'},
 ];
 
 export const toolsData = [
-    assets.solidworks, 
-    assets.dassault, 
-    assets.ansys, 
+    assets.solidworks,
+    assets.dassault,
+    assets.ansys,
     assets.matlab,
     assets.vscode,
     assets.power_bi,
