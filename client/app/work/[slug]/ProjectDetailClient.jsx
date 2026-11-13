@@ -1,26 +1,10 @@
 'use client'
-import { workData, assets } from '@/assets/assets'
+import { assets } from '@/assets/assets'
 import Image from 'next/image'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
-import React, { use } from 'react'
 import { motion } from 'motion/react'
 
-export default function ProjectDetail({ params }) {
-    // Unwrapping params for Next.js 15
-    const resolvedParams = use(params);
-    const { slug } = resolvedParams;
-
-    // Find the project matching the URL slug
-    const project = workData.find(p => 
-        p.title.toLowerCase().replace(/\s+/g, '-') === slug
-    );
-
-    // If project doesn't exist, show 404
-    if (!project) {
-        notFound();
-    }
-
+export default function ProjectDetail({ project }) {
     return (
         <div className='min-h-screen w-full px-[12%] py-20'>
             {/* --- Navigation --- */}
@@ -30,7 +14,7 @@ export default function ProjectDetail({ params }) {
                 transition={{ duration: 0.5 }}
             >
                 <Link 
-                    href="/#work" 
+                    href="/work" 
                     className='inline-flex items-center gap-2 mb-10 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-all font-Ovo'
                 >
                     <Image src={assets.right_arrow} alt='' className='w-4 rotate-180 dark:invert' />
@@ -79,7 +63,7 @@ export default function ProjectDetail({ params }) {
                             <p className='text-gray-700 dark:text-white/70 leading-relaxed text-lg'>
                                 This project involved comprehensive work in {project.title}. 
                                 My approach focused on technical accuracy, efficiency, and meeting specific industry standards. 
-                                Whether it's complex 3D geometry or high-performance frontend code, the goal was to deliver a 
+                                Whether it&apos;s complex 3D geometry or high-performance frontend code, the goal was to deliver a 
                                 solution that is both functional and scalable.
                             </p>
                         </section>
@@ -122,7 +106,7 @@ export default function ProjectDetail({ params }) {
                         <div className='p-8 bg-black dark:bg-white rounded-2xl text-center shadow-xl'>
                             <h4 className='text-white dark:text-black font-Ovo text-xl mb-4'>Like what you see?</h4>
                             <p className='text-white/70 dark:text-black/60 text-sm mb-6'>
-                                I'm available for similar projects and technical consultations.
+                                I&apos;m available for similar projects and technical consultations.
                             </p>
                             <Link 
                                 href="/contact"

@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from 'react';
 import {
   FaCode,
@@ -122,8 +124,7 @@ const Certification = () => {
 
   return (
     <section
-      id="certification"
-      className="scroll-mt-28 min-h-screen bg-white text-gray-900 dark:text-white dark:bg-darkTheme duration-300 p-4 md:p-8"
+      className="min-h-screen bg-white text-gray-900 dark:text-white dark:bg-darkTheme duration-300 p-4 md:p-8"
     >
       <div className="max-w-7xl mx-auto py-12">
 

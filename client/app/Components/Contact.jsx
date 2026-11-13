@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from 'react'
 import Image from 'next/image'
 import { assets } from '@/assets/assets'
@@ -30,8 +32,7 @@ const Contact = () => {
 
   return (
     <div
-      id='contact' 
-      className='w-full px-[12%] py-10 scroll-mt-20 bg-[url("/footer-bg-color.png")] bg-no-repeat bg-center bg-[length:90%_auto] dark:bg-none'
+      className='w-full px-[12%] py-10 bg-[url("/footer-bg-color.png")] bg-no-repeat bg-center bg-[length:90%_auto] dark:bg-none'
     > 
       <h4 className='text-center mb-1 text-xl font-Ovo'>
         Contact with me

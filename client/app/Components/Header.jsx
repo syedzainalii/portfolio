@@ -1,11 +1,14 @@
-import { Asset, assets } from '@/assets/assets'
+"use client";
+
+import { assets } from '@/assets/assets'
 import Image from 'next/image'
 import React from 'react'
 import { motion } from "motion/react"
-import { useState, useEffect, useRef } from 'react';
+import { useTheme } from './ThemeProvider';
 
 
-const Header = ({isDarkMode, setIsDarkMode}) => {
+const Header = () => {
+  const { isDarkMode } = useTheme();
   
   const handleDownload = () => {
     const link = document.createElement('a');
@@ -31,7 +34,7 @@ const Header = ({isDarkMode, setIsDarkMode}) => {
         whileInView={{ y: 0, opacity:1 }}
         transition={{duration:0.6, delay:0.3}}
         className='flex items-center gap-2 text-3xl md:text-5xl mb-4 font-ovo'>
-                Hi! I'm Syed Zain Ali <Image src={assets.hand_icon} alt="" className='w-6'/>
+                Hi! I&apos;m Syed Zain Ali <Image src={assets.hand_icon} alt="" className='w-6'/>
             </motion.h3>
 
     <motion.h1
@@ -54,7 +57,7 @@ const Header = ({isDarkMode, setIsDarkMode}) => {
           whileInView={{ y: 0, opacity:1 }}
           transition={{duration:0.6, delay:1}}
             
-            href="#contact" className='px-10 py-3 border border-gray-400 border dark:border-gray-600 rounded-full bg-darkHover text-white flex items-center gap-2 transition-all duration-500 hover:-translate-y-1 dark:text-black dark:bg-white'> 
+            href="/contact" className='px-10 py-3 border border-gray-400 border dark:border-gray-600 rounded-full bg-darkHover text-white flex items-center gap-2 transition-all duration-500 hover:-translate-y-1 dark:text-black dark:bg-white'>
             Contact Me<Image src={isDarkMode ? assets.right_arrow_light : assets.right_arrow_white} alt="" className='w-4'/></motion.a>
             
             <motion.a 

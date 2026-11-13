@@ -245,7 +245,7 @@ export default function Skills() {
       <div
 
       
-      id='skills' className='w-full px-[12%] py10 scroll-mt-20'>
+      className='w-full px-[12%] py10'>
         
         <h4 
 

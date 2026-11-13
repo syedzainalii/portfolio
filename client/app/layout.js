@@ -1,5 +1,7 @@
 import { Outfit as OutfitFont, Ovo as OvoFont } from "next/font/google";
 import "./globals.css";
+import SiteShell from "./Components/SiteShell";
+import ThemeProvider from "./Components/ThemeProvider";
 
 const outfit = OutfitFont({
   subsets: ["latin"], 
@@ -14,8 +16,11 @@ const ovo = OvoFont({
 });
 
 export const metadata = {
-  title: "Syed Zain Ali | Portfolio",
-  description: "Web Developer Portfolio",
+  title: {
+    default: "Syed Zain Ali | Portfolio",
+    template: "%s | Syed Zain Ali",
+  },
+  description: "Mechanical engineering, CAD, simulation, and web development portfolio.",
 };
 
 export const viewport = {
@@ -25,12 +30,26 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(() => {
+              const isDarkMode = localStorage.theme === "dark" ||
+                (!("theme" in localStorage) &&
+                  window.matchMedia("(prefers-color-scheme: dark)").matches);
+              document.documentElement.classList.toggle("dark", isDarkMode);
+            })();`,
+          }}
+        />
+      </head>
       <body
         className={`${outfit.variable} ${ovo.variable} font-outfit antialiased 
-        leading-8 overflow-x-hidden bg-white text-black dark:bg-darkTheme dark:text-white`}
+        leading-8 overflow-x-hidden bg-white text-black dark:bg-darkTheme dark:text-white flex min-h-screen flex-col`}
       >
-        {children}
+        <ThemeProvider>
+          <SiteShell>{children}</SiteShell>
+        </ThemeProvider>
       </body>
     </html>
   );

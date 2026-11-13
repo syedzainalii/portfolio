@@ -1,8 +1,12 @@
+"use client";
+
 import Image from 'next/image'
 import React from 'react'
 import { assets } from '@/assets/assets'
+import { useTheme } from './ThemeProvider'
 
-const Footer = ({isDarkMode}) => {
+const Footer = () => {
+  const { isDarkMode } = useTheme();
   return (
     <div className='mt-4'>
       {/* Logo */}

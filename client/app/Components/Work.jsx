@@ -7,8 +7,7 @@ import Link from "next/link";
 const Work = () => {
   return (
     <section
-      id="work"
-      className="w-full px-[12%] py-20 scroll-mt-20"
+      className="w-full px-[12%] py-20"
     >
       {/* Heading */}
       <h4 className="text-center mb-2 text-xl font-Ovo">
@@ -67,7 +66,7 @@ const Work = () => {
       {/* Show More Button */}
       <div className="flex justify-center">
         <Link
-          href="/work"
+          href="/work/all"
           className="relative group flex items-center gap-2 border border-gray-400 rounded-full px-10 py-3 mt-16 overflow-hidden transition-all duration-500 hover:-translate-y-1"
         >
           <span className="relative z-10 flex items-center gap-2 text-gray-700 group-hover:text-white dark:text-white dark:group-hover:text-black transition-colors duration-500">

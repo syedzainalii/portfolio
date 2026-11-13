@@ -1,5 +1,9 @@
+"use client";
+
 import React from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { assets } from '@/assets/assets'
 import { useState, useEffect, useRef } from 'react';
 
@@ -7,6 +11,7 @@ const Navbar = ({isDarkMode, setIsDarkMode}) => {
 
     const [isScroll, setIsScroll] = useState(false)
     const sideMenuRef = useRef();
+    const pathname = usePathname() || "/";
 
     function openMenu() {
         sideMenuRef.current.style.transform = "translateX(-16rem)";
@@ -30,14 +35,14 @@ const Navbar = ({isDarkMode, setIsDarkMode}) => {
 
     // Shared styles for the navigation links to keep code clean
     const navLinks = [
-        { href: "#top", label: "Home" },
-        { href: "#about", label: "About me" },
-        { href: "#skills", label: "Skills" },
-        { href: "#services", label: "Services" },
-        { href: "#work", label: "My Work" },
-        { href: "#experience", label: "Experience" },
-        { href: "#certification", label: "Certification" },
-        { href: "#contact", label: "Contact me" },
+        { href: "/", label: "Home" },
+        { href: "/about", label: "About me" },
+        { href: "/skills", label: "Skills" },
+        { href: "/services", label: "Services" },
+        { href: "/work", label: "My Work" },
+        { href: "/experience", label: "Experience" },
+        { href: "/certification", label: "Certification" },
+        { href: "/contact", label: "Contact me" },
     ];
 
     return (
@@ -52,13 +57,13 @@ const Navbar = ({isDarkMode, setIsDarkMode}) => {
                 : ""}`}>
                 
                 {/* Logo Section */}
-                <a href="#top">
+                <Link href="/">
                     <Image 
                         src={isDarkMode ? assets.logo_dark : assets.logo} 
                         alt='Logo'
                         className='w-24 md:w-28 cursor-pointer mr-4 lg:mr-14' 
                     />
-                </a>
+                </Link>
 
                 {/* Desktop & Laptop Menu (Changed lg:flex to md:flex) */}
                 <ul className={`hidden md:flex items-center gap-3 lg:gap-6 xl:gap-10 rounded-full px-6 lg:px-12 py-3 transition-all duration-500 ${isScroll 
@@ -67,10 +72,14 @@ const Navbar = ({isDarkMode, setIsDarkMode}) => {
                     
                     {navLinks.map((link) => (
                         <li key={link.href}>
-                            <a className='font-Ovo text-sm lg:text-base relative group whitespace-nowrap' href={link.href}>
+                            <Link
+                                className='font-Ovo text-sm lg:text-base relative group whitespace-nowrap'
+                                href={link.href}
+                                aria-current={pathname === link.href || (link.href !== "/" && pathname.startsWith(`${link.href}/`)) ? "page" : undefined}
+                            >
                                 {link.label}
-                                <span className='absolute bottom-0 left-0 w-0 h-[1px] bg-gray-700 dark:bg-white transition-all duration-300 group-hover:w-full'></span>
-                            </a>
+                                <span className={`absolute bottom-0 left-0 h-[1px] bg-gray-700 dark:bg-white transition-all duration-300 group-hover:w-full ${(pathname === link.href || (link.href !== "/" && pathname.startsWith(`${link.href}/`))) ? "w-full" : "w-0"}`}></span>
+                            </Link>
                         </li>
                     ))}
                 </ul>
@@ -84,11 +93,11 @@ const Navbar = ({isDarkMode, setIsDarkMode}) => {
                     </button>
 
                     {/* Desktop Contact Button (Hidden on small/medium, visible on large) */}
-                    <a href="#contact" 
+                    <Link href="/contact"
                         className='hidden lg:flex items-center gap-1.5 px-8 py-2.5 border border-gray-400 rounded-full font-Ovo transition-all duration-300 hover:-translate-y-1 hover:shadow-md active:scale-95 group dark:border-gray-600'> 
                         Contact 
                         <Image src={isDarkMode ? assets.arrow_icon_dark : assets.arrow_icon} alt="" className='w-3 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1' />
-                    </a>
+                    </Link>
 
                     {/* Hamburger Menu (Visible on mobile/tablet) */}
                     <button className='block md:hidden ml-2 hover:scale-110 active:scale-95 transition-transform' onClick={openMenu}>
@@ -104,7 +113,14 @@ const Navbar = ({isDarkMode, setIsDarkMode}) => {
 
                     {navLinks.map((link) => (
                         <li key={link.href}>
-                            <a className='font-Ovo' onClick={closeMenu} href={link.href}>{link.label}</a>
+                            <Link
+                                className={`font-Ovo ${pathname === link.href || (link.href !== "/" && pathname.startsWith(`${link.href}/`)) ? "underline underline-offset-4" : ""}`}
+                                onClick={closeMenu}
+                                href={link.href}
+                                aria-current={pathname === link.href || (link.href !== "/" && pathname.startsWith(`${link.href}/`)) ? "page" : undefined}
+                            >
+                                {link.label}
+                            </Link>
                         </li>
                     ))}
                 </ul>

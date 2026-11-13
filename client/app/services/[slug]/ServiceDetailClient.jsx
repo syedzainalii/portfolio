@@ -2,44 +2,9 @@
 import { serviceData, assets } from '@/assets/assets'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useParams, notFound } from 'next/navigation'
 import { motion } from "motion/react"
-import { useState, useEffect } from 'react'
 
-const ServiceDetailPage = () => {
-  const params = useParams()
-  const [service, setService] = useState(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const slug = params?.slug
-    if (slug) {
-      const foundService = serviceData.find(s => s.link === slug)
-      setService(foundService)
-      setLoading(false)
-    }
-  }, [params])
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-2xl font-Ovo dark:text-white">Loading...</div>
-      </div>
-    )
-  }
-
-  if (!service) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-Ovo mb-4 dark:text-white">Service not found</h2>
-          <Link href="/#services" className="text-blue-600 dark:text-blue-400 hover:underline">
-            Back to Services
-          </Link>
-        </div>
-      </div>
-    )
-  }
+const ServiceDetailClient = ({ service }) => {
 
   return (
     <div className="w-full px-[12%] py-20">
@@ -50,7 +15,7 @@ const ServiceDetailPage = () => {
         transition={{ duration: 0.5 }}
       >
         <Link 
-          href="/#services" 
+          href="/services" 
           className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white mb-8 group"
         >
           <motion.div
@@ -103,7 +68,7 @@ const ServiceDetailPage = () => {
         className="mb-16"
       >
         <h2 className="text-3xl sm:text-4xl font-Ovo mb-8 dark:text-white">
-          What's Included
+          What&apos;s Included
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {service.includes.map((item, index) => (
@@ -188,10 +153,10 @@ const ServiceDetailPage = () => {
           Ready to Get Started?
         </h2>
         <p className="text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto font-Ovo">
-          Let's discuss your project and see how I can help bring your ideas to life. 
+          Let&apos;s discuss your project and see how I can help bring your ideas to life. 
           Get in touch today for a free consultation.
         </p>
-        <Link href="/#contact">
+        <Link href="/contact">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -242,4 +207,4 @@ const ServiceDetailPage = () => {
   )
 }
 
-export default ServiceDetailPage
+export default ServiceDetailClient

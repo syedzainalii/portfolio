@@ -1,12 +1,15 @@
+"use client";
+
 import { assets, infoList, toolsData } from '@/assets/assets'
 import React from 'react'
 import Image from 'next/image'
+import { useTheme } from './ThemeProvider'
 
-const About = ({ isDarkMode }) => {
+const About = () => {
+  const { isDarkMode } = useTheme();
   return (
     <div 
-      id='about' 
-      className='w-full px-6 sm:px-10 lg:px-[12%] py-10 scroll-mt-20 overflow-x-hidden'
+      className='w-full px-6 sm:px-10 lg:px-[12%] py-10 overflow-x-hidden'
     >
       <h4 className='text-center mb-1 text-xl font-Ovo'>
         Introduction
@@ -31,7 +34,7 @@ const About = ({ isDarkMode }) => {
         <div className='flex-1'>
           <div className='mb-6 font-Ovo text-gray-700 dark:text-white/90 text-base sm:text-lg leading-relaxed text-left'>
             <p className='mb-4'>
-              I'm a student of NED University of Engineering and Technology, pursuing Bachelor of Engineering in Mechanical Engineering, 
+              I&apos;m a student of NED University of Engineering and Technology, pursuing Bachelor of Engineering in Mechanical Engineering,
               with training in injection molding, machining, and assembly processes. Gained hands-on experience at Sui Southern Gas 
               Company Limited (SSGC) Meter Manufacturing Plant, engaging with quality control, plastic molding, and painting 
               processes that ensure high production standards. 

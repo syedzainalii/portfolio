@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
 
-const WorkPage = () => {
+const AllProjects = () => {
   return (
     <div className="w-full px-[10%] py-20 min-h-screen">
       {/* Heading */}
@@ -59,4 +59,4 @@ const WorkPage = () => {
   );
 };
 
-export default WorkPage;
+export default AllProjects;

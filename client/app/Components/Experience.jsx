@@ -33,7 +33,7 @@ export default function Experience() {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <div id="experience" className="w-full px-[12%] py-10 scroll-mt-20">
+    <div className="w-full px-[12%] py-10">
       {/* Heading */}
       <h4 className="text-center mb-1 text-xl font-Ovo">
         My Journey
@@ -44,7 +44,7 @@ export default function Experience() {
       </h2>
 
       <p className="text-center max-w-2xl mx-auto mt-5 mb-12 font-Ovo">
-        A showcase of my professional growth and the amazing teams I've
+        A showcase of my professional growth and the amazing teams I&apos;ve
         collaborated with
       </p>
 
