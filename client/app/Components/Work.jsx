@@ -57,25 +57,25 @@ const Work = ({ preview = false }) => {
   const body = current.summary ?? current.description;
 
   return (
-    <section id="work" ref={sectionRef} className="w-full py-14 sm:py-20 lg:py-24">
+    <section id="work" ref={sectionRef} className="w-full py-12 sm:py-16 lg:py-20">
       <div className="site-container">
         {/* Heading */}
         <h4 className="mb-2 text-center text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 sm:text-sm">
           My Projects
         </h4>
         <h2 className="text-center font-Ovo text-4xl sm:text-5xl">My latest projects</h2>
-        <p className="mx-auto mb-12 mt-5 max-w-2xl text-center font-Ovo text-gray-600 dark:text-white/70">
+        <p className="mx-auto mb-8 mt-4 max-w-2xl text-center font-Ovo text-gray-600 dark:text-white/70 lg:mb-10">
           Here are a few projects I&apos;ve worked on recently. Want to see more?
         </p>
 
         <div
-          className="grid items-center gap-10 lg:grid-cols-12 lg:gap-14"
+          className="grid items-center gap-8 lg:grid-cols-12 lg:gap-10"
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
           onFocus={() => setPaused(true)}
           onBlur={() => setPaused(false)}
         >
-          {/* ===== Viewport (smaller, portrait on desktop) ===== */}
+          {/* ===== Viewport (wide landscape) ===== */}
           <Link
             href={href}
             aria-label={`Open ${current.title}`}
@@ -88,7 +88,7 @@ const Work = ({ preview = false }) => {
             }}
             onPointerMove={trackPointer}
             onPointerLeave={() => setInspect(false)}
-            className="relative order-1 block aspect-[4/3] cursor-crosshair overflow-hidden rounded-3xl border border-black/10 bg-slate-900 shadow-2xl dark:border-white/15 sm:aspect-[16/10] lg:order-2 lg:col-span-5 lg:aspect-[4/5]"
+            className="relative order-1 block aspect-[4/3] cursor-crosshair overflow-hidden rounded-3xl border border-black/10 bg-slate-900 shadow-2xl dark:border-white/15 sm:aspect-[16/10] lg:order-2 lg:col-span-7 lg:aspect-[3/2]"
           >
             {/* Stacked images, crossfaded */}
             {projects.map((p, i) => (
@@ -98,7 +98,7 @@ const Work = ({ preview = false }) => {
                 alt=""
                 fill
                 priority={i === 0}
-                sizes="(min-width: 1024px) 40vw, 100vw"
+                sizes="(min-width: 1024px) 55vw, 100vw"
                 className={`object-cover transition-all duration-700 ease-out motion-reduce:transition-none ${
                   i === active ? "scale-100 opacity-100" : "scale-110 opacity-0"
                 }`}
@@ -149,21 +149,20 @@ const Work = ({ preview = false }) => {
               />
             </div>
 
-            {/* Open button (the title lives on the left now) */}
+            {/* Open button */}
             <span className="absolute bottom-6 right-6 grid h-12 w-12 place-items-center rounded-full bg-amber-400 text-black shadow-lg transition-transform duration-300 hover:rotate-12">
               <ArrowUpRight className="h-5 w-5" />
             </span>
           </Link>
 
           {/* ===== Left: featured project + index ===== */}
-          <div className="order-2 min-w-0 lg:order-1 lg:col-span-7">
+          <div className="order-2 min-w-0 lg:order-1 lg:col-span-5">
             {/* Featured */}
             <motion.div
               key={active}
               initial={reduce ? false : { opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, ease: "easeOut" }}
-              className="lg:min-h-[21rem]"
               aria-live="polite"
             >
               <p className="flex items-center gap-3 font-mono text-xs uppercase leading-5 tracking-[0.25em] text-amber-600 dark:text-amber-400">
@@ -171,16 +170,16 @@ const Work = ({ preview = false }) => {
                 Project {pad(active + 1)}
               </p>
 
-              <h3 className="mt-4 break-words font-Ovo text-4xl leading-[1.05] sm:text-5xl lg:text-6xl xl:text-7xl">
+              <h3 className="mt-3 break-words font-Ovo text-4xl leading-[1.05] sm:text-5xl xl:text-6xl">
                 {current.title}
               </h3>
 
-              <p className="mt-5 max-w-xl text-lg leading-8 text-gray-600 dark:text-white/70 lg:text-xl lg:leading-9">
+              <p className="mt-4 max-w-md text-lg leading-8 text-gray-600 dark:text-white/70">
                 {body}
               </p>
 
               {current.tools?.length > 0 && (
-                <ul className="mt-6 flex flex-wrap gap-2.5">
+                <ul className="mt-5 flex flex-wrap gap-2.5">
                   {current.tools.map((tool) => (
                     <li
                       key={tool}
@@ -194,7 +193,7 @@ const Work = ({ preview = false }) => {
 
               <Link
                 href={href}
-                className="group mt-8 inline-flex items-center gap-3 rounded-full bg-amber-400 px-7 py-3.5 text-base font-semibold text-black transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_-10px_rgba(202,138,4,0.7)]"
+                className="group mt-6 inline-flex items-center gap-3 rounded-full bg-amber-400 px-7 py-3.5 text-base font-semibold text-black transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_-10px_rgba(202,138,4,0.7)]"
               >
                 View project
                 <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
@@ -202,7 +201,7 @@ const Work = ({ preview = false }) => {
             </motion.div>
 
             {/* Index */}
-            <div className="mt-10 lg:mt-12">
+            <div className="mt-8">
               <div className="mb-2 flex items-center justify-between gap-4">
                 <p className="font-mono text-[11px] uppercase leading-5 tracking-[0.25em] text-gray-500 dark:text-white/45">
                   Project index
@@ -233,7 +232,7 @@ const Work = ({ preview = false }) => {
                         onFocus={() => setActive(i)}
                         onClick={() => setActive(i)}
                         aria-current={isActive}
-                        className="group relative flex min-h-12 w-full items-center gap-4 border-t border-black/10 py-3 text-left outline-none focus-visible:bg-black/[0.03] dark:border-white/10 dark:focus-visible:bg-white/5 sm:gap-6"
+                        className="group relative flex min-h-11 w-full items-center gap-4 border-t border-black/10 py-2 text-left outline-none focus-visible:bg-black/[0.03] dark:border-white/10 dark:focus-visible:bg-white/5 sm:gap-5"
                       >
                         <span
                           className={`font-mono text-sm tabular-nums transition-colors duration-300 ${
@@ -244,21 +243,13 @@ const Work = ({ preview = false }) => {
                         </span>
 
                         <span
-                          className={`min-w-0 flex-1 break-words font-Ovo text-lg leading-tight transition-all duration-300 sm:text-xl ${
+                          className={`min-w-0 flex-1 break-words font-Ovo text-lg leading-tight transition-all duration-300 ${
                             isActive
                               ? "translate-x-1 opacity-100"
                               : "opacity-45 group-hover:opacity-80"
                           }`}
                         >
                           {project.title}
-                        </span>
-
-                        <span
-                          className={`hidden truncate text-xs leading-5 transition-opacity duration-300 sm:block ${
-                            isActive ? "opacity-70" : "opacity-0"
-                          }`}
-                        >
-                          {project.description}
                         </span>
 
                         {/* Autoplay progress line */}

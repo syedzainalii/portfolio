@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import {
   AnimatePresence,
   motion,
@@ -10,9 +11,8 @@ import {
   useSpring,
   useTransform,
 } from "motion/react";
-import { ArrowUpRight, CalendarDays, MapPin } from "lucide-react";
+import { ArrowUpRight, CalendarDays, Cog, MapPin } from "lucide-react";
 import { experienceData } from "@/assets/assets";
-import SectionPageLink from "./SectionPageLink";
 
 const pad = (n) => String(n).padStart(2, "0");
 
@@ -198,6 +198,23 @@ function Gears({ progress, count, active }) {
   );
 }
 
+/* ---------- "Full journey" button (landing page only) ---------- */
+function FullJourneyLink() {
+  return (
+    <Link
+      href="/experience"
+      aria-label="See the full experience page"
+      className="group ml-auto inline-flex shrink-0 items-center gap-2.5 rounded-full border border-amber-400/60 bg-amber-400/10 py-1.5 pl-4 pr-1.5 text-sm font-medium leading-6 transition-all duration-300 hover:border-amber-400 hover:bg-amber-400 hover:text-black hover:shadow-[0_10px_26px_-10px_rgba(202,138,4,0.8)]"
+    >
+      <Cog className="h-4 w-4 text-amber-600 transition-transform duration-700 group-hover:rotate-180 group-hover:text-black dark:text-amber-400 dark:group-hover:text-black" />
+      <span className="hidden sm:inline">Full journey</span>
+      <span className="grid h-8 w-8 place-items-center rounded-full bg-amber-400 text-black transition-colors duration-300 group-hover:bg-black group-hover:text-amber-400">
+        <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+      </span>
+    </Link>
+  );
+}
+
 /* ---------- Role switcher ---------- */
 function RoleTabs({ roles, value, onChange }) {
   if (roles.length < 2) return null;
@@ -205,7 +222,7 @@ function RoleTabs({ roles, value, onChange }) {
     <div
       role="tablist"
       aria-label="Work experience roles"
-      className="mx-auto mb-3 flex w-fit max-w-full gap-1 overflow-x-auto rounded-full border border-black/10 bg-black/[0.03] p-1 [scrollbar-width:none] dark:border-white/15 dark:bg-white/5 lg:mx-0 [&::-webkit-scrollbar]:hidden"
+      className="flex w-fit min-w-0 max-w-full gap-1 overflow-x-auto rounded-full border border-black/10 bg-black/[0.03] p-1 [scrollbar-width:none] dark:border-white/15 dark:bg-white/5 [&::-webkit-scrollbar]:hidden"
     >
       {roles.map((r, i) => {
         const isActive = i === value;
@@ -276,7 +293,7 @@ function ReportLink({ href }) {
 }
 
 /* Scroll-driven version: one pinned stage, one role at a time */
-function Stage({ roles, perStep }) {
+function Stage({ roles, perStep, preview }) {
   const [roleIndex, setRoleIndex] = useState(0);
   const exp = roles[roleIndex];
   const achievements = exp.achievements ?? [];
@@ -314,7 +331,10 @@ function Stage({ roles, perStep }) {
   return (
     <div ref={ref} style={{ height: `${maxCount * perStep + 100}vh` }} className="relative">
       <div className="sticky top-0 flex h-screen flex-col justify-center pt-16 lg:pt-20">
-        <RoleTabs roles={roles} value={roleIndex} onChange={setRoleIndex} />
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <RoleTabs roles={roles} value={roleIndex} onChange={setRoleIndex} />
+          {preview && <FullJourneyLink />}
+        </div>
 
         <div className="grid w-full items-center gap-4 lg:grid-cols-12 lg:gap-14">
           <div className="lg:col-span-5">
@@ -428,7 +448,7 @@ function Stage({ roles, perStep }) {
 }
 
 /* Reduced-motion version: plain, readable, no scroll effects */
-function StaticStage({ roles }) {
+function StaticStage({ roles, preview }) {
   const [roleIndex, setRoleIndex] = useState(0);
   const exp = roles[roleIndex];
   const achievements = exp.achievements ?? [];
@@ -437,7 +457,10 @@ function StaticStage({ roles }) {
 
   return (
     <article className="py-4">
-      <RoleTabs roles={roles} value={roleIndex} onChange={setRoleIndex} />
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <RoleTabs roles={roles} value={roleIndex} onChange={setRoleIndex} />
+        {preview && <FullJourneyLink />}
+      </div>
       <Meta exp={exp} index={roleIndex} total={roles.length} />
       <h3 className="mt-3 text-center font-Ovo text-3xl sm:text-5xl lg:text-left">{exp.role}</h3>
       <p className="mt-4 text-gray-600 dark:text-white/65">{exp.description}</p>
@@ -480,12 +503,10 @@ export default function Experience({ preview = false }) {
           A showcase of my professional growth and the amazing teams I&apos;ve collaborated with
         </p>
 
-        {reduce ? <StaticStage roles={roles} /> : <Stage roles={roles} perStep={perStep} />}
-
-        {preview && (
-          <div>
-            <SectionPageLink href="/experience" label="View all" />
-          </div>
+        {reduce ? (
+          <StaticStage roles={roles} preview={preview} />
+        ) : (
+          <Stage roles={roles} perStep={perStep} preview={preview} />
         )}
       </div>
     </section>
