@@ -1,4 +1,6 @@
 import { Outfit as OutfitFont, Ovo as OvoFont } from "next/font/google";
+import lightFavicon from "./favicon_io/favicon-32x32.png";
+import darkFavicon from "./favicon_io_dark/favicon-32x32.png";
 import "./globals.css";
 import SiteShell from "./Components/SiteShell";
 import ThemeProvider from "./Components/ThemeProvider";
@@ -21,6 +23,22 @@ export const metadata = {
     template: "%s | Syed Zain Ali",
   },
   description: "Mechanical engineering, CAD, simulation, and web development portfolio.",
+  icons: {
+    icon: [
+      {
+        url: lightFavicon.src,
+        sizes: "32x32",
+        type: "image/png",
+        media: "(prefers-color-scheme: light)",
+      },
+      {
+        url: darkFavicon.src,
+        sizes: "32x32",
+        type: "image/png",
+        media: "(prefers-color-scheme: dark)",
+      },
+    ],
+  },
 };
 
 export const viewport = {
