@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ArrowUpRight, BadgeCheck, Plus } from "lucide-react";
+import { ArrowUpRight, BadgeCheck, Layers, Plus } from "lucide-react";
 import {
   FaAws,
   FaChartLine,
@@ -13,7 +14,6 @@ import {
   FaUserTie,
 } from "react-icons/fa";
 import { certificationData, certificationFilters } from "@/assets/assets";
-import SectionPageLink from "./SectionPageLink";
 
 const certificationIcons = {
   aws: FaAws,
@@ -45,7 +45,29 @@ function parseDate(text) {
 const pad = (n) => String(n).padStart(2, "0");
 const hasUrl = (url) => Boolean(url) && url !== "#";
 
-function WalletCard({ cert, index, open, onToggle, reduce }) {
+/* ---------- "All credentials" button (landing page only) ---------- */
+function AllCredentialsLink({ count }) {
+  return (
+    <Link
+      href="/certification"
+      aria-label={`See all ${count} credentials`}
+      className="group inline-flex w-fit shrink-0 items-center gap-3 rounded-xl border border-dashed border-amber-400/70 bg-amber-400/5 py-2 pl-2.5 pr-4 transition-all duration-300 hover:border-solid hover:border-amber-400 hover:bg-amber-400/15 hover:shadow-[0_10px_28px_-12px_rgba(202,138,4,0.75)]"
+    >
+      <span className="relative grid h-10 w-10 place-items-center rounded-lg bg-amber-400 text-black">
+        <Layers className="h-5 w-5 transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110" />
+      </span>
+      <span className="text-left leading-tight">
+        <span className="block text-sm font-semibold">All credentials</span>
+        <span className="block font-mono text-[11px] uppercase tracking-[0.18em] text-gray-500 dark:text-white/50">
+          {pad(count)} on file
+        </span>
+      </span>
+      <ArrowUpRight className="h-4 w-4 text-amber-600 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 dark:text-amber-400" />
+    </Link>
+  );
+}
+
+function WalletCard({ cert, index, isLast, open, onToggle, reduce }) {
   const accent = ACCENTS[cert.iconBg] ?? DEFAULT_ACCENT;
   const Icon = certificationIcons[cert.icon] ?? FaCode;
   const IssuerIcon = certificationIcons[cert.issuerIcon] ?? FaUniversity;
@@ -68,7 +90,9 @@ function WalletCard({ cert, index, open, onToggle, reduce }) {
       className="relative -mt-5 first:mt-0"
     >
       <div
-        className={`group relative overflow-hidden rounded-3xl border bg-white pb-5 shadow-[0_-10px_24px_-14px_rgba(0,0,0,0.35)] transition-all duration-300 dark:bg-darkHover ${
+        className={`group relative overflow-hidden rounded-3xl border bg-white shadow-[0_-10px_24px_-14px_rgba(0,0,0,0.35)] transition-all duration-300 dark:bg-darkHover ${
+          isLast && !open ? "pb-0" : "pb-5"
+        } ${
           open
             ? "border-transparent"
             : "border-black/10 hover:-translate-y-1 dark:border-white/15"
@@ -203,100 +227,106 @@ const Certification = ({ preview = false }) => {
   return (
     <section id="certification" className="w-full py-14 sm:py-20 lg:py-24">
       <div className="site-container">
-      <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 sm:text-sm">
-        QUALIFICATIONS
-      </h4>
-      <h2 className="font-Ovo text-4xl sm:text-5xl">Certifications &amp; Credentials</h2>
-
-      <div className="mt-12 grid items-start gap-10 lg:grid-cols-12 lg:gap-16">
-        {/* ===== Left: counter + filters ===== */}
-        <div className="lg:sticky lg:top-28 lg:col-span-5">
-          <div className="flex items-end gap-4">
-            <span className="relative block h-20 overflow-hidden font-mono text-7xl font-semibold leading-[5rem] tabular-nums md:h-24 md:text-8xl md:leading-[6rem] lg:h-28 lg:text-9xl lg:leading-[7rem]">
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.span
-                  key={visible.length}
-                  initial={reduce ? false : { y: "100%", opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={reduce ? { opacity: 0 } : { y: "-100%", opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="block bg-gradient-to-b from-amber-400 to-amber-600 bg-clip-text text-transparent"
-                >
-                  {pad(visible.length)}
-                </motion.span>
-              </AnimatePresence>
-            </span>
-            <span className="pb-3 font-mono text-xs uppercase leading-5 tracking-[0.2em] text-gray-500 dark:text-white/45">
-              credentials
-              <br />
-              on file
-            </span>
+        {/* Header row: title on the left, button on the right */}
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 sm:text-sm">
+              QUALIFICATIONS
+            </h4>
+            <h2 className="font-Ovo text-4xl sm:text-5xl">Certifications &amp; Credentials</h2>
           </div>
 
-          <p className="mt-4 text-sm leading-6 text-gray-500 dark:text-white/50">
-            From {issuers} issuers{latest ? ` · latest ${latest}` : ""}
-          </p>
+          {preview && <AllCredentialsLink count={certifications.length} />}
+        </div>
 
-          <div
-            role="tablist"
-            aria-label="Filter certifications"
-            className="mt-8 flex flex-wrap gap-x-6 gap-y-2 lg:flex-col lg:gap-1"
-          >
-            {filters.map((filter) => {
-              const isActive = filter.id === activeFilter;
-              return (
-                <button
-                  key={filter.id}
-                  role="tab"
-                  aria-selected={isActive}
-                  onClick={() => selectFilter(filter.id)}
-                  className="flex min-h-11 items-center gap-3 py-1.5 text-left text-base leading-6 lg:min-h-0"
-                >
-                  <span className="grid h-2 w-2 place-items-center">
-                    {isActive && (
-                      <motion.span
-                        layoutId="cert-dot"
-                        className="h-2 w-2 rounded-full bg-amber-400"
-                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                      />
-                    )}
-                  </span>
-                  <span
-                    className={`transition-colors duration-300 ${
-                      isActive
-                        ? "font-semibold text-black dark:text-white"
-                        : "text-gray-500 hover:text-black dark:text-white/55 dark:hover:text-white"
-                    } break-words`}
+        <div className="mt-10 grid items-start gap-8 lg:mt-12 lg:grid-cols-12 lg:gap-12">
+          {/* ===== Left: counter + filters ===== */}
+          <div className="lg:sticky lg:top-28 lg:col-span-4">
+            <div className="flex items-end gap-4">
+              <span className="relative block h-20 overflow-hidden font-mono text-7xl font-semibold leading-[5rem] tabular-nums md:h-24 md:text-8xl md:leading-[6rem] lg:h-28 lg:text-9xl lg:leading-[7rem]">
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.span
+                    key={visible.length}
+                    initial={reduce ? false : { y: "100%", opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={reduce ? { opacity: 0 } : { y: "-100%", opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="block bg-gradient-to-b from-amber-400 to-amber-600 bg-clip-text text-transparent"
                   >
-                    {filter.label}
-                  </span>
-                  <span className="font-mono text-xs text-gray-400 dark:text-white/40">
-                    {pad(countFor(filter.id))}
-                  </span>
-                </button>
-              );
-            })}
+                    {pad(visible.length)}
+                  </motion.span>
+                </AnimatePresence>
+              </span>
+              <span className="pb-3 font-mono text-xs uppercase leading-5 tracking-[0.2em] text-gray-500 dark:text-white/45">
+                credentials
+                <br />
+                on file
+              </span>
+            </div>
+
+            <p className="mt-4 text-sm leading-6 text-gray-500 dark:text-white/50">
+              From {issuers} issuers{latest ? ` · latest ${latest}` : ""}
+            </p>
+
+            <div
+              role="tablist"
+              aria-label="Filter certifications"
+              className="mt-8 flex flex-wrap gap-x-6 gap-y-2 lg:flex-col lg:gap-1"
+            >
+              {filters.map((filter) => {
+                const isActive = filter.id === activeFilter;
+                return (
+                  <button
+                    key={filter.id}
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => selectFilter(filter.id)}
+                    className="flex min-h-11 items-center gap-3 py-1.5 text-left text-base leading-6 lg:min-h-0"
+                  >
+                    <span className="grid h-2 w-2 place-items-center">
+                      {isActive && (
+                        <motion.span
+                          layoutId="cert-dot"
+                          className="h-2 w-2 rounded-full bg-amber-400"
+                          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                        />
+                      )}
+                    </span>
+                    <span
+                      className={`break-words transition-colors duration-300 ${
+                        isActive
+                          ? "font-semibold text-black dark:text-white"
+                          : "text-gray-500 hover:text-black dark:text-white/55 dark:hover:text-white"
+                      }`}
+                    >
+                      {filter.label}
+                    </span>
+                    <span className="font-mono text-xs text-gray-400 dark:text-white/40">
+                      {pad(countFor(filter.id))}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* ===== Right: the wallet ===== */}
+          <div className="lg:col-span-8">
+            <ul key={activeFilter} className="pt-1">
+              {visible.map((cert, i) => (
+                <WalletCard
+                  key={cert.id}
+                  cert={cert}
+                  index={i}
+                  isLast={i === visible.length - 1}
+                  open={openId === cert.id}
+                  onToggle={() => setOpenId((cur) => (cur === cert.id ? null : cert.id))}
+                  reduce={reduce}
+                />
+              ))}
+            </ul>
           </div>
         </div>
-
-        {/* ===== Right: the wallet ===== */}
-        <div className="lg:col-span-7">
-          <ul key={activeFilter} className="pt-1">
-            {visible.map((cert, i) => (
-              <WalletCard
-                key={cert.id}
-                cert={cert}
-                index={i}
-                open={openId === cert.id}
-                onToggle={() => setOpenId((cur) => (cur === cert.id ? null : cert.id))}
-                reduce={reduce}
-              />
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      {preview && <SectionPageLink href="/certification" label="View all" />}
       </div>
     </section>
   );
