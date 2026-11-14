@@ -396,8 +396,8 @@ export const experienceData = [
     {
         id: 1,
         role: 'Planning & Development Intern',
-        company: 'Sui Southern Gas Company Limited (SSGC)',
-        period: 'One-month internship',
+        company: 'Sui Southern Gas Company LTD',
+        period: 'March - April (2025)',
         report: '/pnd%20Intern%20Report.pdf',
         location: 'Karachi, Pakistan',
         logo: '🏗️',
@@ -414,7 +414,7 @@ export const experienceData = [
     },
      {
         id: 2,
-        role: 'Internship',
+        role: 'Meter Manufacturing Plant Intern',
         company: 'Sui Southern Gas Company LTD',
         period: 'March - April (2024)',
         report: '/mmp%20intern%20report.pdf',

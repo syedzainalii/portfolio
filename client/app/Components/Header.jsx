@@ -170,12 +170,6 @@ const Header = () => {
           className="order-first lg:order-last lg:col-span-5"
         >
           <div className="relative mx-auto w-56 sm:w-72 lg:w-full lg:max-w-sm">
-            {/* Figure label */}
-            <div className="mb-3 flex items-center gap-2 font-mono text-[10px] uppercase leading-4 tracking-[0.25em] text-gray-500 dark:text-white/45">
-              <span>Fig. 01</span>
-              <span className="h-px flex-1 bg-black/15 dark:bg-white/20" />
-              <span>Portrait</span>
-            </div>
 
             <div className="relative aspect-[4/5]">
               {/* Glow */}
@@ -241,19 +235,6 @@ const Header = () => {
           ))}
         </dl>
 
-        <div className="hidden items-center gap-3 font-mono text-[10px] uppercase leading-4 tracking-[0.2em] text-gray-500 dark:text-white/45 lg:flex">
-          <span>Move your cursor · live stress contour</span>
-          <span className="flex items-center gap-2">
-            Low
-            <span
-              className="h-1.5 w-28 rounded-full"
-              style={{
-                background: "linear-gradient(to right,#38bdf8,#34d399,#facc15,#fb923c,#ef4444)",
-              }}
-            />
-            High
-          </span>
-        </div>
       </motion.div>
       </div>
     </section>
