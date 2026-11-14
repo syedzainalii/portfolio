@@ -14,19 +14,15 @@ const Contact = ({ preview = false }) => {
       className='w-full py-14 sm:py-20 lg:py-24 bg-[url("/footer-bg-color.png")] bg-no-repeat bg-center bg-[length:90%_auto] dark:bg-none'
     > 
       <div className="site-container">
-      <h4 className='text-center mb-2 text-xl font-Ovo'>
+      <h4 className='mb-2 text-xl font-Ovo'>
         {contactContent.eyebrow}
       </h4>
       
-      <h2 className='text-center text-3xl sm:text-5xl font-Ovo'>
+      <h2 className='text-3xl sm:text-5xl font-Ovo'>
         {contactContent.title}
       </h2>
       
-      <p className='text-center max-w-2xl mx-auto mt-5 mb-12 font-Ovo'>
-        {contactContent.description}
-      </p>
-    
-      <form onSubmit={onSubmit} className='mx-auto max-w-3xl'>
+      <form onSubmit={onSubmit} className='mx-auto mt-12 max-w-3xl'>
         
         <div className='grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8'>
           <input 

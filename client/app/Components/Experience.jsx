@@ -329,8 +329,8 @@ function Stage({ roles, perStep, preview }) {
   const fill = count > 1 ? (active + 1) / count : 1;
 
   return (
-    <div ref={ref} style={{ height: `${maxCount * perStep + 100}vh` }} className="relative">
-      <div className="sticky top-0 flex h-screen flex-col justify-center pt-16 lg:pt-20">
+    <div ref={ref} style={{ height: `${maxCount * perStep + 100}vh` }} className="relative mt-6">
+    <div className="sticky top-0 flex h-screen flex-col justify-start pt-6">
         <div className="mb-3 flex items-center justify-between gap-3">
           <RoleTabs roles={roles} value={roleIndex} onChange={setRoleIndex} />
           {preview && <FullJourneyLink />}
@@ -456,7 +456,7 @@ function StaticStage({ roles, preview }) {
   const report = exp.report ?? "/report.pdf";
 
   return (
-    <article className="py-4">
+    <article className="mt-6 py-4">
       <div className="mb-3 flex items-center justify-between gap-3">
         <RoleTabs roles={roles} value={roleIndex} onChange={setRoleIndex} />
         {preview && <FullJourneyLink />}
@@ -495,13 +495,10 @@ export default function Experience({ preview = false }) {
   return (
     <section id="experience" className="w-full py-16 sm:py-20 lg:py-24">
       <div className="site-container">
-        <h4 className="mb-2 text-center text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 sm:text-sm">
+        <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 sm:text-sm">
           My Journey
         </h4>
-        <h2 className="text-center font-Ovo text-4xl sm:text-5xl">Work Experience</h2>
-        <p className="mx-auto mb-12 mt-5 max-w-2xl text-center font-Ovo text-gray-600 dark:text-white/70">
-          A showcase of my professional growth and the amazing teams I&apos;ve collaborated with
-        </p>
+        <h2 className="font-Ovo text-4xl sm:text-5xl">Work Experience</h2>
 
         {reduce ? (
           <StaticStage roles={roles} preview={preview} />

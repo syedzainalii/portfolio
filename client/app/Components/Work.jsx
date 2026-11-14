@@ -60,16 +60,13 @@ const Work = ({ preview = false }) => {
     <section id="work" ref={sectionRef} className="w-full py-12 sm:py-16 lg:py-20">
       <div className="site-container">
         {/* Heading */}
-        <h4 className="mb-2 text-center text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 sm:text-sm">
+        <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 sm:text-sm">
           My Projects
         </h4>
-        <h2 className="text-center font-Ovo text-4xl sm:text-5xl">My latest projects</h2>
-        <p className="mx-auto mb-8 mt-4 max-w-2xl text-center font-Ovo text-gray-600 dark:text-white/70 lg:mb-10">
-          Here are a few projects I&apos;ve worked on recently. Want to see more?
-        </p>
+        <h2 className="font-Ovo text-4xl sm:text-5xl">My latest projects</h2>
 
         <div
-          className="grid items-center gap-8 lg:grid-cols-12 lg:gap-10"
+          className="mt-8 grid items-center gap-8 lg:mt-10 lg:grid-cols-12 lg:gap-10"
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
           onFocus={() => setPaused(true)}

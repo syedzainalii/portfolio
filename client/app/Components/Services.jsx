@@ -97,9 +97,6 @@ const Services = ({ preview = false }) => {
               What I offer
             </h4>
             <h2 className="font-Ovo text-4xl sm:text-5xl">My Services</h2>
-            <p className="mt-4 max-w-xl text-sm text-gray-600 dark:text-white/70 sm:text-base">
-              Mechanical engineering services including CAD modeling, FEA analysis, and programming.
-            </p>
           </div>
 
           {preview && (

@@ -224,15 +224,13 @@ export default function Skills({ preview = false }) {
   return (
     <section id="skills" className="w-full py-14 sm:py-20 lg:py-24">
       <div className="site-container">
-      <h4 className="mb-2 text-center text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 sm:text-sm">
+      <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 sm:text-sm">
         My Expertise
       </h4>
-      <h2 className="text-center font-Ovo text-3xl sm:text-5xl">My Technical Skills</h2>
-      <p className="mx-auto mb-12 mt-5 max-w-2xl text-center font-Ovo">
-        Explore my comprehensive skill set across various technologies and frameworks
-      </p>
+      <h2 className="font-Ovo text-3xl sm:text-5xl">My Technical Skills</h2>
 
       <div
+        className="mt-12"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
         onFocus={() => setPaused(true)}

@@ -89,10 +89,10 @@ const About = ({ preview = false }) => {
       />
 
       {/* Heading */}
-      <h4 className="mb-2 text-center text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 sm:text-sm">
+      <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 sm:text-sm">
         Introduction
       </h4>
-      <h2 className="text-center font-Ovo text-4xl sm:text-5xl">About Me</h2>
+      <h2 className="font-Ovo text-4xl sm:text-5xl">About Me</h2>
 
       <div className="mt-12 grid w-full gap-5 xl:grid-cols-12">
         {/* ===== Portrait ===== */}
