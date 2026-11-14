@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   AnimatePresence,
   motion,
@@ -20,11 +20,11 @@ const pad = (n) => String(n).padStart(2, "0");
 const NA = 40; // teeth on the big gear
 const NB = 14; // teeth on the small gear
 const M = 1.7; // module (tooth size)
-const RA = (NA * M) / 2; // pitch radius, big gear = 34
-const RB = (NB * M) / 2; // pitch radius, small gear = 11.9
+const RA = (NA * M) / 2;
+const RB = (NB * M) / 2;
 const OUT_A = RA + M; // outer radius (tooth tips)
 const OUT_B = RB + M;
-const BETA = 20; // direction from the big gear to the small one (deg, clockwise from +x)
+const BETA = 20; // direction from the big gear to the small one
 const DIST = RA + RB; // centre distance for perfect meshing
 const CA = { x: 38, y: 56 };
 const CB = {
@@ -154,7 +154,7 @@ function Gears({ progress, count, active }) {
         })}
       </motion.div>
 
-      {/* Pointer */}
+      {/* Pointer on the gear */}
       <svg
         aria-hidden
         viewBox="0 0 20 16"
@@ -198,6 +198,50 @@ function Gears({ progress, count, active }) {
   );
 }
 
+/* ---------- Role switcher ---------- */
+function RoleTabs({ roles, value, onChange }) {
+  if (roles.length < 2) return null;
+  return (
+    <div
+      role="tablist"
+      aria-label="Work experience roles"
+      className="mx-auto mb-3 flex w-fit max-w-full gap-1 overflow-x-auto rounded-full border border-black/10 bg-black/[0.03] p-1 [scrollbar-width:none] dark:border-white/15 dark:bg-white/5 lg:mx-0 [&::-webkit-scrollbar]:hidden"
+    >
+      {roles.map((r, i) => {
+        const isActive = i === value;
+        return (
+          <button
+            key={r.id}
+            role="tab"
+            aria-selected={isActive}
+            onClick={() => onChange(i)}
+            className="relative shrink-0 rounded-full px-4 py-2 text-sm font-medium leading-6"
+          >
+            {isActive && (
+              <motion.span
+                layoutId="exp-role-tab"
+                className="absolute inset-0 rounded-full bg-black dark:bg-white"
+                transition={{ type: "spring", stiffness: 400, damping: 32 }}
+              />
+            )}
+            <span
+              className={`relative z-10 whitespace-nowrap transition-colors duration-300 ${
+                isActive
+                  ? "text-white dark:text-black"
+                  : "text-gray-600 hover:text-black dark:text-white/70 dark:hover:text-white"
+              }`}
+            >
+              <span className="mr-2 font-mono text-[10px] opacity-60">{pad(i + 1)}</span>
+              {/* Add `shortName: "..."` to an entry in assets.js to customize this label */}
+              {r.shortName ?? r.role}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 function Meta({ exp, index, total }) {
   return (
     <p className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 font-mono text-[11px] uppercase leading-5 tracking-[0.18em] text-gray-500 dark:text-white/50 lg:justify-start">
@@ -231,35 +275,55 @@ function ReportLink({ href }) {
   );
 }
 
-/* Scroll-driven version: the gears stay pinned while you scroll */
-function RoleSticky({ exp, index, total, perStep }) {
+/* Scroll-driven version: one pinned stage, one role at a time */
+function Stage({ roles, perStep }) {
+  const [roleIndex, setRoleIndex] = useState(0);
+  const exp = roles[roleIndex];
   const achievements = exp.achievements ?? [];
   const technologies = exp.technologies ?? [];
   const report = exp.report ?? "/report.pdf";
-  const count = achievements.length;
+  const count = Math.max(achievements.length, 1);
+
+  // The runway is as long as the longest role, so the page height never changes
+  const maxCount = Math.max(...roles.map((r) => (r.achievements ?? []).length), 1);
 
   const ref = useRef(null);
+  const countRef = useRef(count);
+  countRef.current = count;
+
   const [active, setActive] = useState(0);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
 
   useMotionValueEvent(scrollYProgress, "change", (v) => {
-    setActive(Math.min(count - 1, Math.max(0, Math.round(v * (count - 1)))));
+    const c = countRef.current;
+    setActive(Math.min(c - 1, Math.max(0, Math.round(v * (c - 1)))));
   });
+
+  // When you switch roles, recompute the station from the current scroll position
+  useEffect(() => {
+    const v = scrollYProgress.get();
+    setActive(Math.min(count - 1, Math.max(0, Math.round(v * (count - 1)))));
+  }, [count, scrollYProgress]);
+
   const hint = useTransform(scrollYProgress, [0, 0.06], [1, 0]);
 
-  const words = String(achievements[active] ?? "").split(" ");
+  const statement = achievements[active] ?? exp.description ?? "";
+  const words = String(statement).split(" ");
+  const fill = count > 1 ? (active + 1) / count : 1;
 
   return (
-    <div ref={ref} style={{ height: `${count * perStep + 100}vh` }} className="relative">
-      <div className="sticky top-0 flex h-screen items-center">
-        <div className="grid w-full items-center gap-4 pt-16 lg:grid-cols-12 lg:gap-14 lg:pt-20">
+    <div ref={ref} style={{ height: `${maxCount * perStep + 100}vh` }} className="relative">
+      <div className="sticky top-0 flex h-screen flex-col justify-center pt-16 lg:pt-20">
+        <RoleTabs roles={roles} value={roleIndex} onChange={setRoleIndex} />
+
+        <div className="grid w-full items-center gap-4 lg:grid-cols-12 lg:gap-14">
           <div className="lg:col-span-5">
-            <Gears progress={scrollYProgress} count={count} active={active} />
+            <Gears key={exp.id} progress={scrollYProgress} count={count} active={active} />
           </div>
 
-          <div className="text-center lg:col-span-7 lg:text-left">
-            <Meta exp={exp} index={index} total={total} />
-            <h3 className="mt-3 font-Ovo text-2xl leading-tight text-gray-700 dark:text-white/80 sm:text-3xl">
+          <div className="lg:col-span-7">
+            <Meta exp={exp} index={roleIndex} total={roles.length} />
+            <h3 className="mt-3 text-center font-Ovo text-2xl leading-tight text-gray-700 dark:text-white/80 sm:text-3xl lg:text-left">
               {exp.role}
             </h3>
             <p className="mt-2 hidden max-w-xl text-sm leading-6 text-gray-500 dark:text-white/55 sm:block lg:max-w-lg">
@@ -268,60 +332,75 @@ function RoleSticky({ exp, index, total, perStep }) {
 
             {/* The statement: the focus of the section */}
             <div
-              className="relative mt-6 min-h-[11rem] sm:min-h-[15rem] lg:min-h-[19rem]"
+              className="relative mt-5 min-h-[11rem] sm:min-h-[15rem] lg:min-h-[19rem]"
               aria-live="polite"
             >
               <span
                 aria-hidden
-                className="pointer-events-none absolute -top-4 right-0 select-none font-mono text-[7rem] font-bold leading-none text-amber-400/10 sm:text-[10rem] lg:text-[13rem]"
+                className="pointer-events-none absolute -top-2 right-0 select-none font-mono text-[7rem] font-bold leading-none text-amber-400/10 sm:text-[10rem] lg:text-[13rem]"
               >
                 {pad(active + 1)}
               </span>
 
-              <div className="relative">
-                <p className="flex items-center justify-center gap-3 font-mono text-xs uppercase leading-5 tracking-[0.25em] text-amber-600 dark:text-amber-400 lg:justify-start">
-                  <span aria-hidden className="h-px w-8 bg-amber-400" />
+              <div className="relative rounded-r-2xl bg-gradient-to-r from-amber-400/10 to-transparent py-4 pl-5 pr-3 sm:pl-8">
+                {/* Rail that fills as you progress */}
+                <span
+                  aria-hidden
+                  className="absolute inset-y-0 left-0 w-[3px] overflow-hidden rounded-full bg-black/10 dark:bg-white/15"
+                >
+                  <motion.span
+                    initial={false}
+                    animate={{ scaleY: fill }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                    className="block h-full w-full origin-top bg-amber-400"
+                  />
+                </span>
+
+                <p className="flex items-center gap-3 font-mono text-xs uppercase leading-5 tracking-[0.25em] text-amber-600 dark:text-amber-400">
                   OP {pad((active + 1) * 10)}
+                  <span aria-hidden className="h-px w-10 bg-amber-400/60" />
                 </p>
 
-                <AnimatePresence mode="wait" initial={false}>
-                  <motion.p
-                    key={active}
-                    initial="hidden"
-                    animate="show"
-                    exit={{ opacity: 0, y: -12, transition: { duration: 0.2 } }}
-                    variants={{ hidden: {}, show: { transition: { staggerChildren: 0.035 } } }}
-                    className="mt-4 font-Ovo text-3xl leading-[1.12] sm:text-5xl lg:text-6xl"
+                {/* Pointer + text. Sizes use `em`, so the pointer scales with the text */}
+                <div className="mt-3 flex items-start gap-[0.4em] font-Ovo text-3xl leading-[1.12] sm:text-5xl lg:text-6xl">
+                  <motion.svg
+                    key={`pointer-${active}`}
+                    aria-hidden
+                    viewBox="0 0 10 10"
+                    initial={{ opacity: 0, x: -16 }}
+                    animate={{ opacity: 1, x: [0, 6, 0] }}
+                    transition={{
+                      opacity: { duration: 0.3 },
+                      x: { duration: 1.4, repeat: Infinity, ease: "easeInOut" },
+                    }}
+                    className="mt-[0.285em] h-[0.55em] w-[0.55em] shrink-0 fill-amber-500 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]"
                   >
-                    {words.map((w, i) => (
-                      <motion.span
-                        key={`${active}-${i}`}
-                        variants={{
-                          hidden: { opacity: 0, y: 18 },
-                          show: { opacity: 1, y: 0 },
-                        }}
-                        className="mr-[0.25em] inline-block"
-                      >
-                        {w}
-                      </motion.span>
-                    ))}
-                  </motion.p>
-                </AnimatePresence>
+                    <path d="M1 0 L10 5 L1 10 Z" />
+                  </motion.svg>
 
-                {/* Progress segments */}
-                <div aria-hidden className="mt-6 flex justify-center gap-1.5 lg:justify-start">
-                  {achievements.map((_, i) => (
-                    <span
-                      key={i}
-                      className={`h-1.5 rounded-full transition-all duration-500 ${
-                        i === active
-                          ? "w-10 bg-amber-400"
-                          : i < active
-                          ? "w-4 bg-amber-400/60"
-                          : "w-4 bg-black/15 dark:bg-white/20"
-                      }`}
-                    />
-                  ))}
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.p
+                      key={`${roleIndex}-${active}`}
+                      initial="hidden"
+                      animate="show"
+                      exit={{ opacity: 0, y: -12, transition: { duration: 0.2 } }}
+                      variants={{ hidden: {}, show: { transition: { staggerChildren: 0.035 } } }}
+                      className="min-w-0"
+                    >
+                      {words.map((w, i) => (
+                        <motion.span
+                          key={`${active}-${i}`}
+                          variants={{
+                            hidden: { opacity: 0, y: 18 },
+                            show: { opacity: 1, y: 0 },
+                          }}
+                          className="mr-[0.25em] inline-block"
+                        >
+                          {w}
+                        </motion.span>
+                      ))}
+                    </motion.p>
+                  </AnimatePresence>
                 </div>
               </div>
             </div>
@@ -349,14 +428,17 @@ function RoleSticky({ exp, index, total, perStep }) {
 }
 
 /* Reduced-motion version: plain, readable, no scroll effects */
-function RoleStatic({ exp, index, total }) {
+function StaticStage({ roles }) {
+  const [roleIndex, setRoleIndex] = useState(0);
+  const exp = roles[roleIndex];
   const achievements = exp.achievements ?? [];
   const technologies = exp.technologies ?? [];
   const report = exp.report ?? "/report.pdf";
 
   return (
-    <article className="py-8">
-      <Meta exp={exp} index={index} total={total} />
+    <article className="py-4">
+      <RoleTabs roles={roles} value={roleIndex} onChange={setRoleIndex} />
+      <Meta exp={exp} index={roleIndex} total={roles.length} />
       <h3 className="mt-3 text-center font-Ovo text-3xl sm:text-5xl lg:text-left">{exp.role}</h3>
       <p className="mt-4 text-gray-600 dark:text-white/65">{exp.description}</p>
       <ol className="mt-8 space-y-4">
@@ -398,21 +480,7 @@ export default function Experience({ preview = false }) {
           A showcase of my professional growth and the amazing teams I&apos;ve collaborated with
         </p>
 
-        <div>
-          {roles.map((exp, i) =>
-            reduce || !(exp.achievements ?? []).length ? (
-              <RoleStatic key={exp.id} exp={exp} index={i} total={roles.length} />
-            ) : (
-              <RoleSticky
-                key={exp.id}
-                exp={exp}
-                index={i}
-                total={roles.length}
-                perStep={perStep}
-              />
-            )
-          )}
-        </div>
+        {reduce ? <StaticStage roles={roles} /> : <Stage roles={roles} perStep={perStep} />}
 
         {preview && (
           <div>

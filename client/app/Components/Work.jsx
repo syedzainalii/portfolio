@@ -4,11 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useInView, useReducedMotion } from "motion/react";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { workData } from "@/assets/assets";
-import SectionPageLink from "./SectionPageLink";
 
 const AUTOPLAY_MS = 5000;
+const pad = (n) => String(n).padStart(2, "0");
 
 const Work = ({ preview = false }) => {
   const projects = preview ? workData.slice(0, 4) : workData;
@@ -25,8 +25,8 @@ const Work = ({ preview = false }) => {
   const readout = useRef(null);
 
   const inView = useInView(sectionRef, { margin: "-20% 0px -20% 0px" });
-  const reduceMotion = useReducedMotion();
-  const playing = inView && !paused && !reduceMotion && total > 1;
+  const reduce = useReducedMotion();
+  const playing = inView && !paused && !reduce && total > 1;
 
   // Autoplay
   useEffect(() => {
@@ -52,229 +52,241 @@ const Work = ({ preview = false }) => {
   };
 
   const current = projects[active];
+  const href = `/project/${current.slug}`;
+  // Optional: add `summary: "..."` to a project in assets.js for a longer line of text here
+  const body = current.summary ?? current.description;
 
   return (
-    <section
-      id="work"
-      ref={sectionRef}
-      className="w-full py-14 sm:py-20 lg:py-24"
-    >
+    <section id="work" ref={sectionRef} className="w-full py-14 sm:py-20 lg:py-24">
       <div className="site-container">
-      {/* Heading */}
-      <h4 className="mb-2 text-center text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 sm:text-sm">
-        My Projects
-      </h4>
-      <h2 className="text-center font-Ovo text-4xl sm:text-5xl">My latest projects</h2>
-      <p className="mx-auto mb-12 mt-5 max-w-2xl text-center font-Ovo text-gray-600 dark:text-white/70">
-        Here are a few projects I&apos;ve worked on recently. Want to see more?
-      </p>
+        {/* Heading */}
+        <h4 className="mb-2 text-center text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 sm:text-sm">
+          My Projects
+        </h4>
+        <h2 className="text-center font-Ovo text-4xl sm:text-5xl">My latest projects</h2>
+        <p className="mx-auto mb-12 mt-5 max-w-2xl text-center font-Ovo text-gray-600 dark:text-white/70">
+          Here are a few projects I&apos;ve worked on recently. Want to see more?
+        </p>
 
-      <div
-        className="grid items-center gap-8 lg:grid-cols-12 lg:gap-12"
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
-        onFocus={() => setPaused(true)}
-        onBlur={() => setPaused(false)}
-      >
-        {/* ===== Viewport ===== */}
-        <Link
-          href={`/project/${current.slug}`}
-          aria-label={`Open ${current.title}`}
-          tabIndex={-1}
-          onPointerEnter={(e) => {
-            if (e.pointerType === "mouse") {
-              setInspect(true);
-              trackPointer(e);
-            }
-          }}
-          onPointerMove={trackPointer}
-          onPointerLeave={() => setInspect(false)}
-          className="relative order-1 block aspect-[4/3] cursor-crosshair overflow-hidden rounded-3xl border border-black/10 bg-slate-900 shadow-2xl dark:border-white/15 lg:order-2 lg:col-span-7 lg:aspect-[5/4]"
+        <div
+          className="grid items-center gap-10 lg:grid-cols-12 lg:gap-14"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          onFocus={() => setPaused(true)}
+          onBlur={() => setPaused(false)}
         >
-          {/* Stacked images, crossfaded */}
-          {projects.map((p, i) => (
-            <Image
-              key={p.title}
-              src={p.bgImage}
-              alt=""
-              fill
-              priority={i === 0}
-              sizes="(min-width: 1024px) 58vw, 100vw"
-              className={`object-cover transition-all duration-700 ease-out motion-reduce:transition-none ${
-                i === active ? "scale-100 opacity-100" : "scale-110 opacity-0"
-              }`}
-            />
-          ))}
-
-          {/* Readability gradient + faint measurement grid */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/5 to-black/20" />
-          <div
-            aria-hidden
-            className="absolute inset-0 opacity-70"
-            style={{
-              backgroundImage:
-                "linear-gradient(to right, rgba(255,255,255,0.07) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.07) 1px, transparent 1px)",
-              backgroundSize: "40px 40px",
+          {/* ===== Viewport (smaller, portrait on desktop) ===== */}
+          <Link
+            href={href}
+            aria-label={`Open ${current.title}`}
+            tabIndex={-1}
+            onPointerEnter={(e) => {
+              if (e.pointerType === "mouse") {
+                setInspect(true);
+                trackPointer(e);
+              }
             }}
-          />
-
-          {/* Corner brackets */}
-          <span aria-hidden className="absolute left-4 top-4 h-6 w-6 border-l-2 border-t-2 border-amber-400" />
-          <span aria-hidden className="absolute right-4 top-4 h-6 w-6 border-r-2 border-t-2 border-amber-400" />
-          <span aria-hidden className="absolute bottom-4 left-4 h-6 w-6 border-b-2 border-l-2 border-amber-400" />
-          <span aria-hidden className="absolute bottom-4 right-4 h-6 w-6 border-b-2 border-r-2 border-amber-400" />
-
-          {/* Top status row */}
-          <div className="absolute inset-x-10 top-5 flex items-center justify-between font-mono text-[11px] leading-5 tracking-wider text-white/80">
-            <span className="flex items-center gap-2">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-400 motion-reduce:animate-none" />
-              PRJ-{String(active + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
-            </span>
-            <span ref={readout} className="hidden tabular-nums sm:block">
-              X 000.0  Y 000.0
-            </span>
-          </div>
-
-          {/* Crosshair */}
-          <div
-            aria-hidden
-            className={`pointer-events-none absolute inset-0 transition-opacity duration-300 ${
-              inspect ? "opacity-100" : "opacity-0"
-            }`}
+            onPointerMove={trackPointer}
+            onPointerLeave={() => setInspect(false)}
+            className="relative order-1 block aspect-[4/3] cursor-crosshair overflow-hidden rounded-3xl border border-black/10 bg-slate-900 shadow-2xl dark:border-white/15 sm:aspect-[16/10] lg:order-2 lg:col-span-5 lg:aspect-[4/5]"
           >
-            <span ref={vLine} className="absolute inset-y-0 left-0 w-px bg-white/40" />
-            <span ref={hLine} className="absolute inset-x-0 top-0 h-px bg-white/40" />
-            <span
-              ref={ring}
-              className="absolute left-0 top-0 -ml-3 -mt-3 h-6 w-6 rounded-full border border-amber-400"
+            {/* Stacked images, crossfaded */}
+            {projects.map((p, i) => (
+              <Image
+                key={p.title}
+                src={p.bgImage}
+                alt=""
+                fill
+                priority={i === 0}
+                sizes="(min-width: 1024px) 40vw, 100vw"
+                className={`object-cover transition-all duration-700 ease-out motion-reduce:transition-none ${
+                  i === active ? "scale-100 opacity-100" : "scale-110 opacity-0"
+                }`}
+              />
+            ))}
+
+            {/* Readability gradient + faint measurement grid */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/25" />
+            <div
+              aria-hidden
+              className="absolute inset-0 opacity-70"
+              style={{
+                backgroundImage:
+                  "linear-gradient(to right, rgba(255,255,255,0.07) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.07) 1px, transparent 1px)",
+                backgroundSize: "40px 40px",
+              }}
             />
-          </div>
 
-          {/* Title block */}
-          <motion.div
-            key={active}
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45 }}
-            className="absolute inset-x-5 bottom-5 flex items-end justify-between gap-4 rounded-2xl border border-white/15 bg-black/40 p-4 backdrop-blur-md sm:inset-x-6 sm:bottom-6"
-          >
-            <div className="min-w-0">
-              <h3 className="break-words text-lg font-semibold leading-6 text-white sm:text-xl">
-                {current.title}
-              </h3>
-              <p className="mt-1 line-clamp-2 break-words text-xs leading-5 text-white/70">
-                {current.description}
-              </p>
+            {/* Corner brackets */}
+            <span aria-hidden className="absolute left-4 top-4 h-6 w-6 border-l-2 border-t-2 border-amber-400" />
+            <span aria-hidden className="absolute right-4 top-4 h-6 w-6 border-r-2 border-t-2 border-amber-400" />
+            <span aria-hidden className="absolute bottom-4 left-4 h-6 w-6 border-b-2 border-l-2 border-amber-400" />
+            <span aria-hidden className="absolute bottom-4 right-4 h-6 w-6 border-b-2 border-r-2 border-amber-400" />
+
+            {/* Top status row */}
+            <div className="absolute inset-x-10 top-5 flex items-center justify-between font-mono text-[11px] leading-5 tracking-wider text-white/80">
+              <span className="flex items-center gap-2">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-400 motion-reduce:animate-none" />
+                PRJ-{pad(active + 1)} / {pad(total)}
+              </span>
+              <span ref={readout} className="hidden tabular-nums sm:block">
+                X 000.0  Y 000.0
+              </span>
             </div>
-            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-amber-400 text-black">
+
+            {/* Crosshair */}
+            <div
+              aria-hidden
+              className={`pointer-events-none absolute inset-0 transition-opacity duration-300 ${
+                inspect ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              <span ref={vLine} className="absolute inset-y-0 left-0 w-px bg-white/40" />
+              <span ref={hLine} className="absolute inset-x-0 top-0 h-px bg-white/40" />
+              <span
+                ref={ring}
+                className="absolute left-0 top-0 -ml-3 -mt-3 h-6 w-6 rounded-full border border-amber-400"
+              />
+            </div>
+
+            {/* Open button (the title lives on the left now) */}
+            <span className="absolute bottom-6 right-6 grid h-12 w-12 place-items-center rounded-full bg-amber-400 text-black shadow-lg transition-transform duration-300 hover:rotate-12">
               <ArrowUpRight className="h-5 w-5" />
             </span>
-          </motion.div>
-        </Link>
+          </Link>
 
-        {/* ===== Project index ===== */}
-        <ul className="order-2 lg:order-1 lg:col-span-5">
-          {projects.map((project, i) => {
-            const isActive = i === active;
-            return (
-              <li key={project.title}>
-                <Link
-                  href={`/project/${project.slug}`}
-                  onPointerEnter={(e) => e.pointerType === "mouse" && setActive(i)}
-                  onFocus={() => setActive(i)}
-                  onClick={(e) => {
-                    // Touch: first tap selects the row, second tap opens the project
-                    if (!isActive) {
-                      e.preventDefault();
-                      setActive(i);
-                    }
-                  }}
-                  className="group relative block border-b border-black/10 py-5 outline-none focus-visible:bg-black/[0.03] dark:border-white/10 dark:focus-visible:bg-white/5"
-                >
-                  <div className="flex items-center gap-4 sm:gap-6">
-                    <span
-                      className={`font-mono text-sm tabular-nums transition-colors duration-300 ${
-                        isActive ? "text-amber-500" : "text-gray-400 dark:text-white/40"
-                      }`}
+          {/* ===== Left: featured project + index ===== */}
+          <div className="order-2 min-w-0 lg:order-1 lg:col-span-7">
+            {/* Featured */}
+            <motion.div
+              key={active}
+              initial={reduce ? false : { opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, ease: "easeOut" }}
+              className="lg:min-h-[21rem]"
+              aria-live="polite"
+            >
+              <p className="flex items-center gap-3 font-mono text-xs uppercase leading-5 tracking-[0.25em] text-amber-600 dark:text-amber-400">
+                <span aria-hidden className="h-px w-8 bg-amber-400" />
+                Project {pad(active + 1)}
+              </p>
+
+              <h3 className="mt-4 break-words font-Ovo text-4xl leading-[1.05] sm:text-5xl lg:text-6xl xl:text-7xl">
+                {current.title}
+              </h3>
+
+              <p className="mt-5 max-w-xl text-lg leading-8 text-gray-600 dark:text-white/70 lg:text-xl lg:leading-9">
+                {body}
+              </p>
+
+              {current.tools?.length > 0 && (
+                <ul className="mt-6 flex flex-wrap gap-2.5">
+                  {current.tools.map((tool) => (
+                    <li
+                      key={tool}
+                      className="rounded-full border border-black/15 bg-white/60 px-4 py-1.5 text-sm font-medium leading-6 text-gray-800 dark:border-white/20 dark:bg-white/5 dark:text-white/85"
                     >
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
+                      {tool}
+                    </li>
+                  ))}
+                </ul>
+              )}
 
-                    <h3
-                      className={`min-w-0 flex-1 break-words font-Ovo text-xl leading-tight transition-all duration-300 sm:text-3xl ${
-                        isActive
-                          ? "translate-x-1 opacity-100"
-                          : "opacity-40 group-hover:opacity-70"
-                      }`}
-                    >
-                      {project.title}
-                    </h3>
+              <Link
+                href={href}
+                className="group mt-8 inline-flex items-center gap-3 rounded-full bg-amber-400 px-7 py-3.5 text-base font-semibold text-black transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_-10px_rgba(202,138,4,0.7)]"
+              >
+                View project
+                <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
+            </motion.div>
 
-                    <span
-                      className={`grid h-11 w-11 shrink-0 place-items-center rounded-full border transition-all duration-300 sm:h-10 sm:w-10 ${
-                        isActive
-                          ? "border-amber-400 bg-amber-400 text-black"
-                          : "border-black/15 text-gray-500 dark:border-white/20 dark:text-white/60"
-                      }`}
-                    >
-                      <ArrowUpRight className="h-4 w-4" />
-                    </span>
-                  </div>
+            {/* Index */}
+            <div className="mt-10 lg:mt-12">
+              <div className="mb-2 flex items-center justify-between gap-4">
+                <p className="font-mono text-[11px] uppercase leading-5 tracking-[0.25em] text-gray-500 dark:text-white/45">
+                  Project index
+                </p>
 
-                  {/* Expanding details */}
-                  <div
-                    className={`grid transition-all duration-500 ease-out motion-reduce:transition-none ${
-                      isActive ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-                    }`}
+                {preview && (
+                  <Link
+                    href="/project"
+                    className="group inline-flex items-center gap-2 rounded-full border border-black/15 py-1.5 pl-4 pr-1.5 text-sm font-medium leading-6 transition-all duration-300 hover:border-amber-400 hover:bg-amber-400/10 dark:border-white/20"
                   >
-                    <div className="min-w-0 overflow-hidden pl-9 sm:pl-12">
-                      <p className="break-words pt-3 text-sm leading-6 text-gray-600 dark:text-white/70">
-                        {project.description}
-                      </p>
+                    All projects
+                    <span className="grid h-7 min-w-7 place-items-center rounded-full bg-black px-2 font-mono text-[11px] text-white transition-colors duration-300 group-hover:bg-amber-400 group-hover:text-black dark:bg-white dark:text-black">
+                      {pad(workData.length)}
+                    </span>
+                    <ArrowUpRight className="-ml-1 mr-2 h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </Link>
+                )}
+              </div>
 
-                      {project.tools?.length > 0 && (
-                        <ul className="mt-3 flex flex-wrap gap-2">
-                          {project.tools.map((tool) => (
-                            <li
-                              key={tool}
-                              className="rounded-full border border-black/15 px-3 py-0.5 text-xs leading-5 text-gray-700 dark:border-white/20 dark:text-white/80"
-                            >
-                              {tool}
-                            </li>
+              <ul>
+                {projects.map((project, i) => {
+                  const isActive = i === active;
+                  return (
+                    <li key={project.title}>
+                      <button
+                        type="button"
+                        onPointerEnter={(e) => e.pointerType === "mouse" && setActive(i)}
+                        onFocus={() => setActive(i)}
+                        onClick={() => setActive(i)}
+                        aria-current={isActive}
+                        className="group relative flex min-h-12 w-full items-center gap-4 border-t border-black/10 py-3 text-left outline-none focus-visible:bg-black/[0.03] dark:border-white/10 dark:focus-visible:bg-white/5 sm:gap-6"
+                      >
+                        <span
+                          className={`font-mono text-sm tabular-nums transition-colors duration-300 ${
+                            isActive ? "text-amber-500" : "text-gray-400 dark:text-white/40"
+                          }`}
+                        >
+                          {pad(i + 1)}
+                        </span>
+
+                        <span
+                          className={`min-w-0 flex-1 break-words font-Ovo text-lg leading-tight transition-all duration-300 sm:text-xl ${
+                            isActive
+                              ? "translate-x-1 opacity-100"
+                              : "opacity-45 group-hover:opacity-80"
+                          }`}
+                        >
+                          {project.title}
+                        </span>
+
+                        <span
+                          className={`hidden truncate text-xs leading-5 transition-opacity duration-300 sm:block ${
+                            isActive ? "opacity-70" : "opacity-0"
+                          }`}
+                        >
+                          {project.description}
+                        </span>
+
+                        {/* Autoplay progress line */}
+                        {isActive &&
+                          (playing ? (
+                            <motion.span
+                              key={`progress-${active}`}
+                              aria-hidden
+                              initial={{ width: 0 }}
+                              animate={{ width: "100%" }}
+                              transition={{ duration: AUTOPLAY_MS / 1000, ease: "linear" }}
+                              className="absolute -top-px left-0 h-[2px] bg-amber-400"
+                            />
+                          ) : (
+                            <span
+                              aria-hidden
+                              className="absolute -top-px left-0 h-[2px] w-full bg-amber-400"
+                            />
                           ))}
-                        </ul>
-                      )}
-
-                      <span className="mt-4 inline-block text-sm font-medium leading-6">
-                        View project &rarr;
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Autoplay progress line */}
-                  {isActive &&
-                    (playing ? (
-                      <motion.span
-                        aria-hidden
-                        initial={{ width: 0 }}
-                        animate={{ width: "100%" }}
-                        transition={{ duration: AUTOPLAY_MS / 1000, ease: "linear" }}
-                        className="absolute -bottom-px left-0 h-[2px] bg-amber-400"
-                      />
-                    ) : (
-                      <span
-                        aria-hidden
-                        className="absolute -bottom-px left-0 h-[2px] w-full bg-amber-400"
-                      />
-                    ))}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-
-      {preview && <SectionPageLink href="/project" label="Show more" />}
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+              <div className="border-t border-black/10 dark:border-white/10" />
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
