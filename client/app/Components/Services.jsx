@@ -19,7 +19,7 @@ const Services = ({ preview = false }) => {
   const [active, setActive] = useState(0)
 
   return (
-    <section id="services" className="w-full py-16 sm:py-20 lg:py-24">
+    <section id="services" className="w-full py-14 sm:py-20 lg:py-24">
       <div className="site-container">
       {/* Header */}
       <div className="flex items-end justify-between gap-6 mb-12">
@@ -73,7 +73,7 @@ const Services = ({ preview = false }) => {
                 border border-black/5 dark:border-white/10 shadow-lg
                 transition-all duration-700 ease-in-out motion-reduce:transition-none
                 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400
-                ${isActive ? 'h-[22rem] lg:h-auto lg:flex-[6]' : 'h-20 lg:h-auto lg:flex-1'}`}
+                ${isActive ? 'h-auto min-h-[22rem] lg:h-auto lg:min-h-0 lg:flex-[6]' : 'h-20 lg:h-auto lg:flex-1'}`}
             >
               {/* Background */}
               {image ? (
@@ -121,21 +121,21 @@ const Services = ({ preview = false }) => {
                   pl-[4.5rem] pr-4 lg:px-0 lg:pt-24 transition-opacity duration-300
                   ${isActive ? 'opacity-0' : 'opacity-100 delay-300'}`}
               >
-                <span className="text-white font-medium whitespace-nowrap lg:[writing-mode:vertical-rl] lg:rotate-180">
+                <span className="break-words text-white font-medium lg:whitespace-nowrap lg:[writing-mode:vertical-rl] lg:rotate-180">
                   {title}
                 </span>
               </div>
 
               {/* Expanded content */}
               <div
-                className={`absolute inset-x-0 bottom-0 z-10 p-6 lg:p-7 transition-all duration-500
+                className={`relative z-10 p-6 pb-20 transition-all duration-500 lg:absolute lg:inset-x-0 lg:bottom-0 lg:p-7
                   ${isActive ? 'opacity-100 translate-y-0 delay-300' : 'opacity-0 translate-y-4 pointer-events-none'}`}
               >
                 <div className="h-1 w-12 rounded-full bg-amber-400 mb-4" />
                 <h3 className="text-2xl lg:text-3xl font-semibold text-white">
                   {title}
                 </h3>
-                <p className="mt-2 max-w-md text-sm leading-6 text-white/80 line-clamp-2">
+                <p className="mt-2 max-w-md text-sm leading-6 text-white/80 lg:line-clamp-2">
                   {description}
                 </p>
 

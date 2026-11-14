@@ -10,7 +10,7 @@ export default function ServicesPage() {
         <p className="mb-2 font-mono text-xs uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400">
           Services / Available Work
         </p>
-        <h1 className="font-Ovo text-4xl sm:text-6xl">What I offer</h1>
+        <h1 className="break-words font-Ovo text-3xl sm:text-6xl">What I offer</h1>
         <p className="mt-5 max-w-2xl leading-7 text-gray-600 dark:text-white/65">
           {serviceIntro}
         </p>

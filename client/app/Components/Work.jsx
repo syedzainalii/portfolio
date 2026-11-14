@@ -57,7 +57,7 @@ const Work = ({ preview = false }) => {
     <section
       id="work"
       ref={sectionRef}
-      className="w-full py-16 sm:py-20 lg:py-24"
+      className="w-full py-14 sm:py-20 lg:py-24"
     >
       <div className="site-container">
       {/* Heading */}
@@ -159,10 +159,10 @@ const Work = ({ preview = false }) => {
             className="absolute inset-x-5 bottom-5 flex items-end justify-between gap-4 rounded-2xl border border-white/15 bg-black/40 p-4 backdrop-blur-md sm:inset-x-6 sm:bottom-6"
           >
             <div className="min-w-0">
-              <h3 className="truncate text-lg font-semibold leading-6 text-white sm:text-xl">
+              <h3 className="break-words text-lg font-semibold leading-6 text-white sm:text-xl">
                 {current.title}
               </h3>
-              <p className="mt-1 truncate text-xs leading-5 text-white/70">
+              <p className="mt-1 line-clamp-2 break-words text-xs leading-5 text-white/70">
                 {current.description}
               </p>
             </div>
@@ -201,7 +201,7 @@ const Work = ({ preview = false }) => {
                     </span>
 
                     <h3
-                      className={`flex-1 font-Ovo text-2xl leading-tight transition-all duration-300 sm:text-3xl ${
+                      className={`min-w-0 flex-1 break-words font-Ovo text-xl leading-tight transition-all duration-300 sm:text-3xl ${
                         isActive
                           ? "translate-x-1 opacity-100"
                           : "opacity-40 group-hover:opacity-70"
@@ -211,7 +211,7 @@ const Work = ({ preview = false }) => {
                     </h3>
 
                     <span
-                      className={`grid h-10 w-10 place-items-center rounded-full border transition-all duration-300 ${
+                      className={`grid h-11 w-11 shrink-0 place-items-center rounded-full border transition-all duration-300 sm:h-10 sm:w-10 ${
                         isActive
                           ? "border-amber-400 bg-amber-400 text-black"
                           : "border-black/15 text-gray-500 dark:border-white/20 dark:text-white/60"
@@ -227,8 +227,8 @@ const Work = ({ preview = false }) => {
                       isActive ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                     }`}
                   >
-                    <div className="overflow-hidden pl-9 sm:pl-12">
-                      <p className="pt-3 text-sm leading-6 text-gray-600 dark:text-white/70">
+                    <div className="min-w-0 overflow-hidden pl-9 sm:pl-12">
+                      <p className="break-words pt-3 text-sm leading-6 text-gray-600 dark:text-white/70">
                         {project.description}
                       </p>
 

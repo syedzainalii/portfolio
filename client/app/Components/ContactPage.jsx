@@ -19,7 +19,7 @@ export default function ContactPage() {
         <p className="mb-2 font-mono text-xs uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400">
           Contact / Start a conversation
         </p>
-        <h1 className="font-Ovo text-4xl sm:text-6xl">{contactContent.title}</h1>
+        <h1 className="font-Ovo text-3xl sm:text-6xl">{contactContent.title}</h1>
         <p className="mt-5 max-w-2xl leading-7 text-gray-600 dark:text-white/65">
           {contactContent.description}
         </p>
@@ -35,19 +35,19 @@ export default function ContactPage() {
               <li key={label} className="py-5">
                 {href ? (
                   <a href={href} className="group flex items-center gap-4">
-                    <Icon className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-                    <span>
+                    <Icon className="h-5 w-5 shrink-0 text-amber-600 dark:text-amber-400" />
+                    <span className="min-w-0">
                       <span className="block text-xs text-gray-500">{label}</span>
                       <span className="mt-1 block break-all font-medium group-hover:underline">
                         {value}
                       </span>
                     </span>
-                    <ArrowUpRight className="ml-auto h-4 w-4" />
+                    <ArrowUpRight className="ml-auto h-4 w-4 shrink-0" />
                   </a>
                 ) : (
                   <div className="flex items-center gap-4">
-                    <Icon className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-                    <span>
+                    <Icon className="h-5 w-5 shrink-0 text-amber-600 dark:text-amber-400" />
+                    <span className="min-w-0">
                       <span className="block text-xs text-gray-500">{label}</span>
                       <span className="mt-1 block font-medium">{value}</span>
                     </span>
@@ -58,10 +58,10 @@ export default function ContactPage() {
           </ul>
 
           <div className="mt-6 flex gap-5 text-sm">
-            <a href={contactDetails.linkedin} target="_blank" rel="noreferrer" className="underline underline-offset-4">
+            <a href={contactDetails.linkedin} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center underline underline-offset-4 lg:min-h-0">
               LinkedIn
             </a>
-            <a href={contactDetails.github} target="_blank" rel="noreferrer" className="underline underline-offset-4">
+            <a href={contactDetails.github} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center underline underline-offset-4 lg:min-h-0">
               GitHub
             </a>
           </div>

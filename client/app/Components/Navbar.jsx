@@ -73,7 +73,7 @@ const Navbar = ({isDarkMode, setIsDarkMode}) => {
                     {navLinks.map((link) => (
                         <li key={link.href}>
                             <Link
-                                className='font-Ovo text-sm lg:text-base relative group whitespace-nowrap'
+                                className='group relative inline-flex min-h-11 items-center whitespace-nowrap font-Ovo text-sm lg:min-h-0 lg:text-base'
                                 href={link.href}
                                 aria-current={pathname === link.href || (link.href !== "/" && pathname.startsWith(`${link.href}/`)) ? "page" : undefined}
                             >
@@ -88,7 +88,7 @@ const Navbar = ({isDarkMode, setIsDarkMode}) => {
                 <div className='flex items-center gap-2 lg:gap-4'> 
 
                     {/* Dark Mode Toggle */}
-                    <button onClick={() => setIsDarkMode(prev => !prev)} className='p-2 rounded-full transition-all duration-300 active:scale-90 group'> 
+                    <button onClick={() => setIsDarkMode(prev => !prev)} className='grid h-11 w-11 place-items-center rounded-full transition-all duration-300 active:scale-90 group lg:h-10 lg:w-10'>
                         <Image src={isDarkMode ? assets.sun_icon : assets.moon_icon} alt="" className='w-6 group-hover:rotate-[15deg] transition-transform' />
                     </button>
 
@@ -100,21 +100,28 @@ const Navbar = ({isDarkMode, setIsDarkMode}) => {
                     </Link>
 
                     {/* Hamburger Menu (Visible on mobile/tablet) */}
-                    <button className='block md:hidden ml-2 hover:scale-110 active:scale-95 transition-transform' onClick={openMenu}>
+                    <button className='grid h-11 w-11 place-items-center md:hidden ml-2 hover:scale-110 active:scale-95 transition-transform' onClick={openMenu}>
                         <Image src={isDarkMode ? assets.menu_white : assets.menu_black} alt="" className='w-6'/>
                     </button>
                 </div>
 
                 {/* Mobile Side Menu */}
-                <ul ref={sideMenuRef} className='flex md:hidden flex-col gap-4 py-20 px-10 fixed -right-64 top-0 bottom-0 w-64 z-50 h-screen bg-rose-50 transition-transform duration-500 dark:bg-darkHover dark:text-white'> 
-                    <div className='absolute top-6 right-6' onClick={closeMenu}> 
-                        <Image src={isDarkMode ? assets.close_white : assets.close_black} alt="" className='w-5 cursor-pointer'/>
-                    </div>
+                <ul ref={sideMenuRef} className='fixed -right-64 top-0 z-50 flex h-[100svh] max-h-[100svh] w-64 flex-col gap-4 overflow-y-auto overscroll-contain bg-rose-50 px-10 py-20 pb-[calc(5rem+env(safe-area-inset-bottom))] transition-transform duration-500 dark:bg-darkHover dark:text-white md:hidden'>
+                    <li className="list-none">
+                        <button
+                            type="button"
+                            aria-label="Close menu"
+                            className="absolute right-3 top-3 grid h-11 w-11 place-items-center"
+                            onClick={closeMenu}
+                        >
+                            <Image src={isDarkMode ? assets.close_white : assets.close_black} alt="" className='w-5'/>
+                        </button>
+                    </li>
 
                     {navLinks.map((link) => (
                         <li key={link.href}>
                             <Link
-                                className={`font-Ovo ${pathname === link.href || (link.href !== "/" && pathname.startsWith(`${link.href}/`)) ? "underline underline-offset-4" : ""}`}
+                                className={`flex min-h-11 items-center font-Ovo ${pathname === link.href || (link.href !== "/" && pathname.startsWith(`${link.href}/`)) ? "underline underline-offset-4" : ""}`}
                                 onClick={closeMenu}
                                 href={link.href}
                                 aria-current={pathname === link.href || (link.href !== "/" && pathname.startsWith(`${link.href}/`)) ? "page" : undefined}

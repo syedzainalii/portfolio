@@ -16,7 +16,7 @@ const ServiceDetailClient = ({ service }) => {
       >
         <Link 
           href="/services" 
-          className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white mb-8 group"
+          className="group mb-8 inline-flex min-h-11 items-center gap-2 text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white lg:min-h-0"
         >
           <motion.div
             whileHover={{ x: -5 }}
@@ -39,7 +39,7 @@ const ServiceDetailClient = ({ service }) => {
         transition={{ duration: 0.6, delay: 0.1 }}
         className="mb-12"
       >
-        <div className="flex items-center gap-4 mb-6">
+        <div className="mb-6 flex min-w-0 items-center gap-4">
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
@@ -48,10 +48,10 @@ const ServiceDetailClient = ({ service }) => {
             <Image 
               src={service.icon} 
               alt={service.title} 
-              className="w-16 sm:w-20" 
+              className="w-16 shrink-0 sm:w-20"
             />
           </motion.div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-Ovo dark:text-white">
+          <h1 className="min-w-0 break-words text-3xl sm:text-5xl lg:text-6xl font-Ovo dark:text-white">
             {service.title}
           </h1>
         </div>

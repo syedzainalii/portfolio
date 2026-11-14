@@ -189,12 +189,12 @@ function RotatingService({ reduce }) {
   }, [reduce, words.length]);
 
   return (
-    <p className="mt-6 flex items-center gap-3">
+    <p className="mt-6 flex min-w-0 items-center gap-3">
       <span className="font-mono text-xs uppercase tracking-[0.2em] text-amber-600 dark:text-amber-400">
         I do
       </span>
       <span className="sr-only">{words.join(", ")}</span>
-      <span aria-hidden className="relative block h-9 overflow-hidden">
+      <span aria-hidden className="relative block min-w-0 max-w-full overflow-hidden sm:h-9">
         <AnimatePresence mode="wait" initial={false}>
           <motion.span
             key={i}
@@ -202,7 +202,7 @@ function RotatingService({ reduce }) {
             animate={{ y: 0, opacity: 1 }}
             exit={reduce ? { opacity: 0 } : { y: "-100%", opacity: 0 }}
             transition={{ duration: 0.35 }}
-            className="block font-Ovo text-2xl leading-9 sm:text-3xl"
+            className="block break-words font-Ovo text-lg leading-7 sm:text-3xl sm:leading-9"
           >
             {words[i]}
           </motion.span>
@@ -248,7 +248,7 @@ const Header = () => {
   return (
     <section
       id="top"
-      className="relative flex min-h-screen w-full flex-col justify-center overflow-hidden pb-10 pt-32"
+      className="relative flex min-h-[100svh] w-full flex-col justify-center overflow-hidden pb-10 pt-32 lg:min-h-screen"
     >
       <MeshBackground dark={isDarkMode} reduce={reduce} />
 
@@ -272,7 +272,7 @@ const Header = () => {
 
           <motion.h1
             variants={item}
-            className="mt-6 font-Ovo text-4xl leading-[1.08] sm:text-6xl lg:text-7xl"
+            className="mt-6 font-Ovo text-3xl leading-[1.08] sm:text-5xl md:text-6xl lg:text-7xl"
           >
             Mechanical Engineering Student at{" "}
             <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">
@@ -386,10 +386,10 @@ const Header = () => {
         transition={{ duration: 0.6, delay: 0.9 }}
         className="relative z-10 mt-12 flex flex-col items-center justify-between gap-6 border-t border-black/10 pt-6 dark:border-white/15 lg:flex-row"
       >
-        <dl className="grid grid-cols-4 gap-6 sm:gap-10">
+        <dl className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-4 sm:gap-10">
           {stats.map((s) => (
             <div key={s.label} className="text-center lg:text-left">
-              <dt className="order-2 font-mono text-[10px] uppercase leading-4 tracking-[0.2em] text-gray-500 dark:text-white/45">
+              <dt className="order-2 font-mono text-xs uppercase leading-4 tracking-[0.2em] text-gray-500 dark:text-white/45 sm:text-[10px]">
                 {s.label}
               </dt>
               <dd className="font-mono text-2xl font-semibold leading-8 tabular-nums sm:text-3xl">

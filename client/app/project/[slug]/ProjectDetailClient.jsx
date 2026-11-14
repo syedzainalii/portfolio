@@ -9,10 +9,10 @@ export default function ProjectDetail({ project }) {
   const otherProjects = workData.filter((item) => item.slug !== project.slug).slice(0, 3);
 
   return (
-    <article className="site-container min-h-screen pt-24 pb-16">
+    <article className="site-container min-h-[100svh] pt-24 pb-16 lg:min-h-screen">
       <Link
         href="/project"
-        className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-amber-600 dark:text-white/65 dark:hover:text-amber-400"
+        className="inline-flex min-h-11 items-center gap-2 text-sm text-gray-600 hover:text-amber-600 dark:text-white/65 dark:hover:text-amber-400 lg:min-h-0"
       >
         <ArrowLeft className="h-4 w-4" />
         Project archive
@@ -23,7 +23,7 @@ export default function ProjectDetail({ project }) {
           <p className="font-mono text-xs uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400">
             Project / {project.slug}
           </p>
-          <h1 className="mt-4 font-Ovo text-4xl sm:text-6xl">{project.title}</h1>
+          <h1 className="mt-4 break-words font-Ovo text-3xl sm:text-5xl lg:text-6xl">{project.title}</h1>
           <p className="mt-4 max-w-xl text-lg leading-7 text-gray-600 dark:text-white/65">
             {project.description}
           </p>
@@ -62,7 +62,7 @@ export default function ProjectDetail({ project }) {
         </div>
         <Link
           href="/contact"
-          className="inline-flex items-center gap-2 text-sm font-medium hover:text-amber-600 dark:hover:text-amber-400"
+          className="inline-flex min-h-11 items-center gap-2 text-sm font-medium hover:text-amber-600 dark:hover:text-amber-400 lg:min-h-0"
         >
           Discuss a project <ArrowUpRight className="h-4 w-4" />
         </Link>
@@ -71,7 +71,7 @@ export default function ProjectDetail({ project }) {
       <section className="mt-16">
         <div className="mb-6 flex items-end justify-between border-b border-black/10 pb-4 dark:border-white/15">
           <h2 className="font-Ovo text-2xl sm:text-3xl">More projects</h2>
-          <Link href="/project" className="text-sm underline underline-offset-4">
+          <Link href="/project" className="inline-flex min-h-11 items-center text-sm underline underline-offset-4 lg:min-h-0">
             View archive
           </Link>
         </div>

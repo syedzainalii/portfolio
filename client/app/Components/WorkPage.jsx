@@ -41,7 +41,7 @@ export default function WorkPage() {
                 </span>
                 <ArrowUpRight className="h-5 w-5 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
               </div>
-              <h2 className="mt-4 font-Ovo text-2xl sm:text-3xl">{project.title}</h2>
+              <h2 className="mt-4 break-words font-Ovo text-2xl sm:text-3xl">{project.title}</h2>
               <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-white/65">
                 {project.description}
               </p>

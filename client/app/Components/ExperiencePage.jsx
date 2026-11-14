@@ -7,7 +7,7 @@ export default function ExperiencePage() {
         <p className="mb-2 font-mono text-xs uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400">
           Experience / Timeline
         </p>
-        <h1 className="font-Ovo text-4xl sm:text-6xl">Work Experience</h1>
+        <h1 className="break-words font-Ovo text-3xl sm:text-6xl">Work Experience</h1>
       </header>
 
       <ol className="space-y-10">

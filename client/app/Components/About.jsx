@@ -68,7 +68,7 @@ const About = ({ preview = false }) => {
   const tools = toolsData.map((src, i) => ({ src, name: TOOL_NAMES[i] ?? "Tool" }));
 
   return (
-    <section id="about" className="w-full py-16 sm:py-20 lg:py-24">
+    <section id="about" className="w-full py-14 sm:py-20 lg:py-24">
       <div className="site-container">
       <style
         dangerouslySetInnerHTML={{
@@ -98,7 +98,7 @@ const About = ({ preview = false }) => {
         {/* ===== Portrait ===== */}
         <motion.div
           {...reveal()}
-          className={`${tile} min-h-[24rem] shadow-xl xl:col-span-3 xl:min-h-[22rem] xl:max-h-[30rem] 2xl:max-h-[28rem]`}
+          className={`${tile} min-h-[18rem] shadow-xl sm:min-h-[24rem] xl:col-span-3 xl:min-h-[22rem] xl:max-h-[30rem] 2xl:max-h-[28rem]`}
         >
           <Image
             src={assets.user_image}
@@ -159,7 +159,7 @@ const About = ({ preview = false }) => {
                   onClick={() => setOpen((v) => !v)}
                   aria-expanded={open}
                   aria-controls="about-more"
-                  className="group mt-2 inline-flex items-center gap-2 text-sm font-medium"
+                  className="group mt-2 inline-flex min-h-11 items-center gap-2 text-sm font-medium lg:min-h-0"
                 >
                   <span className="relative">
                     {open ? "Show less" : "Read full story"}

@@ -13,7 +13,7 @@ export default function AboutPage() {
         <p className="mb-2 font-mono text-xs uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400">
           About / Syed Zain Ali
         </p>
-        <h1 className="font-Ovo text-4xl sm:text-6xl">About Me</h1>
+        <h1 className="font-Ovo text-3xl sm:text-6xl">About Me</h1>
       </header>
 
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1.3fr)_minmax(16rem,0.7fr)] lg:gap-16">

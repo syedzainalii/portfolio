@@ -107,6 +107,7 @@ function SkillCard({ category, offset, wrapped, layout, reduceMotion, onSelect }
       }
       style={{
         width: layout.cardW,
+        maxWidth: "calc(100vw - 2.5rem)",
         height: CARD_HEIGHT,
         zIndex: 10 - abs,
         pointerEvents: hidden ? "none" : "auto",
@@ -138,8 +139,8 @@ function SkillCard({ category, offset, wrapped, layout, reduceMotion, onSelect }
           >
             <Icon className="h-5 w-5" />
           </span>
-          <div>
-            <h3 className="text-lg font-semibold leading-6">{category.title}</h3>
+          <div className="min-w-0">
+            <h3 className="break-words text-lg font-semibold leading-6">{category.title}</h3>
             <p className="text-xs leading-5 text-gray-500 dark:text-white/50">
               {category.skills.length} skills
             </p>
@@ -152,8 +153,8 @@ function SkillCard({ category, offset, wrapped, layout, reduceMotion, onSelect }
             return (
               <li key={skill.name}>
                 <div className="flex items-baseline justify-between gap-3">
-                  <span className="text-sm font-medium leading-5">{skill.name}</span>
-                  <span className="text-xs leading-5 text-gray-500 dark:text-white/55">
+                  <span className="min-w-0 break-words text-sm font-medium leading-5">{skill.name}</span>
+                  <span className="shrink-0 text-xs leading-5 text-gray-500 dark:text-white/55">
                     {SHOW_PERCENT ? `${skill.level}%` : lvl.label}
                   </span>
                 </div>
@@ -221,7 +222,7 @@ export default function Skills({ preview = false }) {
   };
 
   return (
-    <section id="skills" className="w-full py-16 sm:py-20 lg:py-24">
+    <section id="skills" className="w-full py-14 sm:py-20 lg:py-24">
       <div className="site-container">
       <h4 className="mb-2 text-center text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 sm:text-sm">
         My Expertise
@@ -295,7 +296,7 @@ export default function Skills({ preview = false }) {
           <div
             role="tablist"
             aria-label="Skill categories"
-            className="hidden items-center gap-1 rounded-full border border-black/10 bg-black/[0.03] p-1 dark:border-white/15 dark:bg-white/5 sm:flex"
+            className="hidden items-center gap-1 rounded-full border border-black/10 bg-black/[0.03] p-1 dark:border-white/15 dark:bg-white/5 md:flex"
           >
             {skillCategories.map((c, i) => {
               const isActive = i === index;
@@ -305,7 +306,7 @@ export default function Skills({ preview = false }) {
                   role="tab"
                   aria-selected={isActive}
                   onClick={() => jump(i)}
-                  className="relative rounded-full px-4 py-1.5 text-sm font-medium leading-6"
+                  className="relative min-h-11 rounded-full px-4 py-1.5 text-sm font-medium leading-6 lg:min-h-0"
                 >
                   {isActive && (
                     <motion.span
@@ -329,7 +330,7 @@ export default function Skills({ preview = false }) {
           </div>
 
           {/* Compact label for phones */}
-          <p className="min-w-[10rem] text-center text-sm font-medium tabular-nums sm:hidden">
+          <p className="w-36 min-w-0 text-center text-xs font-medium leading-5 tabular-nums md:hidden">
             {current.title} · {index + 1}/{COUNT}
           </p>
 
