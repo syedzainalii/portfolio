@@ -57,14 +57,15 @@ const Work = ({ preview = false }) => {
     <section
       id="work"
       ref={sectionRef}
-      className="w-full px-6 py-20 sm:px-10 lg:px-[5%]"
+      className="w-full py-16 sm:py-20 lg:py-24"
     >
+      <div className="site-container">
       {/* Heading */}
       <h4 className="mb-2 text-center text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 sm:text-sm">
         My Projects
       </h4>
       <h2 className="text-center font-Ovo text-4xl sm:text-5xl">My latest projects</h2>
-      <p className="mx-auto mb-14 mt-5 max-w-2xl text-center font-Ovo text-gray-600 dark:text-white/70">
+      <p className="mx-auto mb-12 mt-5 max-w-2xl text-center font-Ovo text-gray-600 dark:text-white/70">
         Here are a few projects I&apos;ve worked on recently. Want to see more?
       </p>
 
@@ -274,6 +275,7 @@ const Work = ({ preview = false }) => {
       </div>
 
       {preview && <SectionPageLink href="/project" label="Show more" />}
+      </div>
     </section>
   );
 };

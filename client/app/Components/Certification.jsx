@@ -201,17 +201,18 @@ const Certification = ({ preview = false }) => {
     : null;
 
   return (
-    <section id="certification" className="w-full px-6 py-20 sm:px-10 lg:px-[5%]">
+    <section id="certification" className="w-full py-16 sm:py-20 lg:py-24">
+      <div className="site-container">
       <h4 className="mb-2 text-center text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 sm:text-sm">
         Credentials
       </h4>
       <h2 className="text-center font-Ovo text-4xl sm:text-5xl">Certifications &amp; Credentials</h2>
-      <p className="mx-auto mt-5 max-w-3xl text-center font-Ovo text-gray-600 dark:text-white/70">
+      <p className="mx-auto mb-12 mt-5 max-w-3xl text-center font-Ovo text-gray-600 dark:text-white/70">
         Professional certifications and credentials that validate my expertise and commitment to
         continuous learning.
       </p>
 
-      <div className="mx-auto mt-14 grid max-w-6xl items-start gap-10 lg:grid-cols-12 lg:gap-16">
+      <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-16">
         {/* ===== Left: counter + filters ===== */}
         <div className="lg:sticky lg:top-28 lg:col-span-5">
           <div className="flex items-end gap-4">
@@ -300,6 +301,7 @@ const Certification = ({ preview = false }) => {
       </div>
 
       {preview && <SectionPageLink href="/certification" label="View all" />}
+      </div>
     </section>
   );
 };

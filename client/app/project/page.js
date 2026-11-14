@@ -7,9 +7,5 @@ export const metadata = {
 };
 
 export default function WorkPage() {
-  return (
-    <div className="pt-4">
-      <WorkPageView />
-    </div>
-  );
+  return <WorkPageView />;
 }

@@ -7,9 +7,5 @@ export const metadata = {
 };
 
 export default function ExperiencePage() {
-  return (
-    <div className="pt-20">
-      <ExperiencePageView />
-    </div>
-  );
+  return <ExperiencePageView />;
 }

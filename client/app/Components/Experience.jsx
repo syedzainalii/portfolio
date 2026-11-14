@@ -219,7 +219,7 @@ function RoleSticky({ exp, index, total, perStep }) {
   return (
     <div ref={ref} style={{ height: `${count * perStep + 100}vh` }} className="relative">
       <div className="sticky top-0 flex h-screen items-center">
-        <div className="mx-auto grid w-full max-w-6xl items-center gap-6 pt-20 lg:grid-cols-12 lg:gap-14">
+        <div className="grid w-full items-center gap-6 lg:grid-cols-12 lg:gap-14">
           <div className="lg:col-span-5">
             <Gauge progress={scrollYProgress} count={count} active={active} />
           </div>
@@ -280,7 +280,7 @@ function RoleStatic({ exp, index, total }) {
   const report = exp.report ?? "/report.pdf";
 
   return (
-    <article className="mx-auto max-w-4xl py-12">
+    <article className="py-8">
       <Meta exp={exp} index={index} total={total} />
       <h3 className="mt-3 text-center font-Ovo text-3xl sm:text-5xl lg:text-left">{exp.role}</h3>
       <p className="mt-4 text-gray-600 dark:text-white/65">{exp.description}</p>
@@ -313,16 +313,17 @@ export default function Experience({ preview = false }) {
   const roles = experienceData;
 
   return (
-    <section id="experience" className="w-full px-6 pt-20 sm:px-10 lg:px-[5%]">
+    <section id="experience" className="w-full py-16 sm:py-20 lg:py-24">
+      <div className="site-container">
       <h4 className="mb-2 text-center text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 sm:text-sm">
         My Journey
       </h4>
       <h2 className="text-center font-Ovo text-4xl sm:text-5xl">Work Experience</h2>
-      <p className="mx-auto mt-5 max-w-2xl text-center font-Ovo text-gray-600 dark:text-white/70">
+      <p className="mx-auto mb-12 mt-5 max-w-2xl text-center font-Ovo text-gray-600 dark:text-white/70">
         A showcase of my professional growth and the amazing teams I&apos;ve collaborated with
       </p>
 
-      <div className="mt-6">
+      <div>
         {roles.map((exp, i) =>
           reduce || !(exp.achievements ?? []).length ? (
             <RoleStatic key={exp.id} exp={exp} index={i} total={roles.length} />
@@ -339,10 +340,11 @@ export default function Experience({ preview = false }) {
       </div>
 
       {preview && (
-        <div className="pb-10">
+        <div>
           <SectionPageLink href="/experience" label="View all" />
         </div>
       )}
+      </div>
     </section>
   );
 }

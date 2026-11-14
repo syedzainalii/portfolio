@@ -7,9 +7,5 @@ export const metadata = {
 };
 
 export default function SkillsPage() {
-  return (
-    <div className="pt-20">
-      <SkillsPageView />
-    </div>
-  );
+  return <SkillsPageView />;
 }

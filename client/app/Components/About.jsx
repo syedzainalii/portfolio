@@ -68,7 +68,8 @@ const About = ({ preview = false }) => {
   const tools = toolsData.map((src, i) => ({ src, name: TOOL_NAMES[i] ?? "Tool" }));
 
   return (
-    <section id="about" className="w-full overflow-x-hidden px-6 py-20 sm:px-10 lg:px-[5%]">
+    <section id="about" className="w-full py-16 sm:py-20 lg:py-24">
+      <div className="site-container">
       <style
         dangerouslySetInnerHTML={{
           __html: `
@@ -93,7 +94,7 @@ const About = ({ preview = false }) => {
       </h4>
       <h2 className="text-center font-Ovo text-4xl sm:text-5xl">About Me</h2>
 
-      <div className="mx-auto mt-12 grid w-full gap-5 xl:grid-cols-12">
+      <div className="mt-12 grid w-full gap-5 xl:grid-cols-12">
         {/* ===== Portrait ===== */}
         <motion.div
           {...reveal()}
@@ -145,7 +146,7 @@ const About = ({ preview = false }) => {
                   <div className="overflow-hidden">
                     <div
                       id="about-more"
-                      className="space-y-4 pt-5 font-Ovo text-base leading-8 text-gray-600 dark:text-white/70"
+                      className="max-w-2xl space-y-4 pt-5 font-Ovo text-base leading-8 text-gray-600 dark:text-white/70"
                     >
                       {rest.map((paragraph) => (
                         <p key={paragraph}>{paragraph}</p>
@@ -301,7 +302,7 @@ const About = ({ preview = false }) => {
           )}
         </motion.div>
       </div>
-
+      </div>
     </section>
   );
 };

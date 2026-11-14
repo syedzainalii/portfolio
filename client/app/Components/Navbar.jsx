@@ -51,9 +51,10 @@ const Navbar = ({isDarkMode, setIsDarkMode}) => {
                 <Image src={assets.header_bg_color} alt="" className='w-full' priority />
             </div>
 
-            <nav className={`w-full fixed px-5 lg:px-8 xl:px-[5%] py-4 flex items-center justify-between z-50 transition-all duration-300 ${isScroll
+            <nav className={`w-full fixed top-0 z-50 transition-all duration-300 ${isScroll
                 ? "bg-white bg-opacity-50 backdrop-blur-lg shadow-sm dark:bg-darkTheme dark:shadow-white/20" 
                 : ""}`}>
+                <div className="w-full px-5 sm:px-8 lg:px-10 flex items-center justify-between py-4">
                 
                 {/* Logo Section */}
                 <Link href="/">
@@ -124,6 +125,7 @@ const Navbar = ({isDarkMode, setIsDarkMode}) => {
                     ))}
                 </ul>
 
+                </div>
             </nav>
         </>
     )

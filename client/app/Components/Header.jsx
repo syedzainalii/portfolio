@@ -248,11 +248,12 @@ const Header = () => {
   return (
     <section
       id="top"
-      className="relative flex min-h-screen w-full flex-col justify-center overflow-hidden px-6 pb-10 pt-32 sm:px-10 lg:px-[5%]"
+      className="relative flex min-h-screen w-full flex-col justify-center overflow-hidden pb-10 pt-32"
     >
       <MeshBackground dark={isDarkMode} reduce={reduce} />
 
-      <div className="relative z-10 grid items-center gap-12 lg:grid-cols-12">
+      <div className="relative z-10 w-full px-5 sm:px-8 lg:px-10">
+      <div className="grid items-center gap-12 lg:grid-cols-12">
         {/* ===== Text ===== */}
         <motion.div
           variants={container}
@@ -383,7 +384,7 @@ const Header = () => {
         initial={reduce ? false : { opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.9 }}
-        className="relative z-10 mt-14 flex flex-col items-center justify-between gap-6 border-t border-black/10 pt-6 dark:border-white/15 lg:flex-row"
+        className="relative z-10 mt-12 flex flex-col items-center justify-between gap-6 border-t border-black/10 pt-6 dark:border-white/15 lg:flex-row"
       >
         <dl className="grid grid-cols-4 gap-6 sm:gap-10">
           {stats.map((s) => (
@@ -412,6 +413,7 @@ const Header = () => {
           </span>
         </div>
       </motion.div>
+      </div>
     </section>
   );
 };

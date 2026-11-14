@@ -8,7 +8,7 @@ export default function SiteShell({ children }) {
   const { isDarkMode, setIsDarkMode } = useTheme();
 
   return (
-    <div className="min-h-screen font-outfit overflow-x-hidden flex flex-col">
+    <div className="min-h-screen font-outfit overflow-x-clip flex flex-col">
       <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
       <main className="w-full flex-1">
         {children}

@@ -43,6 +43,13 @@ function getLayout(w) {
     return { cardW, xs: [0, Math.round(cardW * 0.86), 0], visible: 1 };
   }
   if (w < 1280) return { cardW: 320, xs: [0, 310, 0], visible: 1 };
+  if (w >= 1536) {
+    const cardW = Math.min(380, Math.round(340 * (w / 1440)));
+    const gap = Math.round(cardW * 0.025);
+    const near = Math.round(cardW * 0.93 + gap);
+    const far = near + Math.round(cardW * 0.76 + gap);
+    return { cardW, xs: [0, near, far], visible: 2 };
+  }
   return { cardW: 340, xs: [0, 325, 579], visible: 2 };
 }
 
@@ -214,12 +221,13 @@ export default function Skills({ preview = false }) {
   };
 
   return (
-    <section id="skills" className="w-full px-6 sm:px-10 lg:px-[5%] py-10">
+    <section id="skills" className="w-full py-16 sm:py-20 lg:py-24">
+      <div className="site-container">
       <h4 className="mb-2 text-center text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 sm:text-sm">
         My Expertise
       </h4>
       <h2 className="text-center font-Ovo text-3xl sm:text-5xl">My Technical Skills</h2>
-      <p className="mx-auto mb-4 mt-5 max-w-2xl text-center font-Ovo">
+      <p className="mx-auto mb-12 mt-5 max-w-2xl text-center font-Ovo">
         Explore my comprehensive skill set across various technologies and frameworks
       </p>
 
@@ -243,7 +251,7 @@ export default function Skills({ preview = false }) {
             if (info.offset.x < -60 || info.velocity.x < -400) go(1);
             else if (info.offset.x > 60 || info.velocity.x > 400) go(-1);
           }}
-          className="relative mx-auto mt-6 w-full cursor-grab select-none outline-none active:cursor-grabbing focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-4 rounded-3xl"
+          className="relative mx-auto w-full cursor-grab select-none outline-none active:cursor-grabbing focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-4 rounded-3xl"
           style={{ height: CARD_HEIGHT + 40, perspective: 1600, touchAction: "pan-y" }}
         >
           {/* Soft glow that follows the active category color */}
@@ -336,6 +344,7 @@ export default function Skills({ preview = false }) {
       </div>
 
       {preview && <SectionPageLink href="/skills" label="View all" />}
+      </div>
     </section>
   );
 }

@@ -5,13 +5,13 @@ import { serviceData, serviceIntro } from "@/assets/assets";
 
 export default function ServicesPage() {
   return (
-    <article className="px-6 py-16 sm:px-10 lg:px-[5%]">
+    <article className="site-container pt-24 pb-16">
       <header className="mb-12 border-b border-black/10 pb-8 dark:border-white/15">
-        <p className="font-mono text-xs uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400">
+        <p className="mb-2 font-mono text-xs uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400">
           Services / Available Work
         </p>
-        <h1 className="mt-4 font-Ovo text-4xl sm:text-6xl">What I offer</h1>
-        <p className="mt-4 max-w-2xl leading-7 text-gray-600 dark:text-white/65">
+        <h1 className="font-Ovo text-4xl sm:text-6xl">What I offer</h1>
+        <p className="mt-5 max-w-2xl leading-7 text-gray-600 dark:text-white/65">
           {serviceIntro}
         </p>
       </header>

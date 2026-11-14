@@ -8,12 +8,12 @@ import {
 
 export default function AboutPage() {
   return (
-    <article className="px-6 py-16 sm:px-10 lg:px-[5%]">
+    <article className="site-container pt-24 pb-16">
       <header className="mb-12 border-b border-black/10 pb-8 dark:border-white/15">
-        <p className="font-mono text-xs uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400">
+        <p className="mb-2 font-mono text-xs uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400">
           About / Syed Zain Ali
         </p>
-        <h1 className="mt-4 font-Ovo text-4xl sm:text-6xl">About Me</h1>
+        <h1 className="font-Ovo text-4xl sm:text-6xl">About Me</h1>
       </header>
 
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1.3fr)_minmax(16rem,0.7fr)] lg:gap-16">
@@ -37,7 +37,7 @@ export default function AboutPage() {
         </div>
       </div>
 
-      <section className="mt-16 border-t border-black/10 pt-10 dark:border-white/15">
+      <section className="mt-12 border-t border-black/10 pt-8 dark:border-white/15">
         <div className="mb-6 flex items-end justify-between gap-4">
           <h2 className="font-Ovo text-2xl sm:text-3xl">Profile</h2>
           <span className="font-mono text-xs text-gray-500">01—04</span>
@@ -61,7 +61,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="mt-14 border-t border-black/10 pt-10 dark:border-white/15">
+      <section className="mt-12 border-t border-black/10 pt-8 dark:border-white/15">
         <div className="mb-6 flex items-end justify-between gap-4">
           <h2 className="font-Ovo text-2xl sm:text-3xl">Tools I use</h2>
           <span className="font-mono text-xs text-gray-500">

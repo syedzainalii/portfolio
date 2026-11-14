@@ -7,7 +7,7 @@ export default function SectionPageLink({ href, label }) {
     <div className="flex justify-center">
       <Link
         href={href}
-        className="relative group flex items-center gap-2 border border-gray-400 rounded-full px-10 py-3 mt-16 overflow-hidden transition-all duration-500 hover:-translate-y-1"
+        className="relative group flex items-center gap-2 border border-gray-400 rounded-full px-10 py-3 mt-12 overflow-hidden transition-all duration-500 hover:-translate-y-1"
       >
         <span className="relative z-10 flex items-center gap-2 text-gray-700 group-hover:text-white dark:text-white dark:group-hover:text-black transition-colors duration-500">
           {label}

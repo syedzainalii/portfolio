@@ -9,13 +9,14 @@ const Footer = () => {
   const { isDarkMode } = useTheme();
   return (
     <div className='mt-4'>
+      <div className="w-full px-5 sm:px-8 lg:px-10">
       {/* Logo */}
-      <div className='mb-4 px-5 sm:px-10 mx-[5%] mt-4'>
+      <div className='mb-4 mt-4'>
         <Image src={isDarkMode ? assets.logo_dark : assets.logo} alt='' className='w-36'/>
       </div>
       
       {/* Contact Details - Responsive Layout */}
-      <div className='flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8 text-sm mb-4 px-5 sm:px-10 mx-[5%] mt-4'>
+      <div className='flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8 text-sm mb-4 mt-4'>
         <div className='flex items-center gap-2'>   
           <Image src={isDarkMode ? assets.mail_icon_dark : assets.mail_icon} alt='' className='w-5 flex-shrink-0'/>
           <span className='break-all'>{contactDetails.email}</span>
@@ -32,7 +33,7 @@ const Footer = () => {
 
       {/* Footer Bottom */}
       <div className="text-center sm:flex items-center justify-between border-t border-gray-400
-        mx-[10%] mt-6 py-6">   
+        mt-6 py-6">
         <p className='text-sm'>© 2025 Syed Zain Ali. All rights reserved</p>
         <ul className='flex items-center gap-2 justify-center mt-4 sm:mt-0'> 
           <li>
@@ -46,6 +47,7 @@ const Footer = () => {
             </a>
           </li>
         </ul>
+      </div>
       </div>
     </div>
   )

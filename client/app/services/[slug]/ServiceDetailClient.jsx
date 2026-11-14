@@ -7,7 +7,7 @@ import { motion } from "motion/react"
 const ServiceDetailClient = ({ service }) => {
 
   return (
-    <div className="w-full px-6 py-20 sm:px-10 lg:px-[5%]">
+    <div className="site-container pt-24 pb-16">
       {/* Back Button */}
       <motion.div
         initial={{ opacity: 0, x: -20 }}
@@ -37,7 +37,7 @@ const ServiceDetailClient = ({ service }) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.1 }}
-        className="mb-16"
+        className="mb-12"
       >
         <div className="flex items-center gap-4 mb-6">
           <motion.div
@@ -65,7 +65,7 @@ const ServiceDetailClient = ({ service }) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.3 }}
-        className="mb-16"
+        className="mb-12"
       >
         <h2 className="text-3xl sm:text-4xl font-Ovo mb-8 dark:text-white">
           What&apos;s Included
@@ -107,7 +107,7 @@ const ServiceDetailClient = ({ service }) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.5 }}
-        className="mb-16"
+        className="mb-12"
       >
         <h2 className="text-3xl sm:text-4xl font-Ovo mb-8 dark:text-white">
           How It Works
@@ -172,7 +172,7 @@ const ServiceDetailClient = ({ service }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 1 }}
-        className="mt-20"
+        className="mt-12"
       >
         <h2 className="text-3xl sm:text-4xl font-Ovo mb-8 dark:text-white text-center">
           Other Services

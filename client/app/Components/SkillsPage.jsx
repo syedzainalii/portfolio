@@ -25,13 +25,13 @@ function getSkillLevel(level) {
 
 export default function SkillsPage() {
   return (
-    <article className="px-6 py-16 sm:px-10 lg:px-[5%]">
+    <article className="site-container pt-24 pb-16">
       <header className="mb-12 grid gap-6 border-b border-black/10 pb-8 dark:border-white/15 sm:grid-cols-[1fr_auto] sm:items-end">
         <div>
-          <p className="font-mono text-xs uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400">
+          <p className="mb-2 font-mono text-xs uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400">
             Skills / Technical Index
           </p>
-          <h1 className="mt-4 font-Ovo text-4xl sm:text-6xl">My Technical Skills</h1>
+          <h1 className="font-Ovo text-4xl sm:text-6xl">My Technical Skills</h1>
         </div>
         <p className="max-w-sm text-sm leading-6 text-gray-600 dark:text-white/65">
           Explore my skill set across engineering, simulation, software, and project work.

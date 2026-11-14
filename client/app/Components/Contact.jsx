@@ -9,11 +9,12 @@ const Contact = ({ preview = false }) => {
   const { onSubmit, result } = useContactSubmission();
 
   return (
-    <div
+    <section
       id="contact"
-      className='w-full px-6 sm:px-10 lg:px-[5%] py-10 bg-[url("/footer-bg-color.png")] bg-no-repeat bg-center bg-[length:90%_auto] dark:bg-none'
+      className='w-full py-16 sm:py-20 lg:py-24 bg-[url("/footer-bg-color.png")] bg-no-repeat bg-center bg-[length:90%_auto] dark:bg-none'
     > 
-      <h4 className='text-center mb-1 text-xl font-Ovo'>
+      <div className="site-container">
+      <h4 className='text-center mb-2 text-xl font-Ovo'>
         {contactContent.eyebrow}
       </h4>
       
@@ -21,13 +22,13 @@ const Contact = ({ preview = false }) => {
         {contactContent.title}
       </h2>
       
-      <p className='text-center max-w-2xl mx-auto mt-3 mb-12 font-Ovo'>
+      <p className='text-center max-w-2xl mx-auto mt-5 mb-12 font-Ovo'>
         {contactContent.description}
       </p>
     
-      <form onSubmit={onSubmit} className='mx-w-2xl mx-auto'>  
+      <form onSubmit={onSubmit} className='mx-auto max-w-3xl'>
         
-        <div className='grid grid-cols-auto sm:grid-cols-2 gap-6 mt-10 mb-8'>
+        <div className='grid grid-cols-auto sm:grid-cols-2 gap-6 mb-8'>
           <input 
             type='text' 
             placeholder={contactContent.namePlaceholder}
@@ -64,7 +65,8 @@ const Contact = ({ preview = false }) => {
         <p className='mt-4 text-center'>{result}</p> 
       </form>
       {preview && <SectionPageLink href="/contact" label="View all" />}
-    </div>
+      </div>
+    </section>
   )
 }
 

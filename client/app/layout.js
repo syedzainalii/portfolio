@@ -45,7 +45,7 @@ export default function RootLayout({ children }) {
       </head>
       <body
         className={`${outfit.variable} ${ovo.variable} font-outfit antialiased 
-        leading-8 overflow-x-hidden bg-white text-black dark:bg-darkTheme dark:text-white flex min-h-screen flex-col`}
+        leading-8 overflow-x-clip bg-white text-black dark:bg-darkTheme dark:text-white flex min-h-screen flex-col`}
       >
         <ThemeProvider>
           <SiteShell>{children}</SiteShell>

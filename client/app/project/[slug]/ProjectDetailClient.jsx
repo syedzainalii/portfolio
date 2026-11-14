@@ -9,7 +9,7 @@ export default function ProjectDetail({ project }) {
   const otherProjects = workData.filter((item) => item.slug !== project.slug).slice(0, 3);
 
   return (
-    <article className="min-h-screen px-6 py-12 sm:px-10 lg:px-[5%]">
+    <article className="site-container min-h-screen pt-24 pb-16">
       <Link
         href="/project"
         className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-amber-600 dark:text-white/65 dark:hover:text-amber-400"

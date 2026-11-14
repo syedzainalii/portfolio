@@ -19,9 +19,10 @@ const Services = ({ preview = false }) => {
   const [active, setActive] = useState(0)
 
   return (
-    <section id="services" className="w-full px-6 sm:px-10 lg:px-[5%] py-10">
+    <section id="services" className="w-full py-16 sm:py-20 lg:py-24">
+      <div className="site-container">
       {/* Header */}
-      <div className="flex items-end justify-between gap-6 mb-10">
+      <div className="flex items-end justify-between gap-6 mb-12">
         <div>
           <h4 className="text-xs sm:text-sm tracking-[0.25em] uppercase font-semibold text-slate-500 dark:text-slate-400 mb-2">
             What I offer
@@ -29,7 +30,7 @@ const Services = ({ preview = false }) => {
           <h2 className="text-3xl sm:text-5xl font-Ovo leading-tight">
             My Services
           </h2>
-          <p className="mt-4 max-w-xl text-sm sm:text-base text-gray-600 dark:text-white/70">
+          <p className="mt-5 max-w-xl text-sm sm:text-base text-gray-600 dark:text-white/70">
             {serviceIntro}
           </p>
         </div>
@@ -176,6 +177,7 @@ const Services = ({ preview = false }) => {
           Explore services <ArrowUpRight className="w-4 h-4" />
         </Link>
       )}
+      </div>
     </section>
   )
 }

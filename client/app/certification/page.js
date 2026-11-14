@@ -7,9 +7,5 @@ export const metadata = {
 };
 
 export default function CertificationPage() {
-  return (
-    <div className="pt-20">
-      <CertificationPageView />
-    </div>
-  );
+  return <CertificationPageView />;
 }
