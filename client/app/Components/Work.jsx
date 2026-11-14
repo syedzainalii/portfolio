@@ -61,9 +61,9 @@ const Work = ({ preview = false }) => {
       <div className="site-container">
         {/* Heading */}
         <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 sm:text-sm">
-          My Projects
+          SHOWCASE
         </h4>
-        <h2 className="font-Ovo text-4xl sm:text-5xl">My latest projects</h2>
+        <h2 className="font-Ovo text-4xl sm:text-5xl">FEATURED PROJECTS</h2>
 
         <div
           className="mt-8 grid items-center gap-8 lg:mt-10 lg:grid-cols-12 lg:gap-10"

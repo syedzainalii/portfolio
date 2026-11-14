@@ -225,9 +225,9 @@ export default function Skills({ preview = false }) {
     <section id="skills" className="w-full py-14 sm:py-20 lg:py-24">
       <div className="site-container">
       <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 sm:text-sm">
-        My Expertise
+        SKILLS
       </h4>
-      <h2 className="font-Ovo text-3xl sm:text-5xl">My Technical Skills</h2>
+      <h2 className="font-Ovo text-3xl sm:text-5xl">Technical Proficiencies</h2>
 
       <div
         className="mt-12"
