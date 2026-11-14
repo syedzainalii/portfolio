@@ -197,12 +197,6 @@ const Header = () => {
                 />
               </div>
 
-              {/* Corner brackets */}
-              <span aria-hidden className="absolute -left-2 -top-2 h-7 w-7 border-l-2 border-t-2 border-amber-400" />
-              <span aria-hidden className="absolute -right-2 -top-2 h-7 w-7 border-r-2 border-t-2 border-amber-400" />
-              <span aria-hidden className="absolute -bottom-2 -left-2 h-7 w-7 border-b-2 border-l-2 border-amber-400" />
-              <span aria-hidden className="absolute -bottom-2 -right-2 h-7 w-7 border-b-2 border-r-2 border-amber-400" />
-
               {/* Floating chips */}
               <Chip reduce={reduce} desktop={desktop} delay={0} className="-left-4 bottom-10 hidden sm:block lg:-left-10">
                 <span className="block font-mono text-[10px] uppercase tracking-widest text-amber-600 dark:text-amber-400">

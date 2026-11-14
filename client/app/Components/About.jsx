@@ -129,10 +129,6 @@ const About = ({ preview = false }) => {
               className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
             />
 
-            {/* Corner brackets */}
-            <span aria-hidden className="absolute left-4 top-4 h-6 w-6 border-l-2 border-t-2 border-amber-400" />
-            <span aria-hidden className="absolute right-4 top-4 h-6 w-6 border-r-2 border-t-2 border-amber-400" />
-
             {/* Name label */}
             <div className="absolute inset-x-4 bottom-4 rounded-2xl border border-white/20 bg-black/60 p-4 lg:bg-black/35 lg:backdrop-blur-md">
               <p className="text-lg font-semibold leading-6 text-white">Syed Zain Ali</p>
