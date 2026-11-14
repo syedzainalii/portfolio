@@ -14,6 +14,7 @@ import {
   FaUserTie,
 } from "react-icons/fa";
 import { certificationData, certificationFilters } from "@/assets/assets";
+import useMediaQuery from "./useMediaQuery";
 
 const certificationIcons = {
   aws: FaAws,
@@ -67,7 +68,7 @@ function AllCredentialsLink({ count }) {
   );
 }
 
-function WalletCard({ cert, index, isLast, open, onToggle, reduce }) {
+function WalletCard({ cert, index, isLast, open, onToggle, reduce, desktop }) {
   const accent = ACCENTS[cert.iconBg] ?? DEFAULT_ACCENT;
   const Icon = certificationIcons[cert.icon] ?? FaCode;
   const IssuerIcon = certificationIcons[cert.issuerIcon] ?? FaUniversity;
@@ -87,17 +88,24 @@ function WalletCard({ cert, index, isLast, open, onToggle, reduce }) {
       transition={{ duration: 0.5, delay: reduce ? 0 : index * 0.07, ease: "easeOut" }}
       // Later cards sit on top of earlier ones, so each card's bottom edge is tucked under the next
       style={{ zIndex: index + 1 }}
-      className="relative -mt-5 first:mt-0"
+      className="relative mt-3 first:mt-0 lg:-mt-5 lg:first:mt-0"
     >
       <div
-        className={`group relative overflow-hidden rounded-3xl border bg-white shadow-[0_-10px_24px_-14px_rgba(0,0,0,0.35)] transition-all duration-300 dark:bg-darkHover ${
+        className={`group relative overflow-hidden rounded-3xl border bg-white shadow-sm transition-all duration-300 dark:bg-darkHover lg:shadow-[0_-10px_24px_-14px_rgba(0,0,0,0.35)] ${
           isLast && !open ? "pb-0" : "pb-5"
         } ${
           open
             ? "border-transparent"
             : "border-black/10 hover:-translate-y-1 dark:border-white/15"
         }`}
-        style={open ? { borderColor: `${accent}99`, boxShadow: `0 18px 50px -18px ${accent}66` } : undefined}
+        style={
+          open
+            ? {
+                borderColor: `${accent}99`,
+                ...(desktop ? { boxShadow: `0 18px 50px -18px ${accent}66` } : {}),
+              }
+            : undefined
+        }
       >
         {/* Accent wash */}
         <div
@@ -195,6 +203,7 @@ const Certification = ({ preview = false }) => {
   const certifications = certificationData;
   const filters = certificationFilters;
   const reduce = useReducedMotion();
+  const desktop = useMediaQuery("(min-width: 1024px)");
 
   const [activeFilter, setActiveFilter] = useState("all");
   const [openId, setOpenId] = useState(certifications[0]?.id ?? null);
@@ -225,7 +234,7 @@ const Certification = ({ preview = false }) => {
     : null;
 
   return (
-    <section id="certification" className="w-full py-14 sm:py-20 lg:py-24">
+    <section id="certification" className="heavy-section w-full py-14 sm:py-20 lg:py-24">
       <div className="site-container">
         {/* Header row: title on the left, button on the right */}
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
@@ -285,11 +294,15 @@ const Certification = ({ preview = false }) => {
                   >
                     <span className="grid h-2 w-2 place-items-center">
                       {isActive && (
-                        <motion.span
-                          layoutId="cert-dot"
-                          className="h-2 w-2 rounded-full bg-amber-400"
-                          transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                        />
+                        desktop ? (
+                          <motion.span
+                            layoutId="cert-dot"
+                            className="h-2 w-2 rounded-full bg-amber-400"
+                            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                          />
+                        ) : (
+                          <span className="h-2 w-2 rounded-full bg-amber-400" />
+                        )
                       )}
                     </span>
                     <span
@@ -321,7 +334,8 @@ const Certification = ({ preview = false }) => {
                   isLast={i === visible.length - 1}
                   open={openId === cert.id}
                   onToggle={() => setOpenId((cur) => (cur === cert.id ? null : cert.id))}
-                  reduce={reduce}
+                  reduce={reduce || !desktop}
+                  desktop={desktop}
                 />
               ))}
             </ul>

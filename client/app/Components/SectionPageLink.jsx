@@ -15,6 +15,8 @@ export default function SectionPageLink({ href, label }) {
             src={assets.right_arrow_bold}
             alt=""
             className="w-4 group-hover:invert"
+            sizes="16px"
+            loading="lazy"
           />
         </span>
 

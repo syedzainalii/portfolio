@@ -1,11 +1,13 @@
+import dynamic from "next/dynamic";
 import Header from "./Components/Header";
-import About from "./Components/About";
-import Skills from "./Components/Skills";
-import Services from "./Components/Services";
-import Work from "./Components/Work";
-import Experience from "./Components/Experience";
-import Certification from "./Components/Certification";
-import Contact from "./Components/Contact";
+
+const About = dynamic(() => import("./Components/About"), { ssr: true });
+const Skills = dynamic(() => import("./Components/Skills"), { ssr: true });
+const Services = dynamic(() => import("./Components/Services"), { ssr: true });
+const Work = dynamic(() => import("./Components/Work"), { ssr: true });
+const Experience = dynamic(() => import("./Components/Experience"), { ssr: true });
+const Certification = dynamic(() => import("./Components/Certification"), { ssr: true });
+const Contact = dynamic(() => import("./Components/Contact"), { ssr: true });
 
 export const metadata = {
   title: { absolute: "Home | Syed Zain Ali" },

@@ -1,9 +1,9 @@
 "use client";
 
 import { aboutParagraphs, assets, infoList, toolsData } from "@/assets/assets";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Image from "next/image";
-import { motion, useReducedMotion } from "motion/react";
+import { motion, useInView, useReducedMotion } from "motion/react";
 import { ChevronDown, MapPin } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
 
@@ -49,7 +49,7 @@ function ToolPill({ src, name }) {
         motion-reduce:transition-none"
     >
       <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white p-1.5 ring-1 ring-black/5 transition-shadow duration-300 group-hover:ring-amber-500/40">
-        <Image src={src} alt="" className="h-full w-full object-contain" />
+        <Image src={src} alt="" className="h-full w-full object-contain" sizes="36px" loading="lazy" />
       </span>
       <span className="min-w-0 whitespace-nowrap text-sm font-medium leading-5 xl:whitespace-normal">
         {name}
@@ -61,6 +61,8 @@ function ToolPill({ src, name }) {
 const About = ({ preview = false }) => {
   const { isDarkMode } = useTheme();
   const reduce = useReducedMotion();
+  const toolsRef = useRef(null);
+  const inView = useInView(toolsRef);
   const [open, setOpen] = useState(false);
 
   const [lead, ...rest] = aboutParagraphs;
@@ -88,6 +90,8 @@ const About = ({ preview = false }) => {
               .about-tools-marquee-host:hover .about-tools-marquee-y,
               .about-tools-marquee-host:focus-within .about-tools-marquee-x,
               .about-tools-marquee-host:focus-within .about-tools-marquee-y { animation-play-state: paused; }
+              .about-tools-marquee-paused .about-tools-marquee-x,
+              .about-tools-marquee-paused .about-tools-marquee-y { animation-play-state: paused; }
               @media (prefers-reduced-motion: reduce) {
                 .about-tools-marquee-x, .about-tools-marquee-y { animation: none; }
               }
@@ -109,12 +113,14 @@ const About = ({ preview = false }) => {
           {/* ===== Portrait (spans bio + specs rows) ===== */}
           <motion.div
             {...reveal()}
-            className={`${tile} h-[26rem] shadow-xl sm:h-[30rem] md:col-span-2 md:row-span-2 md:h-auto md:min-h-[22rem] xl:col-span-3 xl:col-start-1 xl:row-start-1`}
+            className={`${tile} h-[26rem] shadow-md sm:h-[30rem] md:col-span-2 md:row-span-2 md:h-auto md:min-h-[22rem] xl:col-span-3 xl:col-start-1 xl:row-start-1 lg:shadow-xl`}
           >
             <Image
               src={assets.user_image}
               alt="Syed Zain Ali"
               fill
+              loading="lazy"
+              quality={70}
               sizes="(min-width: 1280px) 24rem, (min-width: 768px) 40vw, 100vw"
               className="object-cover object-top"
             />
@@ -128,7 +134,7 @@ const About = ({ preview = false }) => {
             <span aria-hidden className="absolute right-4 top-4 h-6 w-6 border-r-2 border-t-2 border-amber-400" />
 
             {/* Name label */}
-            <div className="absolute inset-x-4 bottom-4 rounded-2xl border border-white/20 bg-black/35 p-4 backdrop-blur-md">
+            <div className="absolute inset-x-4 bottom-4 rounded-2xl border border-white/20 bg-black/60 p-4 lg:bg-black/35 lg:backdrop-blur-md">
               <p className="text-lg font-semibold leading-6 text-white">Syed Zain Ali</p>
               <p className="mt-1 flex items-center gap-1.5 text-xs leading-5 text-white/75">
                 <MapPin className="h-3.5 w-3.5" />
@@ -140,7 +146,7 @@ const About = ({ preview = false }) => {
           {/* ===== Bio ===== */}
           <motion.div
             {...reveal(0.05)}
-            className={`${tile} p-6 shadow-lg sm:p-7 md:col-span-3 xl:col-span-6 xl:col-start-4 xl:row-start-1`}
+            className={`${tile} p-6 shadow-sm sm:p-7 md:col-span-3 xl:col-span-6 xl:col-start-4 xl:row-start-1 lg:shadow-lg`}
           >
             <Label>Profile</Label>
             {lead && (
@@ -189,7 +195,7 @@ const About = ({ preview = false }) => {
           {/* ===== Specifications ===== */}
           <motion.div
             {...reveal(0.1)}
-            className={`${tile} shadow-lg md:col-span-3 xl:col-span-6 xl:col-start-4 xl:row-start-2`}
+            className={`${tile} shadow-sm md:col-span-3 xl:col-span-6 xl:col-start-4 xl:row-start-2 lg:shadow-lg`}
           >
             <dl className="grid h-full sm:grid-cols-2">
               {infoList.map(({ icon, iconDark, title, description }, index) => {
@@ -212,7 +218,7 @@ const About = ({ preview = false }) => {
                       className="absolute inset-y-4 left-0 w-0.5 origin-top scale-y-0 rounded-full bg-amber-400 transition-transform duration-300 group-hover:scale-y-100 motion-reduce:transition-none"
                     />
                     <dt className="flex items-center gap-3">
-                      <Image src={isDarkMode ? iconDark : icon} alt="" className="w-6 shrink-0" />
+                      <Image src={isDarkMode ? iconDark : icon} alt="" className="w-6 shrink-0" sizes="24px" loading="lazy" />
                       <span className="font-semibold leading-6">{title}</span>
                     </dt>
                     <dd className="mt-2 text-sm leading-6 text-gray-600 dark:text-white/70">
@@ -235,10 +241,11 @@ const About = ({ preview = false }) => {
           {/* ===== Tools list (dark yellow glow) ===== */}
           <motion.div
             {...reveal(0.1)}
+            ref={toolsRef}
             className={`${tile} about-tools-marquee-host p-5 sm:p-6 md:col-span-5 xl:col-span-3 xl:col-start-10 xl:row-span-2 xl:row-start-1 xl:flex xl:flex-col
-              shadow-[0_18px_50px_-18px_rgba(180,115,0,0.5)]
+              lg:shadow-[0_18px_50px_-18px_rgba(180,115,0,0.5)]
               dark:border-amber-500/20
-              dark:shadow-[0_18px_60px_-16px_rgba(202,138,4,0.45)]`}
+              lg:dark:shadow-[0_18px_60px_-16px_rgba(202,138,4,0.45)]`}
           >
             {/* Dark yellow glow along the top edge */}
             <div
@@ -271,9 +278,20 @@ const About = ({ preview = false }) => {
               </>
             ) : (
               <>
-                {/* Phones + tablets: horizontal marquee */}
+                {/* Phones: static, manually scrollable tool list */}
+                <div className="relative overflow-hidden py-2 lg:hidden">
+                  <ul className="flex gap-3 overflow-x-auto pb-2 pt-1">
+                    {tools.map((t) => (
+                      <ToolPill key={t.name} src={t.src} name={t.name} />
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Tablets: horizontal marquee */}
                 <div
-                  className="relative overflow-hidden py-2 xl:hidden"
+                  className={`relative hidden overflow-hidden py-2 lg:block xl:hidden ${
+                    inView ? "" : "about-tools-marquee-paused"
+                  }`}
                   style={{ maskImage: fadeX, WebkitMaskImage: fadeX }}
                 >
                   <div className="about-tools-marquee-x flex w-max">
@@ -291,7 +309,9 @@ const About = ({ preview = false }) => {
                     It is absolutely positioned, so it never pushes the row taller. */}
                 <div className="relative hidden min-h-0 flex-1 xl:block">
                   <div
-                    className="absolute inset-0 overflow-hidden py-2"
+                    className={`absolute inset-0 overflow-hidden py-2 ${
+                      inView ? "" : "about-tools-marquee-paused"
+                    }`}
                     style={{ maskImage: fadeY, WebkitMaskImage: fadeY }}
                   >
                     <div className="about-tools-marquee-y flex flex-col">

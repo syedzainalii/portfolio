@@ -1,4 +1,4 @@
-import user_image from './user-image.png';
+import user_image from './user-image.webp';
 import code_icon from './code-icon.png';
 import code_icon_dark from './code-icon-dark.png';
 import edu_icon from './edu-icon.png';
@@ -127,42 +127,42 @@ export const workData = [
         slug: 'cad-modeling',
         title: 'CAD Modeling',
         description: 'Modelling 3D Designs',
-        bgImage: '/work-1.png',
+        bgImage: '/work-1.webp',
         tools: ['SolidWorks', 'CATIA'],
     },
     {
         slug: 'fea-simulation',
         title: 'FEA Simulation',
         description: 'Structural Analysis',
-        bgImage: '/work-2.png',
+        bgImage: '/work-2.webp',
         tools: ['Abaqus', 'ANSYS'],
     },
     {
         slug: 'frontend-project',
         title: 'Frontend Project',
         description: 'Web Design',
-        bgImage: '/work-3.png',
+        bgImage: '/work-3.webp',
         tools: ['Next.js', 'Tailwind'],
     },
     {
         slug: 'data-visualization',
         title: 'Data Visualization',
         description: 'Analysing Data',
-        bgImage: '/work-4.png',
+        bgImage: '/work-4.webp',
         tools: ['Tableau', 'Power BI'],
     },
     {
         slug: 'video-editing',
         title: 'Video Editing',
         description: 'Promotional Video',
-        bgImage: '/work-5.png',
+        bgImage: '/work-5.webp',
         tools: ['Premiere Pro', 'After Effects'],
     },
 ];
 
 /*
   `image`: background for the expanding service panels.
-  - Temporary: reusing the existing images in /public (work-1.png ... work-5.png).
+  - Temporary: reusing the existing optimized images in /public (work-1.webp ... work-5.webp).
   - Later: put your own renders in /public/services/ and change the paths,
     e.g. image: '/services/cad-modeling.jpg'
   - Set image: null to show the gradient fallback (Backend Programming does this for now).
@@ -174,7 +174,7 @@ export const serviceData = [
         title: 'CAD Modeling',
         description: 'Creating 3D models and technical drawings...',
         link: 'cad-modeling',
-        image: '/work-1.png',
+        image: '/work-1.webp',
         tools: ['SolidWorks', 'CATIA', 'AutoCAD'],
         detailedDescription: 'I provide comprehensive CAD modeling services using industry-standard software like SolidWorks and Dassault Systèmes tools. Whether you need product design, mechanical parts, or complex assemblies, I deliver precise and manufacturable 3D models.',
         includes: [
@@ -196,7 +196,7 @@ export const serviceData = [
         title: 'FEA Simulation',
         description: 'Performing Finite Element Analysis for structural simulation...',
         link: 'fea-simulation',
-        image: '/work-2.png',
+        image: '/work-2.webp',
         tools: ['ANSYS', 'Abaqus', 'COMSOL'],
         detailedDescription: 'Comprehensive FEA services using ANSYS to validate and optimize your designs. I perform stress analysis, thermal analysis, modal analysis, and more to ensure your products meet safety and performance requirements.',
         includes: [
@@ -240,7 +240,7 @@ export const serviceData = [
         title: 'Web design',
         description: 'Developing websites and web applications...',
         link: 'web-design',
-        image: '/work-3.png',
+        image: '/work-3.webp',
         tools: ['Next.js', 'React', 'TypeScript', 'Tailwind'],
         detailedDescription: 'Creating modern, responsive websites and web applications that deliver exceptional user experiences. From landing pages to full-stack applications, I build solutions that work.',
         includes: [
@@ -262,7 +262,7 @@ export const serviceData = [
         title: 'Data Visualization',
         description: 'Bringing data to life through interactive visualizations...',
         link: 'data-visualization',
-        image: '/work-4.png',
+        image: '/work-4.webp',
         tools: ['Tableau', 'Power BI', 'Matplotlib'],
         detailedDescription: 'Transform complex data into clear, actionable insights using Tableau, Power BI, and custom visualization solutions. I help you make data-driven decisions with confidence.',
         includes: [
@@ -284,7 +284,7 @@ export const serviceData = [
         title: 'Video Editing',
         description: 'Editing and producing high-quality video content...',
         link: 'video-editing',
-        image: '/work-5.png',
+        image: '/work-5.webp',
         tools: ['Premiere Pro', 'After Effects', 'DaVinci Resolve'],
         detailedDescription: 'Professional video editing services for promotional content, tutorials, presentations, and more. I create engaging videos that capture attention and deliver your message effectively.',
         includes: [

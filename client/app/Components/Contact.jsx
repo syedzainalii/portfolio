@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
 import { ArrowUpRight, Check, Cog, Copy, Mail, MapPin, Phone, Send } from "lucide-react";
@@ -12,6 +12,9 @@ const EMAIL = "syedzainali4372@outlook.com";
 const PHONE_DISPLAY = "+92 300 2678500";
 const PHONE_LINK = "+923002678500";
 const LOCATION = "Karachi, Pakistan";
+const subscribeToClock = () => () => {};
+const getOrderNumber = () => new Date().toISOString().slice(0, 10).replaceAll("-", "");
+const getServerOrderNumber = () => "00000000";
 
 /* ---------- Round "full page" stamp (landing page only) ---------- */
 function OpenPageStamp() {
@@ -24,7 +27,7 @@ function OpenPageStamp() {
       <svg
         viewBox="0 0 100 100"
         aria-hidden
-        className="absolute inset-0 h-full w-full animate-spin text-gray-700 [animation-duration:18s] motion-reduce:animate-none dark:text-white"
+        className="absolute inset-0 hidden h-full w-full animate-spin text-gray-700 [animation-duration:18s] motion-reduce:animate-none dark:text-white lg:block"
       >
         <defs>
           <path id="stamp-circle" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0" />
@@ -108,12 +111,11 @@ const Contact = ({ preview = false }) => {
 
   const [service, setService] = useState(null);
   const [copied, setCopied] = useState(false);
-  const [orderNo, setOrderNo] = useState("00000000");
-
-  // Today's date as the work order number (set after mount, so server and client match)
-  useEffect(() => {
-    setOrderNo(new Date().toISOString().slice(0, 10).replaceAll("-", ""));
-  }, []);
+  const orderNo = useSyncExternalStore(
+    subscribeToClock,
+    getOrderNumber,
+    getServerOrderNumber,
+  );
 
   const copyEmail = async () => {
     try {
@@ -145,7 +147,7 @@ const Contact = ({ preview = false }) => {
   });
 
   return (
-    <section id="contact" className="w-full py-14 sm:py-20 lg:py-24">
+    <section id="contact" className="heavy-section w-full py-14 sm:py-20 lg:py-24">
       <div className="site-container">
         {/* Header row: title on the left, stamp on the right */}
         <div className="flex items-end justify-between gap-6">
@@ -162,11 +164,11 @@ const Contact = ({ preview = false }) => {
         <div className="mt-10 grid items-start gap-8 lg:mt-12 lg:grid-cols-12 lg:gap-10">
           {/* ===== Left: ways to reach me ===== */}
           <motion.div {...reveal()} className="lg:col-span-5">
-            <div className="relative overflow-hidden rounded-3xl border border-black/10 bg-white p-6 shadow-lg dark:border-white/15 dark:bg-darkHover sm:p-8">
+            <div className="relative overflow-hidden rounded-3xl border border-black/10 bg-white p-6 shadow-sm dark:border-white/15 dark:bg-darkHover sm:p-8 lg:shadow-lg">
               {/* Slow turning cog */}
               <Cog
                 aria-hidden
-                className="pointer-events-none absolute -bottom-16 -right-16 h-64 w-64 animate-spin text-amber-400/15 [animation-duration:60s] motion-reduce:animate-none"
+                className="pointer-events-none absolute -bottom-16 -right-16 hidden h-64 w-64 animate-spin text-amber-400/15 [animation-duration:60s] motion-reduce:animate-none lg:block"
                 strokeWidth={1}
               />
 
@@ -208,7 +210,7 @@ const Contact = ({ preview = false }) => {
           <motion.form
             {...reveal(0.08)}
             onSubmit={handleSubmit}
-            className="overflow-hidden rounded-3xl border border-black/10 bg-white shadow-xl dark:border-white/15 dark:bg-darkHover lg:col-span-7"
+            className="overflow-hidden rounded-3xl border border-black/10 bg-white shadow-md dark:border-white/15 dark:bg-darkHover lg:col-span-7 lg:shadow-xl"
           >
             {/* Top bar */}
             <div className="flex items-center justify-between gap-3 border-b border-black/10 bg-black/[0.03] px-5 py-3 dark:border-white/15 dark:bg-white/5 sm:px-8">
@@ -216,7 +218,7 @@ const Contact = ({ preview = false }) => {
                 Work order · WO-{orderNo} · Rev A
               </p>
               <p className="flex shrink-0 items-center gap-2 font-mono text-[11px] uppercase leading-5 tracking-[0.15em] text-emerald-600 dark:text-emerald-400">
-                <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500 motion-reduce:animate-none" />
+                <span className="h-2 w-2 rounded-full bg-emerald-500 motion-reduce:animate-none lg:animate-pulse" />
                 Open
               </p>
             </div>

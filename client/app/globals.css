@@ -19,7 +19,7 @@
 /* 3. Base Layer - Fixing the "Fitting" Issues */
 @layer base { 
   html { 
-    scroll-behavior: smooth !important;
+    scroll-behavior: auto;
     overflow-x: clip;
     width: 100%;
     margin: 0;
@@ -51,6 +51,29 @@
     height: auto;
     display: block;
   }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+.hero-mesh-canvas {
+  mask-image: radial-gradient(ellipse 75% 70% at 55% 50%, black 35%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 75% 70% at 55% 50%, black 35%, transparent 100%);
+}
+
+@media (max-width: 1023px) {
+  .hero-mesh-canvas {
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+}
+
+.heavy-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 52rem;
 }
 
 /* 4. Utility Classes (Optional but helpful) */

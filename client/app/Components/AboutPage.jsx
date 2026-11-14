@@ -29,7 +29,9 @@ export default function AboutPage() {
             src={assets.user_image}
             alt="Syed Zain Ali"
             className="relative w-full object-cover"
-            priority
+            loading="lazy"
+            quality={70}
+            sizes="(min-width: 1024px) 40vw, (min-width: 640px) 24rem, 100vw"
           />
           <p className="relative bg-slate-950 px-4 py-3 font-mono text-xs uppercase tracking-widest text-white">
             Mechanical Engineering / NED UET
@@ -49,8 +51,8 @@ export default function AboutPage() {
               className="border border-black/10 p-5 dark:border-white/15"
             >
               <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-full bg-amber-400/15">
-                <Image src={icon} alt="" className="h-6 w-6 dark:hidden" />
-                <Image src={iconDark} alt="" className="hidden h-6 w-6 dark:block" />
+                <Image src={icon} alt="" className="h-6 w-6 dark:hidden" sizes="24px" loading="lazy" />
+                <Image src={iconDark} alt="" className="hidden h-6 w-6 dark:block" sizes="24px" loading="lazy" />
               </div>
               <h3 className="font-semibold">{title}</h3>
               <p className="mt-2 whitespace-pre-line text-sm leading-6 text-gray-600 dark:text-white/65">
@@ -74,7 +76,7 @@ export default function AboutPage() {
               key={index}
               className="grid h-16 w-16 place-items-center border border-black/10 p-3 dark:border-white/15"
             >
-              <Image src={tool} alt="Tool" className="max-h-full w-full object-contain" />
+              <Image src={tool} alt="Tool" className="max-h-full w-full object-contain" sizes="64px" loading="lazy" />
             </li>
           ))}
         </ul>

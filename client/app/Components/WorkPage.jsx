@@ -30,6 +30,7 @@ export default function WorkPage() {
                 src={project.bgImage}
                 alt={project.title}
                 fill
+                loading="lazy"
                 sizes="(min-width: 640px) 40vw, 100vw"
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
               />

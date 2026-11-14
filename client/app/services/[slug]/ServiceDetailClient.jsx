@@ -26,6 +26,8 @@ const ServiceDetailClient = ({ service }) => {
               src={assets.right_arrow} 
               alt="back" 
               className="w-4 rotate-180" 
+              sizes="16px"
+              loading="lazy"
             />
           </motion.div>
           <span className="font-Ovo">Back to Services</span>
@@ -49,6 +51,8 @@ const ServiceDetailClient = ({ service }) => {
               src={service.icon} 
               alt={service.title} 
               className="w-16 shrink-0 sm:w-20"
+              sizes="(min-width: 640px) 80px, 64px"
+              loading="lazy"
             />
           </motion.div>
           <h1 className="min-w-0 break-words text-3xl sm:text-5xl lg:text-6xl font-Ovo dark:text-white">
@@ -191,6 +195,8 @@ const ServiceDetailClient = ({ service }) => {
                     src={otherService.icon} 
                     alt={otherService.title} 
                     className="w-10 mb-4" 
+                    sizes="40px"
+                    loading="lazy"
                   />
                   <h3 className="text-xl font-semibold mb-2 dark:text-white font-Ovo">
                     {otherService.title}

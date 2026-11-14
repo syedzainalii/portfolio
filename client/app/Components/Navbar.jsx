@@ -11,6 +11,7 @@ const Navbar = ({isDarkMode, setIsDarkMode}) => {
 
     const [isScroll, setIsScroll] = useState(false)
     const sideMenuRef = useRef();
+    const isScrollRef = useRef(false);
     const pathname = usePathname() || "/";
 
     function openMenu() {
@@ -23,13 +24,13 @@ const Navbar = ({isDarkMode, setIsDarkMode}) => {
 
     useEffect(() => {
         const handleScroll = () => {
-            if (window.scrollY > 50) {
-                setIsScroll(true);
-            } else {
-                setIsScroll(false);
-            }
+            const next = window.scrollY > 50;
+            if (isScrollRef.current === next) return;
+            isScrollRef.current = next;
+            setIsScroll(next);
         };
-        window.addEventListener('scroll', handleScroll);
+        handleScroll();
+        window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, [])
 
@@ -47,12 +48,17 @@ const Navbar = ({isDarkMode, setIsDarkMode}) => {
     return (
         <>
             {/* Background color blob - Hidden on dark mode */}
-            <div className='fixed top-0 right-0 w-11/12 -z-10 translate-y-[-80%] dark:hidden'>
-                <Image src={assets.header_bg_color} alt="" className='w-full' priority />
+            <div aria-hidden className='absolute top-0 right-0 -z-10 hidden w-11/12 translate-y-[-80%] dark:hidden lg:block'>
+                <Image src={assets.header_bg_color} alt="" className='w-full' sizes="(min-width: 1024px) 90vw, 100vw" loading="lazy" />
+            </div>
+            <div
+                aria-hidden
+                className="absolute right-0 top-0 -z-10 h-64 w-11/12 -translate-y-1/3 bg-[radial-gradient(ellipse_at_top_right,rgba(251,191,36,0.2),transparent_70%)] dark:hidden lg:hidden"
+            >
             </div>
 
             <nav className={`w-full fixed top-0 z-50 transition-all duration-300 ${isScroll
-                ? "bg-white bg-opacity-50 backdrop-blur-lg shadow-sm dark:bg-darkTheme dark:shadow-white/20" 
+                ? "bg-white/95 shadow-sm dark:bg-darkTheme/95 dark:shadow-white/10 lg:bg-white lg:bg-opacity-50 lg:backdrop-blur-lg lg:shadow-sm lg:dark:bg-darkTheme lg:dark:shadow-white/20"
                 : ""}`}>
                 <div className="w-full px-5 sm:px-8 lg:px-10 flex items-center justify-between py-4">
                 
@@ -62,6 +68,8 @@ const Navbar = ({isDarkMode, setIsDarkMode}) => {
                         src={isDarkMode ? assets.logo_dark : assets.logo} 
                         alt='Logo'
                         className='w-24 md:w-28 cursor-pointer mr-4 lg:mr-14' 
+                        sizes="(min-width: 768px) 7rem, 6rem"
+                        loading="lazy"
                     />
                 </Link>
 
@@ -89,19 +97,19 @@ const Navbar = ({isDarkMode, setIsDarkMode}) => {
 
                     {/* Dark Mode Toggle */}
                     <button onClick={() => setIsDarkMode(prev => !prev)} className='grid h-11 w-11 place-items-center rounded-full transition-all duration-300 active:scale-90 group lg:h-10 lg:w-10'>
-                        <Image src={isDarkMode ? assets.sun_icon : assets.moon_icon} alt="" className='w-6 group-hover:rotate-[15deg] transition-transform' />
+                        <Image src={isDarkMode ? assets.sun_icon : assets.moon_icon} alt="" className='w-6 group-hover:rotate-[15deg] transition-transform' sizes="24px" loading="lazy" />
                     </button>
 
                     {/* Desktop Contact Button (Hidden on small/medium, visible on large) */}
                     <Link href="/contact"
                         className='hidden lg:flex items-center gap-1.5 px-8 py-2.5 border border-gray-400 rounded-full font-Ovo transition-all duration-300 hover:-translate-y-1 hover:shadow-md active:scale-95 group dark:border-gray-600'> 
                         Contact 
-                        <Image src={isDarkMode ? assets.arrow_icon_dark : assets.arrow_icon} alt="" className='w-3 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1' />
+                        <Image src={isDarkMode ? assets.arrow_icon_dark : assets.arrow_icon} alt="" className='w-3 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1' sizes="12px" loading="lazy" />
                     </Link>
 
                     {/* Hamburger Menu (Visible on mobile/tablet) */}
                     <button className='grid h-11 w-11 place-items-center md:hidden ml-2 hover:scale-110 active:scale-95 transition-transform' onClick={openMenu}>
-                        <Image src={isDarkMode ? assets.menu_white : assets.menu_black} alt="" className='w-6'/>
+                        <Image src={isDarkMode ? assets.menu_white : assets.menu_black} alt="" className='w-6' sizes="24px" loading="lazy"/>
                     </button>
                 </div>
 
@@ -114,7 +122,7 @@ const Navbar = ({isDarkMode, setIsDarkMode}) => {
                             className="absolute right-3 top-3 grid h-11 w-11 place-items-center"
                             onClick={closeMenu}
                         >
-                            <Image src={isDarkMode ? assets.close_white : assets.close_black} alt="" className='w-5'/>
+                            <Image src={isDarkMode ? assets.close_white : assets.close_black} alt="" className='w-5' sizes="20px" loading="lazy"/>
                         </button>
                     </li>
 

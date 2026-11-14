@@ -1,9 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { motion, useReducedMotion } from "motion/react";
+import { motion, useInView, useReducedMotion } from "motion/react";
 import { skillCategories } from "@/assets/assets";
+import useMediaQuery from "./useMediaQuery";
 import {
   ArrowUpRight,
   Box,
@@ -17,7 +18,6 @@ import {
 
 // Set to true to show raw percentages instead of level labels
 const SHOW_PERCENT = false;
-const CARD_HEIGHT = 500;
 const AUTOPLAY_MS = 6000;
 const skillIcons = {
   box: Box,
@@ -136,7 +136,7 @@ function SkillMatrixLink() {
   );
 }
 
-function SkillCard({ category, offset, wrapped, layout, reduceMotion, onSelect }) {
+function SkillCard({ category, offset, wrapped, layout, reduceMotion, desktop, onSelect }) {
   const abs = Math.abs(offset);
   const dir = Math.sign(offset);
   const pose = POSE[Math.min(abs, 2)];
@@ -155,28 +155,29 @@ function SkillCard({ category, offset, wrapped, layout, reduceMotion, onSelect }
       animate={{
         x: dir * layout.xs[Math.min(abs, 2)],
         scale: pose.scale,
-        rotateY: -dir * pose.rotate,
+        rotateY: desktop ? -dir * pose.rotate : 0,
         opacity: hidden ? 0 : pose.opacity,
       }}
       transition={
         wrapped || reduceMotion
           ? { duration: 0 }
-          : { type: "spring", stiffness: 170, damping: 24, mass: 0.9 }
+          : desktop
+            ? { type: "spring", stiffness: 170, damping: 24, mass: 0.9 }
+            : { duration: 0.25, ease: "easeOut" }
       }
       style={{
         width: layout.cardW,
         maxWidth: "calc(100vw - 2.5rem)",
-        height: CARD_HEIGHT,
         zIndex: 10 - abs,
         pointerEvents: hidden ? "none" : "auto",
       }}
-      className={`absolute inset-x-0 top-0 mx-auto ${active ? "" : "cursor-pointer"}`}
+      className={`absolute inset-x-0 top-0 mx-auto h-[560px] lg:h-[500px] ${active ? "" : "cursor-pointer"}`}
     >
       <div
         className={`relative h-full overflow-hidden rounded-3xl border bg-white p-7 transition-shadow duration-500 dark:bg-darkHover ${
           active
-            ? "border-black/15 shadow-2xl dark:border-white/20"
-            : "border-black/10 shadow-lg dark:border-white/10"
+            ? "border-black/15 shadow-md dark:border-white/20 lg:shadow-2xl"
+            : "border-black/10 shadow-sm dark:border-white/10 lg:shadow-lg"
         }`}
       >
         {/* Accent glow at the top of the card */}
@@ -221,18 +222,25 @@ function SkillCard({ category, offset, wrapped, layout, reduceMotion, onSelect }
                 <div className="mt-2 flex gap-1" aria-hidden>
                   {[0, 1, 2, 3, 4].map((p) =>
                     p < lvl.pips ? (
-                      <motion.span
-                        // key changes when the card becomes active, so the fill replays
-                        key={`${active}-${p}`}
-                        initial={{ scaleX: active ? 0 : 1 }}
-                        animate={{ scaleX: 1 }}
-                        transition={{
-                          duration: 0.4,
-                          delay: active ? 0.2 + si * 0.06 + p * 0.05 : 0,
-                        }}
-                        className="h-2 flex-1 origin-left rounded-full"
-                        style={{ backgroundColor: accent }}
-                      />
+                      desktop ? (
+                        <motion.span
+                          key={`${active}-${p}`}
+                          initial={{ scaleX: active ? 0 : 1 }}
+                          animate={{ scaleX: 1 }}
+                          transition={{
+                            duration: 0.4,
+                            delay: active ? 0.2 + si * 0.06 + p * 0.05 : 0,
+                          }}
+                          className="h-2 flex-1 origin-left rounded-full"
+                          style={{ backgroundColor: accent }}
+                        />
+                      ) : (
+                        <span
+                          key={p}
+                          className="h-2 flex-1 rounded-full"
+                          style={{ backgroundColor: accent }}
+                        />
+                      )
                     ) : (
                       <span
                         key={p}
@@ -256,6 +264,10 @@ export default function Skills({ preview = false }) {
   const [paused, setPaused] = useState(false);
   const layout = useLayout();
   const reduceMotion = useReducedMotion();
+  const desktop = useMediaQuery("(min-width: 1024px)");
+  const touchDevice = useMediaQuery("(hover: none), (pointer: coarse)", true);
+  const sectionRef = useRef(null);
+  const inView = useInView(sectionRef, { margin: "-20% 0px -20% 0px" });
 
   const { index, prev } = pos;
   const current = skillCategories[index];
@@ -271,10 +283,10 @@ export default function Skills({ preview = false }) {
 
   // Autoplay: pauses on hover/focus, off for reduced-motion users
   useEffect(() => {
-    if (paused || reduceMotion) return;
+    if (paused || reduceMotion || touchDevice || !inView) return;
     const id = setTimeout(() => go(1), AUTOPLAY_MS);
     return () => clearTimeout(id);
-  }, [index, paused, reduceMotion, go]);
+  }, [index, paused, reduceMotion, touchDevice, inView, go]);
 
   const onKeyDown = (e) => {
     if (e.key === "ArrowLeft") go(-1);
@@ -282,7 +294,7 @@ export default function Skills({ preview = false }) {
   };
 
   return (
-    <section id="skills" className="w-full py-14 sm:py-20 lg:py-24">
+    <section ref={sectionRef} id="skills" className="heavy-section w-full py-14 sm:py-20 lg:py-24">
       <div className="site-container">
         {/* Header row: title on the left, button on the right */}
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
@@ -317,14 +329,17 @@ export default function Skills({ preview = false }) {
               if (info.offset.x < -60 || info.velocity.x < -400) go(1);
               else if (info.offset.x > 60 || info.velocity.x > 400) go(-1);
             }}
-            className="relative mx-auto w-full cursor-grab select-none rounded-3xl outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-4 active:cursor-grabbing"
-            style={{ height: CARD_HEIGHT + 40, perspective: 1600, touchAction: "pan-y" }}
+            className="relative mx-auto h-[600px] w-full cursor-grab select-none rounded-3xl outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-4 active:cursor-grabbing lg:h-[540px]"
+            style={{
+              perspective: desktop ? 1600 : "none",
+              touchAction: "pan-y",
+            }}
           >
             {/* Soft glow that follows the active category color */}
             <div
               aria-hidden
-              className="pointer-events-none absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20 blur-3xl transition-colors duration-700"
-              style={{ backgroundColor: current.accent }}
+              className="pointer-events-none absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20 transition-colors duration-700 lg:blur-3xl"
+              style={{ background: `radial-gradient(circle, ${current.accent}55, transparent 70%)` }}
             />
 
             {skillCategories.map((category, i) => {
@@ -338,6 +353,7 @@ export default function Skills({ preview = false }) {
                   wrapped={wrapped}
                   layout={layout}
                   reduceMotion={reduceMotion}
+                  desktop={desktop}
                   onSelect={() => jump(i)}
                 />
               );
@@ -374,11 +390,15 @@ export default function Skills({ preview = false }) {
                     className="relative min-h-11 rounded-full px-4 py-1.5 text-sm font-medium leading-6 lg:min-h-0"
                   >
                     {isActive && (
-                      <motion.span
-                        layoutId="skills-tab"
-                        className="absolute inset-0 rounded-full bg-black dark:bg-white"
-                        transition={{ type: "spring", stiffness: 400, damping: 32 }}
-                      />
+                      desktop ? (
+                        <motion.span
+                          layoutId="skills-tab"
+                          className="absolute inset-0 rounded-full bg-black dark:bg-white"
+                          transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                        />
+                      ) : (
+                        <span className="absolute inset-0 rounded-full bg-black dark:bg-white" />
+                      )
                     )}
                     <span
                       className={`relative z-10 transition-colors duration-300 ${

@@ -34,7 +34,7 @@ export default function ProjectDetail({ project }) {
             src={project.bgImage}
             alt={project.title}
             fill
-            priority
+            loading="lazy"
             sizes="(min-width: 1024px) 60vw, 100vw"
             className="object-cover"
           />

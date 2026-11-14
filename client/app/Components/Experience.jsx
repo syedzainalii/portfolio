@@ -11,8 +11,16 @@ import {
   useSpring,
   useTransform,
 } from "motion/react";
-import { ArrowUpRight, CalendarDays, Cog, MapPin } from "lucide-react";
+import {
+  ArrowUpRight,
+  CalendarDays,
+  ChevronLeft,
+  ChevronRight,
+  Cog,
+  MapPin,
+} from "lucide-react";
 import { experienceData } from "@/assets/assets";
+import useMediaQuery from "./useMediaQuery";
 
 const pad = (n) => String(n).padStart(2, "0");
 
@@ -191,9 +199,103 @@ function Gears({ progress, count, active }) {
         </span>
       </div>
 
-      <p className="absolute inset-x-0 bottom-0 text-center font-mono text-[10px] uppercase leading-4 tracking-[0.25em] text-gray-400 dark:text-white/40">
+      <p className="absolute inset-x-0 bottom-0 hidden text-center font-mono text-[10px] uppercase leading-4 tracking-[0.25em] text-gray-400 dark:text-white/40 lg:block">
         Gear train · {NA}:{NB} · scroll to turn
       </p>
+    </div>
+  );
+}
+
+function MobileGears({ count, active, reduce }) {
+  const step = 360 / count;
+  const theta = -active * step;
+  const rotA = BETA + theta;
+  const rotB = BETA + 180 + 180 / NB - (theta * NA) / NB;
+  const motionStyle = {
+    transition: reduce ? "none" : "transform 450ms ease-out",
+  };
+  const ring = (STATION_R / OUT_A) * 50;
+
+  return (
+    <div className="relative mx-auto aspect-square w-[min(70vw,16rem)]">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-[10%] rounded-full bg-[radial-gradient(circle,rgba(251,191,36,0.2),transparent_72%)] dark:bg-[radial-gradient(circle,rgba(245,158,11,0.15),transparent_72%)]"
+      />
+      <div
+        className="absolute text-gray-700 dark:text-white"
+        style={{
+          ...motionStyle,
+          transform: `rotate(${rotB}deg)`,
+          left: `${CB.x - OUT_B}%`,
+          top: `${CB.y - OUT_B}%`,
+          width: `${OUT_B * 2}%`,
+          height: `${OUT_B * 2}%`,
+        }}
+      >
+        <GearSvg
+          path={PATH_B}
+          outer={OUT_B}
+          hub={3.2}
+          className="fill-black/5 stroke-black/35 dark:fill-white/5 dark:stroke-white/35"
+        />
+      </div>
+      <div
+        className="absolute text-gray-700 dark:text-white"
+        style={{
+          ...motionStyle,
+          transform: `rotate(${rotA}deg)`,
+          left: `${CA.x - OUT_A}%`,
+          top: `${CA.y - OUT_A}%`,
+          width: `${OUT_A * 2}%`,
+          height: `${OUT_A * 2}%`,
+        }}
+      >
+        <GearSvg
+          path={PATH_A}
+          outer={OUT_A}
+          hub={15}
+          className="fill-amber-400/10 stroke-amber-600/70 dark:fill-amber-400/[0.06] dark:stroke-amber-400/60"
+        />
+        {Array.from({ length: count }, (_, i) => {
+          const angle = ((-90 + i * step - BETA) * Math.PI) / 180;
+          const isActive = i === active;
+          return (
+            <span
+              key={i}
+              style={{
+                left: `${50 + ring * Math.cos(angle)}%`,
+                top: `${50 + ring * Math.sin(angle)}%`,
+                transform: `translate(-50%, -50%) rotate(${-rotA}deg)`,
+                transition: reduce ? "none" : "transform 450ms ease-out",
+              }}
+              className={`absolute grid aspect-square w-[17%] place-items-center rounded-full border-2 ${
+                isActive
+                  ? "border-amber-500 bg-amber-400 text-black"
+                  : "border-black/25 bg-white text-gray-500 dark:border-white/30 dark:bg-darkHover dark:text-white/60"
+              }`}
+            >
+              <span className="font-mono text-[10px] font-semibold leading-none">
+                {pad(i + 1)}
+              </span>
+            </span>
+          );
+        })}
+      </div>
+      <svg
+        aria-hidden
+        viewBox="0 0 20 16"
+        className="absolute z-10 w-[6%] -translate-x-1/2"
+        style={{ left: `${CA.x}%`, top: `${CA.y - OUT_A - 3}%` }}
+      >
+        <path d="M2 2 H18 L10 15 Z" className="fill-amber-500" />
+      </svg>
+      <span
+        className="absolute z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center font-mono text-3xl font-bold leading-none text-amber-600 dark:text-amber-400"
+        style={{ left: `${CA.x}%`, top: `${CA.y}%` }}
+      >
+        {pad(active + 1)}
+      </span>
     </div>
   );
 }
@@ -216,25 +318,46 @@ function FullJourneyLink() {
 }
 
 /* ---------- Role switcher ---------- */
-function RoleTabs({ roles, value, onChange }) {
+function RoleTabs({ roles, value, onChange, desktop = false }) {
+  const activeTabRef = useRef(null);
+  const reduce = useReducedMotion();
+
+  useEffect(() => {
+    if (!desktop) {
+      activeTabRef.current?.scrollIntoView({
+        behavior: reduce ? "auto" : "smooth",
+        block: "nearest",
+        inline: "nearest",
+      });
+    }
+  }, [desktop, reduce, value]);
+
   if (roles.length < 2) return null;
+
   return (
     <div
       role="tablist"
       aria-label="Work experience roles"
-      className="flex w-fit min-w-0 max-w-full gap-1 overflow-x-auto rounded-full border border-black/10 bg-black/[0.03] p-1 [scrollbar-width:none] dark:border-white/15 dark:bg-white/5 [&::-webkit-scrollbar]:hidden"
+      className="flex w-full min-w-0 max-w-full snap-x snap-mandatory gap-1 overflow-x-auto rounded-full border border-black/10 bg-black/[0.03] p-1 [scrollbar-width:none] dark:border-white/15 dark:bg-white/5 [&::-webkit-scrollbar]:hidden lg:w-fit lg:snap-none lg:overflow-visible"
     >
       {roles.map((r, i) => {
         const isActive = i === value;
         return (
           <button
             key={r.id}
+            ref={isActive ? activeTabRef : null}
             role="tab"
             aria-selected={isActive}
             onClick={() => onChange(i)}
-            className="relative shrink-0 rounded-full px-4 py-2 text-sm font-medium leading-6"
+            className="relative flex min-h-11 min-w-0 max-w-[70vw] shrink-0 snap-start items-center rounded-full px-4 py-2 text-sm font-medium leading-6 lg:min-h-0 lg:max-w-none"
           >
-            {isActive && (
+            {isActive && !desktop && (
+              <span
+                aria-hidden
+                className="absolute inset-0 rounded-full bg-black dark:bg-white"
+              />
+            )}
+            {isActive && desktop && (
               <motion.span
                 layoutId="exp-role-tab"
                 className="absolute inset-0 rounded-full bg-black dark:bg-white"
@@ -242,15 +365,15 @@ function RoleTabs({ roles, value, onChange }) {
               />
             )}
             <span
-              className={`relative z-10 whitespace-nowrap transition-colors duration-300 ${
+              className={`relative z-10 flex min-w-0 items-center whitespace-nowrap transition-colors duration-300 ${
                 isActive
                   ? "text-white dark:text-black"
                   : "text-gray-600 hover:text-black dark:text-white/70 dark:hover:text-white"
               }`}
             >
-              <span className="mr-2 font-mono text-[10px] opacity-60">{pad(i + 1)}</span>
+              <span className="mr-2 shrink-0 font-mono text-[10px] opacity-60">{pad(i + 1)}</span>
               {/* Add `shortName: "..."` to an entry in assets.js to customize this label */}
-              {r.shortName ?? r.role}
+              <span className="min-w-0 truncate">{r.shortName ?? r.role}</span>
             </span>
           </button>
         );
@@ -305,22 +428,31 @@ function Stage({ roles, perStep, preview }) {
   const maxCount = Math.max(...roles.map((r) => (r.achievements ?? []).length), 1);
 
   const ref = useRef(null);
-  const countRef = useRef(count);
-  countRef.current = count;
-
   const [active, setActive] = useState(0);
+  const activeRef = useRef(0);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
 
   useMotionValueEvent(scrollYProgress, "change", (v) => {
-    const c = countRef.current;
-    setActive(Math.min(c - 1, Math.max(0, Math.round(v * (c - 1)))));
+    const next = Math.min(count - 1, Math.max(0, Math.round(v * (count - 1))));
+    if (activeRef.current !== next) {
+      activeRef.current = next;
+      setActive(next);
+    }
   });
 
-  // When you switch roles, recompute the station from the current scroll position
-  useEffect(() => {
+  const changeRole = (index) => {
+    const nextCount = Math.max((roles[index].achievements ?? []).length, 1);
     const v = scrollYProgress.get();
-    setActive(Math.min(count - 1, Math.max(0, Math.round(v * (count - 1)))));
-  }, [count, scrollYProgress]);
+    const next = Math.min(
+      nextCount - 1,
+      Math.max(0, Math.round(v * (nextCount - 1))),
+    );
+    setRoleIndex(index);
+    if (activeRef.current !== next) {
+      activeRef.current = next;
+      setActive(next);
+    }
+  };
 
   const hint = useTransform(scrollYProgress, [0, 0.06], [1, 0]);
 
@@ -332,7 +464,7 @@ function Stage({ roles, perStep, preview }) {
     <div ref={ref} style={{ height: `${maxCount * perStep + 100}vh` }} className="relative mt-6">
     <div className="sticky top-0 flex h-screen flex-col justify-start pt-6">
         <div className="mb-3 flex items-center justify-between gap-3">
-          <RoleTabs roles={roles} value={roleIndex} onChange={setRoleIndex} />
+          <RoleTabs roles={roles} value={roleIndex} onChange={changeRole} desktop />
           {preview && <FullJourneyLink />}
         </div>
 
@@ -447,6 +579,142 @@ function Stage({ roles, perStep, preview }) {
   );
 }
 
+function MobileStepper({ roles, preview, reduce }) {
+  const [roleIndex, setRoleIndex] = useState(0);
+  const [active, setActive] = useState(0);
+  const touchStartX = useRef(null);
+  const exp = roles[roleIndex];
+  const achievements = exp.achievements ?? [];
+  const count = Math.max(achievements.length, 1);
+  const statement = achievements[active] ?? exp.description ?? "";
+  const technologies = exp.technologies ?? [];
+  const report = exp.report ?? "/report.pdf";
+
+  const changeRole = (index) => {
+    setRoleIndex(index);
+    setActive(0);
+  };
+  const go = (direction) => {
+    setActive((current) => (current + direction + count) % count);
+  };
+
+  return (
+    <div className="mt-6 min-w-0 py-2">
+      <RoleTabs roles={roles} value={roleIndex} onChange={changeRole} />
+      {preview && (
+        <div className="mt-3 flex justify-end">
+          <FullJourneyLink />
+        </div>
+      )}
+
+      <div className="mt-5">
+        <MobileGears count={count} active={active} reduce={reduce} />
+      </div>
+
+      <div className="mt-5 min-w-0 text-center">
+        <Meta exp={exp} index={roleIndex} total={roles.length} />
+        <h3 className="mt-3 break-words font-Ovo text-2xl leading-tight text-gray-700 dark:text-white/80">
+          {exp.role}
+        </h3>
+      </div>
+
+      <div
+        className="relative mt-5 min-w-0 touch-pan-y rounded-r-2xl bg-gradient-to-r from-amber-400/10 to-transparent py-4 pl-4 pr-3"
+        onTouchStart={(event) => {
+          touchStartX.current = event.touches[0]?.clientX ?? null;
+        }}
+        onTouchEnd={(event) => {
+          const startX = touchStartX.current;
+          const endX = event.changedTouches[0]?.clientX;
+          touchStartX.current = null;
+          if (startX == null || endX == null || Math.abs(endX - startX) < 50) return;
+          go(endX < startX ? 1 : -1);
+        }}
+        aria-live="polite"
+      >
+        <span
+          aria-hidden
+          className="absolute inset-y-0 left-0 w-[3px] rounded-full bg-black/10 dark:bg-white/15"
+        >
+          <span
+            className="block h-full w-full origin-top rounded-full bg-amber-400 transition-transform duration-300"
+            style={{ transform: `scaleY(${(active + 1) / count})` }}
+          />
+        </span>
+        <p className="font-mono text-[11px] uppercase leading-5 tracking-[0.2em] text-amber-600 dark:text-amber-400">
+          OP {pad((active + 1) * 10)}
+        </p>
+        <div className="mt-2 flex items-start gap-2 font-Ovo text-xl leading-snug sm:text-2xl">
+          <span
+            aria-hidden
+            className="mt-[0.38em] h-0 w-0 shrink-0 border-y-[5px] border-l-[8px] border-y-transparent border-l-amber-500"
+          />
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.p
+              key={`${roleIndex}-${active}`}
+              initial={reduce ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: reduce ? 0 : 0.18 }}
+              className="min-w-0 break-words"
+            >
+              {statement}
+            </motion.p>
+          </AnimatePresence>
+        </div>
+      </div>
+
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => go(-1)}
+            aria-label="Previous experience highlight"
+            className="grid h-11 w-11 place-items-center rounded-full border border-black/15 dark:border-white/20"
+          >
+            <ChevronLeft aria-hidden className="h-5 w-5" />
+          </button>
+          <span className="min-w-16 text-center font-mono text-xs tabular-nums">
+            {pad(active + 1)} / {pad(count)}
+          </span>
+          <button
+            type="button"
+            onClick={() => go(1)}
+            aria-label="Next experience highlight"
+            className="grid h-11 w-11 place-items-center rounded-full border border-black/15 dark:border-white/20"
+          >
+            <ChevronRight aria-hidden className="h-5 w-5" />
+          </button>
+        </div>
+        <div
+          aria-hidden
+          className="flex min-w-24 flex-1 items-center gap-1"
+        >
+          {Array.from({ length: count }, (_, index) => (
+            <span
+              key={index}
+              className={`h-1 flex-1 rounded-full ${
+                index <= active ? "bg-amber-400" : "bg-black/10 dark:bg-white/15"
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-4 space-y-3 text-sm leading-6 text-gray-500 dark:text-white/55">
+        <p className="break-words">{exp.description}</p>
+        {technologies.length > 0 && (
+          <p className="break-words">
+            <span className="font-medium text-gray-800 dark:text-white/85">Worked with </span>
+            {technologies.join(" · ")}
+          </p>
+        )}
+        <ReportLink href={report} />
+      </div>
+    </div>
+  );
+}
+
 /* Reduced-motion version: plain, readable, no scroll effects */
 function StaticStage({ roles, preview }) {
   const [roleIndex, setRoleIndex] = useState(0);
@@ -458,7 +726,7 @@ function StaticStage({ roles, preview }) {
   return (
     <article className="mt-6 py-4">
       <div className="mb-3 flex items-center justify-between gap-3">
-        <RoleTabs roles={roles} value={roleIndex} onChange={setRoleIndex} />
+        <RoleTabs roles={roles} value={roleIndex} onChange={setRoleIndex} desktop />
         {preview && <FullJourneyLink />}
       </div>
       <Meta exp={exp} index={roleIndex} total={roles.length} />
@@ -489,6 +757,7 @@ function StaticStage({ roles, preview }) {
 
 export default function Experience({ preview = false }) {
   const reduce = useReducedMotion();
+  const desktop = useMediaQuery("(min-width: 1024px)");
   const perStep = preview ? 40 : 65; // vh of scrolling per achievement
   const roles = experienceData;
 
@@ -500,10 +769,14 @@ export default function Experience({ preview = false }) {
         </h4>
         <h2 className="font-Ovo text-4xl sm:text-5xl">Work Experience</h2>
 
-        {reduce ? (
-          <StaticStage roles={roles} preview={preview} />
+        {desktop ? (
+          reduce ? (
+            <StaticStage roles={roles} preview={preview} />
+          ) : (
+            <Stage roles={roles} perStep={perStep} preview={preview} />
+          )
         ) : (
-          <Stage roles={roles} perStep={perStep} preview={preview} />
+          <MobileStepper roles={roles} preview={preview} reduce={reduce} />
         )}
       </div>
     </section>

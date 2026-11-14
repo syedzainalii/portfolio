@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion, useInView, useReducedMotion } from "motion/react";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { workData } from "@/assets/assets";
+import useMediaQuery from "./useMediaQuery";
 
 const AUTOPLAY_MS = 5000;
 const pad = (n) => String(n).padStart(2, "0");
@@ -19,6 +20,8 @@ const Work = ({ preview = false }) => {
   const [inspect, setInspect] = useState(false);
 
   const sectionRef = useRef(null);
+  const isMobile = useMediaQuery("(max-width: 1023px)", true);
+  const touchDevice = useMediaQuery("(hover: none), (pointer: coarse)", true);
   const vLine = useRef(null);
   const hLine = useRef(null);
   const ring = useRef(null);
@@ -26,7 +29,7 @@ const Work = ({ preview = false }) => {
 
   const inView = useInView(sectionRef, { margin: "-20% 0px -20% 0px" });
   const reduce = useReducedMotion();
-  const playing = inView && !paused && !reduce && total > 1;
+  const playing = inView && !paused && !reduce && !touchDevice && total > 1;
 
   // Autoplay
   useEffect(() => {
@@ -57,7 +60,7 @@ const Work = ({ preview = false }) => {
   const body = current.summary ?? current.description;
 
   return (
-    <section id="work" ref={sectionRef} className="w-full py-12 sm:py-16 lg:py-20">
+    <section id="work" ref={sectionRef} className="heavy-section w-full py-12 sm:py-16 lg:py-20">
       <div className="site-container">
         {/* Heading */}
         <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400 sm:text-sm">
@@ -85,19 +88,19 @@ const Work = ({ preview = false }) => {
             }}
             onPointerMove={trackPointer}
             onPointerLeave={() => setInspect(false)}
-            className="relative order-1 block aspect-[4/3] cursor-crosshair overflow-hidden rounded-3xl border border-black/10 bg-slate-900 shadow-2xl dark:border-white/15 sm:aspect-[16/10] lg:order-2 lg:col-span-7 lg:aspect-[3/2]"
+            className="relative order-1 block aspect-[4/3] cursor-crosshair overflow-hidden rounded-3xl border border-black/10 bg-slate-900 shadow-md dark:border-white/15 sm:aspect-[16/10] lg:order-2 lg:col-span-7 lg:aspect-[3/2] lg:shadow-2xl"
           >
             {/* Stacked images, crossfaded */}
-            {projects.map((p, i) => (
+            {(isMobile ? [current] : projects).map((p) => (
               <Image
                 key={p.title}
                 src={p.bgImage}
                 alt=""
                 fill
-                priority={i === 0}
+                loading="lazy"
                 sizes="(min-width: 1024px) 55vw, 100vw"
                 className={`object-cover transition-all duration-700 ease-out motion-reduce:transition-none ${
-                  i === active ? "scale-100 opacity-100" : "scale-110 opacity-0"
+                  p.slug === current.slug ? "scale-100 opacity-100" : "scale-110 opacity-0"
                 }`}
               />
             ))}
@@ -123,7 +126,7 @@ const Work = ({ preview = false }) => {
             {/* Top status row */}
             <div className="absolute inset-x-10 top-5 flex items-center justify-between font-mono text-[11px] leading-5 tracking-wider text-white/80">
               <span className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-400 motion-reduce:animate-none" />
+                <span className="h-1.5 w-1.5 rounded-full bg-amber-400 motion-reduce:animate-none lg:animate-pulse" />
                 PRJ-{pad(active + 1)} / {pad(total)}
               </span>
               <span ref={readout} className="hidden tabular-nums sm:block">

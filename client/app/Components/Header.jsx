@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ArrowRight, Download } from "lucide-react";
 import {
@@ -12,170 +13,10 @@ import {
   workData,
 } from "@/assets/assets";
 import { useTheme } from "./ThemeProvider";
+import useMediaQuery from "./useMediaQuery";
 
 const pad = (n) => String(n).padStart(2, "0");
-
-/* ---------- Live FEA-style mesh ---------- */
-const STEP = 34;
-// bucket 0 = unstressed, 1-5 = blue, green, yellow, orange, red
-const HOT = ["", "56,189,248", "52,211,153", "250,204,21", "251,146,60", "239,68,68"];
-const HOT_ALPHA = [0, 0.55, 0.65, 0.75, 0.85, 0.92];
-const HOT_WIDTH = [1, 1, 1, 1.2, 1.4, 1.6];
-
-function MeshBackground({ dark, reduce }) {
-  const canvasRef = useRef(null);
-  const darkRef = useRef(dark);
-
-  useEffect(() => {
-    darkRef.current = dark;
-  }, [dark]);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const host = canvas.parentElement;
-    const ctx = canvas.getContext("2d");
-
-    let w = 0, h = 0, cols = 0, rows = 0, raf = 0, visible = true;
-    let X, Y, F;
-    const mouse = { x: 0, y: 0, tx: 0, ty: 0, active: false };
-
-    const resize = () => {
-      const r = host.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      w = r.width;
-      h = r.height;
-      canvas.width = Math.round(w * dpr);
-      canvas.height = Math.round(h * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      cols = Math.ceil(w / STEP) + 3;
-      rows = Math.ceil(h / STEP) + 3;
-      X = new Float32Array(cols * rows);
-      Y = new Float32Array(cols * rows);
-      F = new Float32Array(cols * rows);
-      if (!mouse.active) {
-        mouse.x = mouse.tx = w * 0.7;
-        mouse.y = mouse.ty = h * 0.45;
-      }
-      if (reduce) draw(0);
-    };
-
-    const draw = (t) => {
-      if (!w || !X) return;
-      const dk = darkRef.current;
-
-      if (!mouse.active && !reduce) {
-        mouse.tx = w * (0.5 + 0.32 * Math.sin(t / 2600));
-        mouse.ty = h * (0.5 + 0.28 * Math.sin(t / 1900 + 1));
-      }
-      mouse.x += (mouse.tx - mouse.x) * 0.08;
-      mouse.y += (mouse.ty - mouse.y) * 0.08;
-
-      const SIGMA2 = 2 * 170 * 170;
-      const PUSH = 42;
-
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-          const i = r * cols + c;
-          const bx = (c - 1) * STEP;
-          const by = (r - 1) * STEP;
-          const dx = bx - mouse.x;
-          const dy = by - mouse.y;
-          const d2 = dx * dx + dy * dy;
-          const f = Math.exp(-d2 / SIGMA2);
-          const d = Math.sqrt(d2) || 1;
-          X[i] = bx + (dx / d) * f * PUSH;
-          Y[i] = by + (dy / d) * f * PUSH;
-          F[i] = f;
-        }
-      }
-
-      ctx.clearRect(0, 0, w, h);
-      const paths = HOT.map(() => new Path2D());
-
-      const edge = (a, b) => {
-        const v = (F[a] + F[b]) / 2;
-        const k = v < 0.04 ? 0 : Math.min(5, 1 + Math.floor((v - 0.04) / 0.16));
-        paths[k].moveTo(X[a], Y[a]);
-        paths[k].lineTo(X[b], Y[b]);
-      };
-
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-          const i = r * cols + c;
-          if (c < cols - 1) edge(i, i + 1);
-          if (r < rows - 1) edge(i, i + cols);
-        }
-      }
-
-      paths.forEach((p, k) => {
-        ctx.lineWidth = HOT_WIDTH[k];
-        ctx.strokeStyle =
-          k === 0
-            ? dk
-              ? "rgba(255,255,255,0.09)"
-              : "rgba(0,0,0,0.09)"
-            : `rgba(${HOT[k]},${HOT_ALPHA[k]})`;
-        ctx.stroke(p);
-      });
-    };
-
-    const frame = (t) => {
-      if (!visible) {
-        raf = 0;
-        return;
-      }
-      draw(t);
-      raf = requestAnimationFrame(frame);
-    };
-    const start = () => {
-      if (!raf && visible && !reduce) raf = requestAnimationFrame(frame);
-    };
-
-    const onMove = (e) => {
-      if (e.pointerType === "touch") return;
-      const r = host.getBoundingClientRect();
-      mouse.tx = e.clientX - r.left;
-      mouse.ty = e.clientY - r.top;
-      mouse.active = true;
-    };
-    const onLeave = () => {
-      mouse.active = false;
-    };
-
-    const ro = new ResizeObserver(resize);
-    ro.observe(host);
-    const io = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting;
-      if (visible) start();
-    });
-    io.observe(host);
-
-    host.addEventListener("pointermove", onMove);
-    host.addEventListener("pointerleave", onLeave);
-    resize();
-    start();
-
-    return () => {
-      cancelAnimationFrame(raf);
-      ro.disconnect();
-      io.disconnect();
-      host.removeEventListener("pointermove", onMove);
-      host.removeEventListener("pointerleave", onLeave);
-    };
-  }, [reduce]);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      aria-hidden
-      className="pointer-events-none absolute inset-0 h-full w-full"
-      style={{
-        maskImage: "radial-gradient(ellipse 75% 70% at 55% 50%, black 35%, transparent 100%)",
-        WebkitMaskImage: "radial-gradient(ellipse 75% 70% at 55% 50%, black 35%, transparent 100%)",
-      }}
-    />
-  );
-}
+const MeshBackground = dynamic(() => import("./MeshBackground"), { ssr: false });
 
 /* ---------- Rotating "I do ..." line ---------- */
 function RotatingService({ reduce }) {
@@ -213,12 +54,12 @@ function RotatingService({ reduce }) {
 }
 
 /* ---------- Floating chip around the portrait ---------- */
-function Chip({ children, className, delay = 0, reduce }) {
+function Chip({ children, className, delay = 0, reduce, desktop }) {
   return (
     <motion.div
-      animate={reduce ? undefined : { y: [0, -8, 0] }}
+      animate={reduce || !desktop ? undefined : { y: [0, -8, 0] }}
       transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay }}
-      className={`absolute z-20 rounded-xl border border-black/10 bg-white/80 px-3 py-2 text-xs font-medium leading-5 shadow-lg backdrop-blur-md dark:border-white/15 dark:bg-darkHover/80 ${className}`}
+      className={`absolute z-20 rounded-xl border border-black/10 bg-white/95 px-3 py-2 text-xs font-medium leading-5 shadow-sm dark:border-white/15 dark:bg-darkHover/95 lg:bg-white/80 lg:backdrop-blur-md lg:dark:bg-darkHover/80 lg:shadow-lg ${className}`}
     >
       {children}
     </motion.div>
@@ -228,6 +69,8 @@ function Chip({ children, className, delay = 0, reduce }) {
 const Header = () => {
   const { isDarkMode } = useTheme();
   const reduce = useReducedMotion();
+  const desktop = useMediaQuery("(min-width: 1024px)");
+  const meshEnabled = useMediaQuery("(min-width: 640px)");
 
   const container = {
     hidden: {},
@@ -250,7 +93,11 @@ const Header = () => {
       id="top"
       className="relative flex min-h-[100svh] w-full flex-col justify-center overflow-hidden pb-10 pt-32 lg:min-h-screen"
     >
-      <MeshBackground dark={isDarkMode} reduce={reduce} />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 hidden bg-[radial-gradient(ellipse_75%_70%_at_55%_50%,transparent_35%,rgba(0,0,0,0.025)_100%),linear-gradient(to_right,rgba(0,0,0,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.07)_1px,transparent_1px)] bg-[length:auto,52px_52px,52px_52px] dark:bg-[radial-gradient(ellipse_75%_70%_at_55%_50%,transparent_35%,rgba(255,255,255,0.025)_100%),linear-gradient(to_right,rgba(255,255,255,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.07)_1px,transparent_1px)] max-sm:block"
+      />
+      {meshEnabled && <MeshBackground dark={isDarkMode} reduce={reduce} />}
 
       <div className="relative z-10 w-full px-5 sm:px-8 lg:px-10">
       <div className="grid items-center gap-12 lg:grid-cols-12">
@@ -263,11 +110,11 @@ const Header = () => {
         >
           <motion.p
             variants={item}
-            className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/70 px-4 py-1.5 text-sm leading-6 backdrop-blur-md dark:border-white/15 dark:bg-white/5"
+            className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/90 px-4 py-1.5 text-sm leading-6 dark:border-white/15 dark:bg-darkHover/90 lg:bg-white/70 lg:backdrop-blur-md lg:dark:bg-white/5"
           >
-            <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500 motion-reduce:animate-none" />
+            <span className="h-2 w-2 rounded-full bg-emerald-500 motion-reduce:animate-none lg:animate-pulse" />
             Hi! I&apos;m Syed Zain Ali
-            <Image src={assets.hand_icon} alt="" className="w-4" />
+            <Image src={assets.hand_icon} alt="" className="w-4" sizes="16px" loading="lazy" />
           </motion.p>
 
           <motion.h1
@@ -281,7 +128,7 @@ const Header = () => {
           </motion.h1>
 
           <motion.div variants={item} className="flex justify-center lg:justify-start">
-            <RotatingService reduce={reduce} />
+            <RotatingService reduce={reduce || !desktop} />
           </motion.div>
 
           <motion.p
@@ -307,7 +154,7 @@ const Header = () => {
             <a
               href="/my_resume.pdf"
               download="Syed_Zain_Ali_Resume.pdf"
-              className="group inline-flex items-center gap-2 rounded-full border border-black/20 bg-white/60 px-8 py-3.5 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-amber-400 dark:border-white/25 dark:bg-white/5"
+              className="group inline-flex items-center gap-2 rounded-full border border-black/20 bg-white/90 px-8 py-3.5 transition-all duration-300 hover:-translate-y-1 hover:border-amber-400 dark:border-white/25 dark:bg-darkHover/90 lg:bg-white/60 lg:backdrop-blur-md lg:dark:bg-white/5"
             >
               My Resume
               <Download className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
@@ -334,17 +181,18 @@ const Header = () => {
               {/* Glow */}
               <div
                 aria-hidden
-                className="absolute -inset-6 rounded-[3rem] bg-amber-400/25 blur-3xl dark:bg-amber-400/15"
+                className="absolute -inset-6 rounded-[3rem] bg-[radial-gradient(ellipse,rgba(251,191,36,0.25),transparent_70%)] dark:bg-[radial-gradient(ellipse,rgba(251,191,36,0.15),transparent_70%)] lg:bg-amber-400/25 lg:blur-3xl lg:dark:bg-amber-400/15"
               />
 
               {/* Photo */}
-              <div className="relative h-full overflow-hidden rounded-3xl border border-black/10 bg-gray-200 shadow-2xl dark:border-white/15 dark:bg-darkHover">
+              <div className="relative h-full overflow-hidden rounded-3xl border border-black/10 bg-gray-200 shadow-lg dark:border-white/15 dark:bg-darkHover lg:shadow-2xl">
                 <Image
                   src={assets.user_image}
                   alt="Syed Zain Ali"
                   fill
                   priority
-                  sizes="(min-width: 1024px) 24rem, 18rem"
+                  quality={70}
+                  sizes="(min-width: 1024px) 24rem, (min-width: 640px) 18rem, 14rem"
                   className="object-cover object-top"
                 />
               </div>
@@ -356,19 +204,19 @@ const Header = () => {
               <span aria-hidden className="absolute -bottom-2 -right-2 h-7 w-7 border-b-2 border-r-2 border-amber-400" />
 
               {/* Floating chips */}
-              <Chip reduce={reduce} delay={0} className="-left-4 bottom-10 hidden sm:block lg:-left-10">
+              <Chip reduce={reduce} desktop={desktop} delay={0} className="-left-4 bottom-10 hidden sm:block lg:-left-10">
                 <span className="block font-mono text-[10px] uppercase tracking-widest text-amber-600 dark:text-amber-400">
                   Internship
                 </span>
                 SSGC · Meter Manufacturing
               </Chip>
-              <Chip reduce={reduce} delay={1.2} className="-right-3 top-10 hidden sm:block lg:-right-8">
+              <Chip reduce={reduce} desktop={desktop} delay={1.2} className="-right-3 top-10 hidden sm:block lg:-right-8">
                 <span className="block font-mono text-[10px] uppercase tracking-widest text-amber-600 dark:text-amber-400">
                   Tools
                 </span>
                 Abaqus · SolidWorks · Next.js
               </Chip>
-              <Chip reduce={reduce} delay={2.4} className="-right-3 bottom-24 hidden lg:block lg:-right-10">
+              <Chip reduce={reduce} desktop={desktop} delay={2.4} className="-right-3 bottom-24 hidden lg:block lg:-right-10">
                 <span className="block font-mono text-[10px] uppercase tracking-widest text-amber-600 dark:text-amber-400">
                   Certified
                 </span>

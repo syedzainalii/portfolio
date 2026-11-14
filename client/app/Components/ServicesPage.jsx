@@ -29,12 +29,13 @@ export default function ServicesPage() {
                   src={service.image}
                   alt=""
                   fill
+                  loading="lazy"
                   sizes="(min-width: 1280px) 30vw, (min-width: 640px) 45vw, 100vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               ) : (
                 <div className="grid h-full place-items-center bg-gradient-to-br from-emerald-700 to-slate-950">
-                  <Image src={service.icon} alt="" className="w-16 opacity-80" />
+                  <Image src={service.icon} alt="" className="w-16 opacity-80" sizes="64px" loading="lazy" />
                 </div>
               )}
               <span className="absolute left-4 top-4 font-mono text-xs text-white">

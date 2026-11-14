@@ -9,12 +9,14 @@ const outfit = OutfitFont({
   subsets: ["latin"], 
   weight: ["400", "500", "600", "700"],
   variable: '--font-outfit',
+  display: "swap",
 });
 
 const ovo = OvoFont({
   subsets: ["latin"], 
   weight: ["400"],
   variable: '--font-ovo',
+  display: "swap",
 });
 
 export const metadata = {
@@ -48,7 +50,7 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{

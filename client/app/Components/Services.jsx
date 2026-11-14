@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
 import { serviceData } from "@/assets/assets";
+import useMediaQuery from "./useMediaQuery";
 
 const pad = (n) => String(n).padStart(2, "0");
 
@@ -34,6 +35,7 @@ const WIDE_SLOTS = [1, 5];
 
 const Services = ({ preview = false }) => {
   const reduce = useReducedMotion();
+  const desktop = useMediaQuery("(min-width: 1024px)");
   const [order, setOrder] = useState(() => serviceData.map((_, i) => i));
 
   const gridRef = useRef(null);
@@ -41,13 +43,13 @@ const Services = ({ preview = false }) => {
   const blocked = useRef(null); // the card that was just demoted under the cursor
 
   // Swap the chosen card with the focused one
-  const activate = (idx) => {
+  const activate = (idx, timestamp) => {
     const slot = order.indexOf(idx);
     if (slot <= 0) return;
     const next = [...order];
     [next[0], next[slot]] = [next[slot], next[0]];
     blocked.current = order[0];
-    lock.current = performance.now() + 700;
+    lock.current = timestamp + 700;
     setOrder(next);
   };
 
@@ -58,20 +60,20 @@ const Services = ({ preview = false }) => {
     if (idx === blocked.current) return;
     blocked.current = null;
     if (idx === order[0]) return;
-    if (performance.now() < lock.current) return;
-    activate(idx);
+    if (e.timeStamp < lock.current) return;
+    activate(idx, e.timeStamp);
   };
 
   // Keyboard: tabbing to a card focuses it (but not mouse or touch focus)
   const onFocus = (e, idx) => {
-    if (e.currentTarget.matches(":focus-visible")) activate(idx);
+    if (e.currentTarget.matches(":focus-visible")) activate(idx, e.timeStamp);
   };
 
   // Touch/click: the first tap focuses, the second tap (on the focused card) opens
   const onClick = (e, idx) => {
     if (order[0] === idx) return;
     e.preventDefault();
-    activate(idx);
+    activate(idx, e.timeStamp);
 
     if (window.matchMedia("(max-width: 1023px)").matches) {
       window.setTimeout(() => {
@@ -88,7 +90,7 @@ const Services = ({ preview = false }) => {
   };
 
   return (
-    <section id="services" className="w-full py-14 sm:py-20 lg:py-24">
+    <section id="services" className="heavy-section w-full py-14 sm:py-20 lg:py-24">
       <div className="site-container">
         {/* Header */}
         <div className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
@@ -116,7 +118,7 @@ const Services = ({ preview = false }) => {
         {/* Bento grid */}
         <ul
           ref={gridRef}
-          className="grid auto-rows-[8.5rem] grid-cols-2 gap-3 sm:auto-rows-[10rem] sm:gap-4 lg:h-[36rem] lg:grid-cols-12 lg:grid-rows-6 xl:h-[40rem]"
+          className="grid auto-rows-[minmax(8.5rem,auto)] grid-cols-2 gap-3 sm:auto-rows-[minmax(10rem,auto)] sm:gap-4 lg:h-[36rem] lg:grid-cols-12 lg:grid-rows-6 xl:h-[40rem]"
         >
           {order.map((idx, slot) => {
             const service = serviceData[idx];
@@ -127,11 +129,11 @@ const Services = ({ preview = false }) => {
             return (
               <motion.li
                 key={link ?? idx}
-                layout={!reduce}
+                layout={desktop && !reduce}
                 transition={{ type: "spring", stiffness: 240, damping: 30 }}
                 style={{ borderRadius: 28 }}
                 data-featured={featured}
-                className={`relative min-h-0 min-w-0 overflow-hidden border border-black/5 shadow-lg dark:border-white/10 ${
+                className={`relative min-h-0 min-w-0 overflow-hidden border border-black/5 shadow-sm dark:border-white/10 lg:shadow-lg ${
                   SLOTS[slot] ?? ""
                 }`}
               >
@@ -144,12 +146,13 @@ const Services = ({ preview = false }) => {
                   className="group absolute inset-0 block outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-amber-400"
                 >
                   {/* Background */}
-                  <motion.div layout={!reduce} className="absolute inset-0">
+                  <motion.div layout={desktop && !reduce} className="absolute inset-0">
                     {image ? (
                       <Image
                         src={image}
                         alt=""
                         fill
+                        loading="lazy"
                         sizes="(min-width: 1024px) 60vw, 100vw"
                         className="object-cover transition-transform duration-700 group-hover:scale-105 motion-reduce:transition-none"
                       />
@@ -164,7 +167,7 @@ const Services = ({ preview = false }) => {
 
                   {/* Overlay */}
                   <motion.div
-                    layout={!reduce}
+                    layout={desktop && !reduce}
                     className={`absolute inset-0 transition-colors duration-500 ${
                       featured
                         ? "bg-gradient-to-t from-black/85 via-black/25 to-black/10"
@@ -174,13 +177,15 @@ const Services = ({ preview = false }) => {
 
                   {/* Content */}
                   <motion.div
-                    layout={reduce ? false : "position"}
+                    layout={desktop && !reduce ? "position" : false}
                     className="absolute inset-0 flex flex-col justify-between p-4 sm:p-5 lg:p-6"
                   >
                     <div className="flex items-start justify-between">
                       <span
-                        className={`grid h-9 w-9 place-items-center rounded-full text-xs font-bold backdrop-blur-sm transition-colors duration-500 sm:h-10 sm:w-10 ${
-                          featured ? "bg-amber-400 text-black" : "bg-white/20 text-white"
+                        className={`grid h-9 w-9 place-items-center rounded-full text-xs font-bold transition-colors duration-500 sm:h-10 sm:w-10 lg:backdrop-blur-sm ${
+                          featured
+                            ? "bg-amber-400 text-black"
+                            : "bg-slate-950/75 text-white lg:bg-white/20"
                         }`}
                       >
                         {pad(idx + 1)}
@@ -209,7 +214,7 @@ const Services = ({ preview = false }) => {
                               {tools.slice(0, 4).map((tool, t) => (
                                 <li
                                   key={tool}
-                                  className={`rounded-full border border-white/25 bg-white/10 px-3 py-0.5 text-xs leading-5 text-white backdrop-blur-sm lg:px-4 lg:py-1 lg:text-sm ${
+                                  className={`rounded-full border border-white/25 bg-slate-950/75 px-3 py-0.5 text-xs leading-5 text-white lg:bg-white/10 lg:px-4 lg:py-1 lg:text-sm lg:backdrop-blur-sm ${
                                     t >= 3 ? "hidden sm:block" : ""
                                   }`}
                                 >
