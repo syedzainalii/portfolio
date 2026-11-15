@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { Box, ClipboardList, Code, Cpu, Star, Wrench } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Box, ClipboardList, Code, Cpu, Wrench } from "lucide-react";
 import { skillCategories } from "@/assets/assets";
 
 const skillIcons = {
@@ -12,75 +12,94 @@ const skillIcons = {
   wrench: Wrench,
 };
 
+// Width of each board on large screens (12-column bento)
+const SPANS = ["lg:col-span-7", "lg:col-span-5", "lg:col-span-4", "lg:col-span-4", "lg:col-span-4"];
+
 const pad = (n) => String(n).padStart(2, "0");
 
 function levelOf(n) {
-  if (n >= 85) return "Expert";
-  if (n >= 70) return "Advanced";
-  if (n >= 55) return "Proficient";
-  if (n >= 35) return "Intermediate";
-  return "Basic";
+  if (n >= 85) return { label: "Expert", pips: 5 };
+  if (n >= 70) return { label: "Advanced", pips: 4 };
+  if (n >= 55) return { label: "Proficient", pips: 3 };
+  if (n >= 35) return { label: "Intermediate", pips: 2 };
+  return { label: "Basic", pips: 1 };
 }
 
-/* ---------- Tape measure ---------- */
-function Tape({ percent, accent }) {
+// strong = solid, mid = outlined, low = dashed and faded
+function tierOf(n) {
+  if (n >= 70) return "strong";
+  if (n >= 55) return "mid";
+  return "low";
+}
+
+/* ---------- One hanging tool tag ---------- */
+function Tag({ skill, accent, dim }) {
+  const lvl = levelOf(skill.level);
+  const tier = tierOf(skill.level);
+
+  const style =
+    tier === "strong"
+      ? { backgroundColor: accent, borderColor: accent, color: "#111" }
+      : tier === "mid"
+      ? { backgroundColor: `${accent}26`, borderColor: accent }
+      : { borderColor: `${accent}99`, borderStyle: "dashed" };
+
   return (
-    <div
-      aria-hidden
-      className="relative h-3.5 overflow-hidden rounded-sm bg-black/[0.07] dark:bg-white/10"
+    <li
+      className={`relative min-w-0 rounded-2xl border-2 px-4 pb-3 pt-6 transition-all duration-300 motion-reduce:transition-none ${
+        dim ? "opacity-20 grayscale" : "hover:-translate-y-1 hover:shadow-lg"
+      } ${tier === "low" ? "text-gray-600 dark:text-white/65" : ""}`}
+      style={style}
     >
-      <div
-        className="absolute inset-y-0 left-0 rounded-sm"
-        style={{ width: `${percent}%`, backgroundColor: accent }}
+      {/* Peg hole */}
+      <span
+        aria-hidden
+        className="absolute left-3.5 top-2.5 h-2.5 w-2.5 rounded-full bg-white ring-1 ring-black/25 dark:bg-darkHover dark:ring-white/30"
       />
-      {/* Tick marks: a line every 5% */}
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage:
-            "repeating-linear-gradient(to right, transparent 0, transparent calc(5% - 1px), rgba(0,0,0,0.3) calc(5% - 1px), rgba(0,0,0,0.3) 5%)",
-        }}
-      />
-    </div>
-  );
-}
 
-/* ---------- One tool ---------- */
-function ToolCard({ skill, accent, top }) {
-  return (
-    <li className="group relative min-w-0 rounded-2xl border border-black/10 bg-white p-4 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:border-white/15 dark:bg-darkHover motion-reduce:transition-none sm:p-5">
-      {top && (
-        <span
-          className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-mono text-[10px] font-bold uppercase leading-4 tracking-[0.12em] text-black"
-          style={{ backgroundColor: accent }}
-        >
-          <Star className="h-3 w-3" fill="currentColor" />
-          Top tool
+      <p className="break-words font-Ovo text-lg leading-6">{skill.name}</p>
+
+      <div className="mt-2 flex items-center gap-2">
+        <span aria-hidden className="flex gap-0.5">
+          {[0, 1, 2, 3, 4].map((p) => (
+            <span
+              key={p}
+              className="h-1.5 w-1.5 rounded-full"
+              style={{
+                backgroundColor: tier === "strong" ? "#111" : accent,
+                opacity: p < lvl.pips ? 1 : 0.22,
+              }}
+            />
+          ))}
         </span>
-      )}
-
-      <p className={`break-words font-Ovo text-xl leading-7 sm:text-2xl sm:leading-8 ${top ? "pr-24" : ""}`}>
-        {skill.name}
-      </p>
-
-      <div className="mt-4">
-        <Tape percent={skill.level} accent={accent} />
-        <div className="mt-2 flex items-center justify-between gap-3 text-sm leading-5">
-          <span className="font-medium">{levelOf(skill.level)}</span>
-          <span className="font-mono tabular-nums text-gray-500 dark:text-white/55">
-            {skill.level}%
-          </span>
-        </div>
+        <span className="font-mono text-[10px] uppercase leading-4 tracking-[0.12em]">
+          {lvl.label}
+        </span>
       </div>
     </li>
   );
 }
 
+/* ---------- Legend swatch ---------- */
+function Swatch({ kind, label }) {
+  const base = "inline-block h-4 w-8 rounded-md border-2";
+  const style =
+    kind === "strong"
+      ? { backgroundColor: "#fbbf24", borderColor: "#fbbf24" }
+      : kind === "mid"
+      ? { backgroundColor: "#fbbf2426", borderColor: "#fbbf24" }
+      : { borderColor: "#fbbf2499", borderStyle: "dashed" };
+  return (
+    <span className="inline-flex items-center gap-2 text-sm leading-5 text-gray-600 dark:text-white/65">
+      <span aria-hidden className={base} style={style} />
+      {label}
+    </span>
+  );
+}
+
 export default function SkillsExplorer() {
   const [strongOnly, setStrongOnly] = useState(false);
-  const [active, setActive] = useState(0);
 
-  // Zones with tools sorted strongest first
   const zones = useMemo(
     () =>
       skillCategories.map((c, i) => {
@@ -91,27 +110,8 @@ export default function SkillsExplorer() {
     []
   );
 
-  const totalSkills = zones.reduce((n, z) => n + z.skills.length, 0);
-  const strongCount = zones.reduce((n, z) => n + z.skills.filter((s) => s.level >= 70).length, 0);
-
-  // Highlight the zone you are scrolled to
-  useEffect(() => {
-    const els = zones.map((z) => document.getElementById(`zone-${z.index}`)).filter(Boolean);
-    if (!els.length || typeof IntersectionObserver === "undefined") return;
-
-    const io = new IntersectionObserver(
-      (entries) => {
-        const visible = entries.filter((e) => e.isIntersecting);
-        if (visible.length) {
-          const top = visible.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
-          setActive(Number(top.target.dataset.zone));
-        }
-      },
-      { rootMargin: "-30% 0px -60% 0px" }
-    );
-    els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
-  }, [zones]);
+  const total = zones.reduce((n, z) => n + z.skills.length, 0);
+  const strong = zones.reduce((n, z) => n + z.skills.filter((s) => s.level >= 70).length, 0);
 
   const chip = (on) =>
     `min-h-11 shrink-0 whitespace-nowrap rounded-full border px-4 py-2 text-sm font-medium leading-5 transition-colors duration-200 lg:min-h-0 lg:py-1.5 ${
@@ -121,13 +121,27 @@ export default function SkillsExplorer() {
     }`;
 
   return (
-    <div>
+    <article className="site-container pb-20 pt-28 sm:pt-32">
+      {/* ===== Header ===== */}
+      <header className="mb-10 sm:mb-12">
+        <p className="mb-3 font-mono text-xs uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400">
+          Skills / Shadow board
+        </p>
+        <h1 className="break-words font-Ovo text-4xl leading-[1.05] sm:text-6xl lg:text-7xl">
+          My Technical Skills
+        </h1>
+        <p className="mt-5 max-w-2xl text-base leading-7 text-gray-600 dark:text-white/65 sm:text-lg sm:leading-8">
+          Every discipline has its own board, and every tool hangs on it. The more solid the tag,
+          the stronger the skill.
+        </p>
+      </header>
+
       {/* ===== Stats ===== */}
       <dl className="grid grid-cols-3 divide-x divide-black/10 rounded-2xl border border-black/10 dark:divide-white/15 dark:border-white/15">
         {[
-          { label: "Skills", value: totalSkills },
-          { label: "Zones", value: zones.length },
-          { label: "Advanced +", value: strongCount },
+          { label: "Tools", value: total },
+          { label: "Boards", value: zones.length },
+          { label: "Advanced +", value: strong },
         ].map((s) => (
           <div key={s.label} className="px-2 py-4 text-center sm:px-6 sm:py-5">
             <dd className="font-mono text-3xl font-semibold leading-8 tabular-nums sm:text-5xl sm:leading-[3.25rem]">
@@ -140,136 +154,92 @@ export default function SkillsExplorer() {
         ))}
       </dl>
 
-      {/* ===== Level toggle ===== */}
-      <div className="mt-6 flex flex-wrap items-center gap-2">
-        <button type="button" aria-pressed={!strongOnly} onClick={() => setStrongOnly(false)} className={chip(!strongOnly)}>
-          All levels
-        </button>
-        <button type="button" aria-pressed={strongOnly} onClick={() => setStrongOnly(true)} className={chip(strongOnly)}>
-          Advanced and above
-        </button>
-      </div>
+      {/* ===== Controls + legend ===== */}
+      <div className="mt-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-wrap gap-2">
+          <button type="button" aria-pressed={!strongOnly} onClick={() => setStrongOnly(false)} className={chip(!strongOnly)}>
+            All levels
+          </button>
+          <button type="button" aria-pressed={strongOnly} onClick={() => setStrongOnly(true)} className={chip(strongOnly)}>
+            Advanced and above
+          </button>
+        </div>
 
-      <div className="mt-8 grid items-start gap-6 lg:grid-cols-12 lg:gap-12">
-        {/* ===== Zone map ===== */}
-        <nav
-          aria-label="Skill zones"
-          className="sticky top-[4.5rem] z-20 -mx-5 bg-white px-5 py-2 dark:bg-darkTheme sm:-mx-8 sm:px-8 lg:top-28 lg:col-span-3 lg:mx-0 lg:bg-transparent lg:px-0 lg:py-0 dark:lg:bg-transparent"
-        >
-          <p className="mb-3 hidden font-mono text-[11px] uppercase leading-5 tracking-[0.2em] text-gray-500 dark:text-white/45 lg:block">
-            Zone map
-          </p>
-          <ul className="flex gap-2 overflow-x-auto [scrollbar-width:none] lg:flex-col lg:gap-0 lg:overflow-visible [&::-webkit-scrollbar]:hidden">
-            {zones.map((z) => {
-              const on = active === z.index;
-              return (
-                <li key={z.title} className="shrink-0">
-                  <a
-                    href={`#zone-${z.index}`}
-                    aria-current={on ? "true" : undefined}
-                    className={`relative flex min-h-11 items-center gap-3 rounded-full border px-4 py-2 text-sm font-medium transition-colors duration-200 lg:min-h-0 lg:rounded-none lg:border-0 lg:border-t lg:border-black/10 lg:px-0 lg:py-4 lg:dark:border-white/15 ${
-                      on
-                        ? "border-black bg-black text-white dark:border-white dark:bg-white dark:text-black lg:bg-transparent lg:text-inherit dark:lg:bg-transparent dark:lg:text-inherit"
-                        : "border-black/15 text-gray-700 dark:border-white/20 dark:text-white/80 lg:text-gray-500 dark:lg:text-white/55"
-                    }`}
-                  >
-                    {/* Amber bar (desktop) */}
-                    <span
-                      aria-hidden
-                      className={`absolute -top-px left-0 hidden h-px bg-amber-400 transition-all duration-500 lg:block ${
-                        on ? "w-full" : "w-0"
-                      }`}
-                    />
-                    <span className={`font-mono text-xs tabular-nums ${on ? "text-amber-400 lg:text-amber-500" : "opacity-60"}`}>
-                      {pad(z.index + 1)}
-                    </span>
-                    <span className={`whitespace-nowrap font-Ovo text-base leading-6 lg:whitespace-normal lg:text-xl ${on ? "lg:text-black dark:lg:text-white" : ""}`}>
-                      {z.title}
-                    </span>
-                    <span className="ml-auto hidden font-mono text-xs tabular-nums opacity-60 lg:block">
-                      {pad(z.skills.length)}
-                    </span>
-                  </a>
-                </li>
-              );
-            })}
-            <li aria-hidden className="hidden border-t border-black/10 dark:border-white/15 lg:block" />
-          </ul>
-        </nav>
-
-        {/* ===== Zones ===== */}
-        <div className="min-w-0 space-y-16 lg:col-span-9 lg:space-y-20">
-          {zones.map((z) => {
-            const list = strongOnly ? z.skills.filter((s) => s.level >= 70) : z.skills;
-            const topLevel = z.skills[0]?.level;
-
-            return (
-              <section
-                key={z.title}
-                id={`zone-${z.index}`}
-                data-zone={z.index}
-                className="scroll-mt-32"
-              >
-                {/* Zone header */}
-                <header className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4 border-b-2 pb-5" style={{ borderColor: z.accent }}>
-                  <div className="flex min-w-0 items-center gap-4 sm:gap-5">
-                    <span
-                      aria-hidden
-                      className="select-none font-mono text-5xl font-bold leading-none tabular-nums text-transparent sm:text-7xl"
-                      style={{ WebkitTextStroke: `1.5px ${z.accent}` }}
-                    >
-                      {pad(z.index + 1)}
-                    </span>
-                    <div className="min-w-0">
-                      <p className="font-mono text-[11px] uppercase leading-5 tracking-[0.2em] text-gray-500 dark:text-white/45">
-                        Zone · {pad(z.skills.length)} tools
-                      </p>
-                      <h2 className="flex items-center gap-3 break-words font-Ovo text-3xl leading-tight sm:text-4xl">
-                        <span
-                          className="grid h-10 w-10 shrink-0 place-items-center rounded-xl"
-                          style={{ backgroundColor: `${z.accent}26`, color: z.accent }}
-                        >
-                          <z.Icon className="h-5 w-5" />
-                        </span>
-                        {z.title}
-                      </h2>
-                    </div>
-                  </div>
-
-                  <div className="w-full min-w-[12rem] sm:w-56">
-                    <p className="flex items-center justify-between font-mono text-[10px] uppercase leading-4 tracking-[0.2em] text-gray-500 dark:text-white/45">
-                      <span>Zone strength</span>
-                      <span>{levelOf(z.avg)}</span>
-                    </p>
-                    <div className="mt-1.5">
-                      <Tape percent={z.avg} accent={z.accent} />
-                    </div>
-                  </div>
-                </header>
-
-                {/* Tools */}
-                {list.length > 0 ? (
-                  <ul className="mt-6 grid gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-3">
-                    {list.map((s) => (
-                      <ToolCard
-                        key={s.name}
-                        skill={s}
-                        accent={z.accent}
-                        top={s.level === topLevel && z.skills.length > 1 && s === z.skills[0]}
-                      />
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="mt-6 rounded-2xl border border-dashed border-black/20 px-5 py-6 text-sm text-gray-500 dark:border-white/25 dark:text-white/55">
-                    Nothing in this zone is at Advanced yet. Switch to &ldquo;All levels&rdquo; to see
-                    every tool.
-                  </p>
-                )}
-              </section>
-            );
-          })}
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2" aria-label="How to read the tags">
+          <Swatch kind="strong" label="Advanced +" />
+          <Swatch kind="mid" label="Proficient" />
+          <Swatch kind="low" label="Learning" />
         </div>
       </div>
-    </div>
+
+      {/* ===== Boards ===== */}
+      <div className="mt-8 grid gap-5 lg:grid-cols-12">
+        {zones.map((z) => (
+          <section
+            key={z.title}
+            aria-labelledby={`board-${z.index}`}
+            className={`relative min-w-0 overflow-hidden rounded-3xl border border-black/10 bg-white p-5 shadow-sm dark:border-white/15 dark:bg-darkHover sm:p-7 ${
+              SPANS[z.index] ?? "lg:col-span-6"
+            }`}
+            style={{
+              backgroundImage:
+                "radial-gradient(circle, rgba(120,120,120,0.22) 1.2px, transparent 1.5px)",
+              backgroundSize: "22px 22px",
+            }}
+          >
+            {/* Colour wash from the corner */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background: `radial-gradient(70% 50% at 0% 0%, ${z.accent}22, transparent 70%)`,
+              }}
+            />
+
+            {/* Board header */}
+            <header className="relative flex items-start justify-between gap-4">
+              <div className="flex min-w-0 items-center gap-3.5">
+                <span
+                  className="grid h-12 w-12 shrink-0 place-items-center rounded-xl"
+                  style={{ backgroundColor: `${z.accent}2e`, color: z.accent }}
+                >
+                  <z.Icon className="h-6 w-6" />
+                </span>
+                <div className="min-w-0">
+                  <p className="font-mono text-[11px] uppercase leading-5 tracking-[0.2em] text-gray-500 dark:text-white/45">
+                    Board {pad(z.index + 1)} · {pad(z.skills.length)} tools
+                  </p>
+                  <h2 id={`board-${z.index}`} className="break-words font-Ovo text-2xl leading-tight sm:text-3xl">
+                    {z.title}
+                  </h2>
+                </div>
+              </div>
+
+              <div className="shrink-0 text-right">
+                <p className="font-mono text-3xl font-semibold leading-8 tabular-nums sm:text-4xl sm:leading-9" style={{ color: z.accent }}>
+                  {z.avg}
+                  <span className="text-base">%</span>
+                </p>
+                <p className="font-mono text-[10px] uppercase leading-4 tracking-[0.2em] text-gray-500 dark:text-white/45">
+                  Strength
+                </p>
+              </div>
+            </header>
+
+            {/* Tools */}
+            <ul className="relative mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-[repeat(auto-fill,minmax(9.5rem,1fr))]">
+              {z.skills.map((s) => (
+                <Tag
+                  key={s.name}
+                  skill={s}
+                  accent={z.accent}
+                  dim={strongOnly && s.level < 70}
+                />
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+    </article>
   );
 }
