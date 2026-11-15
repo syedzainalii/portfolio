@@ -8,7 +8,7 @@ import { experienceData } from "@/assets/assets";
 
 const pad = (n) => String(n).padStart(2, "0");
 
-// Splits a highlight into a bold opening phrase and the rest of the sentence
+// Splits a highlight into an opening phrase (highlighted) and the rest of the sentence
 function splitHighlight(text) {
   const words = String(text).split(" ");
   if (words.length <= 5) return { lead: text, rest: "" };
@@ -20,10 +20,10 @@ function splitHighlight(text) {
       break;
     }
   }
-  const lead = words.slice(0, n).join(" ").replace(/[,;:]$/, "");
-  const rest = words.slice(n).join(" ");
-  const joiner = /[,;:]$/.test(words[n - 1]) ? words[n - 1].slice(-1) : "";
-  return { lead: lead + joiner, rest: ` ${rest}` };
+  return {
+    lead: words.slice(0, n).join(" "),
+    rest: ` ${words.slice(n).join(" ")}`,
+  };
 }
 
 /* ---------- "Full journey" link (landing page only) ---------- */
@@ -80,46 +80,58 @@ function RoleTabs({ roles, value, onChange }) {
   );
 }
 
-/* ---------- One plain row in the facts list ---------- */
-function Fact({ label, value }) {
+/* ---------- One fact in the left panel ---------- */
+function Fact({ label, value, wide = false }) {
   return (
-    <div className="flex items-baseline justify-between gap-6 border-t border-black/10 py-3 dark:border-white/15">
-      <dt className="shrink-0 font-mono text-[11px] uppercase leading-5 tracking-[0.2em] text-gray-500 dark:text-white/45">
+    <div className={`min-w-0 ${wide ? "col-span-2" : ""}`}>
+      <dt className="font-mono text-[10px] uppercase leading-4 tracking-[0.2em] text-gray-500 dark:text-white/45">
         {label}
       </dt>
-      <dd className="min-w-0 break-words text-right text-base font-medium leading-6">{value}</dd>
+      <dd className="mt-1 break-words text-base font-semibold leading-6">{value}</dd>
     </div>
   );
 }
 
-/* ---------- One objective ---------- */
+/* ---------- One objective on the timeline ---------- */
 function Objective({ text, index, reduce }) {
   const { lead, rest } = splitHighlight(text);
+
   return (
-    <motion.li
-      initial={reduce ? false : { opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.45, delay: Math.min(index, 4) * 0.05, ease: "easeOut" }}
-      className="group/item relative grid grid-cols-[3rem_1fr] gap-x-3 border-t border-black/10 py-6 transition-opacity duration-300 first:border-t-0 first:pt-0 hover:opacity-100! group-hover/list:opacity-35 dark:border-white/15 sm:grid-cols-[4.5rem_1fr] sm:gap-x-6 sm:py-8"
-    >
-      {/* Amber marker that draws in on hover */}
-      <span
+    <li className="group/item relative py-6 transition-opacity duration-300 hover:opacity-100! group-hover/list:opacity-40 sm:py-8">
+      {/* Dot on the rail: turns amber when it scrolls into view */}
+      <motion.span
         aria-hidden
-        className="absolute left-0 top-0 h-px w-full origin-left scale-x-0 bg-amber-400 transition-transform duration-500 group-hover/item:scale-x-100 motion-reduce:transition-none"
+        initial={reduce ? false : { scale: 0.6, backgroundColor: "rgba(150,150,150,0.45)" }}
+        whileInView={{ scale: 1, backgroundColor: "#fbbf24" }}
+        viewport={{ once: true, margin: "-30% 0px -30% 0px" }}
+        transition={{ duration: 0.35 }}
+        className="absolute -left-6 top-9 h-3 w-3 -translate-x-1/2 rounded-full ring-4 ring-white dark:ring-darkTheme sm:-left-10 sm:top-12"
       />
 
-      <span className="font-mono text-3xl font-light leading-none tabular-nums text-amber-500 sm:text-5xl">
-        {pad(index + 1)}
-      </span>
-
-      <p className="min-w-0 break-words text-lg leading-8 text-gray-500 dark:text-white/55 sm:text-xl sm:leading-9">
-        <span className="font-Ovo text-2xl leading-9 text-black dark:text-white sm:text-3xl sm:leading-10">
-          {lead}
+      <motion.div
+        initial={reduce ? false : { opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-40px" }}
+        transition={{ duration: 0.45, ease: "easeOut" }}
+        className="grid grid-cols-[2.75rem_1fr] gap-x-3 sm:grid-cols-[5rem_1fr] sm:gap-x-6"
+      >
+        {/* Outlined numeral that fills on hover */}
+        <span
+          aria-hidden
+          className="select-none font-mono text-4xl font-bold leading-none tabular-nums text-transparent transition-colors duration-300 group-hover/item:text-amber-400 sm:text-6xl"
+          style={{ WebkitTextStroke: "1.5px #f59e0b" }}
+        >
+          {pad(index + 1)}
         </span>
-        {rest}
-      </p>
-    </motion.li>
+
+        <p className="min-w-0 break-words text-lg leading-8 text-gray-500 dark:text-white/55 sm:text-xl sm:leading-9">
+          <span className="bg-[linear-gradient(transparent_62%,rgba(251,191,36,0.4)_62%)] font-Ovo text-2xl leading-9 text-black [box-decoration-break:clone] dark:text-white sm:text-3xl sm:leading-10">
+            {lead}
+          </span>
+          {rest}
+        </p>
+      </motion.div>
+    </li>
   );
 }
 
@@ -160,55 +172,57 @@ export default function Experience({ preview = false }) {
             animate={{ opacity: 1, y: 0 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
             transition={{ duration: 0.25 }}
-            className="mt-10 grid gap-12 lg:mt-14 lg:grid-cols-12 lg:gap-16"
+            className="mt-10 grid gap-10 lg:mt-14 lg:grid-cols-12 lg:gap-14"
           >
-            {/* ===== Left: the role ===== */}
+            {/* ===== Left: the role (pinned on desktop) ===== */}
             <div className="min-w-0 lg:sticky lg:top-28 lg:col-span-5 lg:self-start">
-              <p className="font-mono text-[11px] uppercase leading-5 tracking-[0.2em] text-amber-600 dark:text-amber-400">
-                {exp.company}
-              </p>
-              <h3 className="mt-3 break-words font-Ovo text-4xl leading-[1.08] sm:text-5xl lg:text-6xl">
-                {exp.role}
-              </h3>
+              <div className="relative overflow-hidden rounded-3xl border border-black/10 bg-gradient-to-br from-amber-400/15 via-white to-white p-6 shadow-lg dark:border-white/15 dark:from-amber-400/10 dark:via-darkHover dark:to-darkHover sm:p-8">
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(251,191,36,0.28),transparent_70%)]"
+                />
 
-              <p className="mt-5 text-base leading-7 text-gray-600 dark:text-white/65">
-                {exp.description}
-              </p>
+                <h3 className="relative break-words font-Ovo text-4xl leading-[1.08] sm:text-5xl">
+                  {exp.role}
+                </h3>
 
-              <dl className="mt-8">
-                <Fact label="Company" value={exp.company} />
-                <Fact label="Site" value={exp.location} />
-                <Fact label="Duration" value={exp.period} />
-                <Fact label="Highlights" value={`${pad(achievements.length)} completed`} />
-                <div className="border-t border-black/10 dark:border-white/15" />
-              </dl>
+                <dl className="relative mt-7 grid grid-cols-2 gap-x-6 gap-y-5">
+                  <Fact label="Company" value={exp.company} wide />
+                  <Fact label="Site" value={exp.location} />
+                  <Fact label="Duration" value={exp.period} />
+                  <Fact label="Highlights" value={`${pad(achievements.length)} completed`} />
+                  {technologies.length > 0 && (
+                    <Fact label="Tooling" value={`${pad(technologies.length)} items`} />
+                  )}
+                </dl>
 
-              {technologies.length > 0 && (
-                <p className="mt-5 text-sm leading-7 text-gray-500 dark:text-white/55">
-                  <span className="font-medium text-black dark:text-white">Tooling </span>
-                  {technologies.join("  ·  ")}
+                <p className="relative mt-7 text-base leading-7 text-gray-600 dark:text-white/65">
+                  {exp.description}
                 </p>
-              )}
 
-              <a
-                href={report}
-                download
-                className="group mt-7 inline-flex items-center gap-2 text-sm font-medium"
-              >
-                <Download className="h-4 w-4 text-amber-600 dark:text-amber-400" />
-                <span className="relative">
-                  Download full report
-                  <span className="absolute -bottom-1 left-0 h-px w-full bg-current opacity-30 transition-opacity duration-300 group-hover:opacity-100" />
-                </span>
-              </a>
+                {technologies.length > 0 && (
+                  <p className="relative mt-4 text-sm leading-7 text-gray-500 dark:text-white/55">
+                    {technologies.join("  ·  ")}
+                  </p>
+                )}
+
+                <a
+                  href={report}
+                  download
+                  className="group relative mt-7 inline-flex items-center gap-2.5 rounded-full bg-black px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-amber-400 hover:text-black hover:shadow-[0_12px_30px_-10px_rgba(202,138,4,0.8)] dark:bg-white dark:text-black dark:hover:bg-amber-400"
+                >
+                  Download report
+                  <Download className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
+                </a>
+              </div>
             </div>
 
-            {/* ===== Right: the objectives ===== */}
+            {/* ===== Right: the objectives on a timeline ===== */}
             <div className="min-w-0 lg:col-span-7">
-              <p className="mb-6 font-mono text-[11px] uppercase leading-5 tracking-[0.2em] text-gray-500 dark:text-white/45">
+              <p className="mb-2 font-mono text-[11px] uppercase leading-5 tracking-[0.2em] text-gray-500 dark:text-white/45">
                 What I worked on · {pad(achievements.length)}
               </p>
-              <ol className="group/list">
+              <ol className="group/list relative ml-1.5 border-l border-black/15 pl-6 dark:border-white/20 sm:pl-10">
                 {achievements.map((item, i) => (
                   <Objective key={item} text={item} index={i} reduce={reduce} />
                 ))}
