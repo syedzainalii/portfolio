@@ -123,32 +123,7 @@ export default function SkillsExplorer() {
         <p className="mb-3 font-mono text-xs uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400">
           Skills / Shadow board
         </p>
-        <h1 className="break-words font-Ovo text-4xl leading-[1.05] sm:text-6xl lg:text-7xl">
-          My Technical Skills
-        </h1>
-        <p className="mt-5 max-w-2xl text-base leading-7 text-gray-600 dark:text-white/65 sm:text-lg sm:leading-8">
-          Every discipline has its own board, and every tool hangs on it. The more solid the tag,
-          the stronger the skill.
-        </p>
       </header>
-
-      {/* ===== Stats ===== */}
-      <dl className="grid grid-cols-3 divide-x divide-black/10 rounded-2xl border border-black/10 dark:divide-white/15 dark:border-white/15">
-        {[
-          { label: "Tools", value: total },
-          { label: "Boards", value: zones.length },
-          { label: "Advanced +", value: strong },
-        ].map((s) => (
-          <div key={s.label} className="px-2 py-4 text-center sm:px-6 sm:py-5">
-            <dd className="font-mono text-3xl font-semibold leading-8 tabular-nums sm:text-5xl sm:leading-[3.25rem]">
-              {pad(s.value)}
-            </dd>
-            <dt className="mt-1 font-mono text-[10px] uppercase leading-4 tracking-[0.2em] text-gray-500 dark:text-white/45">
-              {s.label}
-            </dt>
-          </div>
-        ))}
-      </dl>
 
       {/* ===== Controls + legend ===== */}
       <div className="mt-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
