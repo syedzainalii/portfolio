@@ -5,8 +5,10 @@ import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   ArrowUpRight,
+  Building2,
   CalendarDays,
   Cog,
+  Download,
   ListChecks,
   MapPin,
   Wrench,
@@ -14,12 +16,32 @@ import {
 import { experienceData } from "@/assets/assets";
 
 const pad = (n) => String(n).padStart(2, "0");
+const cap = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
 
-// Bold the first few words of a highlight, so skimmers can read just those
-function splitLead(text, n = 3) {
+// Splits "Studied the pipeline project lifecycle, from..." into
+// a tag ("Studied"), a headline ("The pipeline project lifecycle") and the full sentence
+function parseHighlight(text) {
   const words = String(text).split(" ");
-  if (words.length <= n + 1) return { lead: text, rest: "" };
-  return { lead: words.slice(0, n).join(" "), rest: ` ${words.slice(n).join(" ")}` };
+  if (words.length <= 5) return { verb: null, head: cap(text), body: "" };
+
+  const verb = words[0];
+  const take = [];
+  for (let k = 1; k <= 4 && k < words.length; k++) {
+    const w = words[k];
+    if (/[,;:]$/.test(w)) {
+      take.push(w.replace(/[,;:]$/, ""));
+      break;
+    }
+    take.push(w);
+  }
+  return { verb: verb.replace(/[,;:]$/, ""), head: cap(take.join(" ")), body: text };
+}
+
+// Card widths on large screens (12-column grid on desktop uses 6 columns here)
+function spanFor(i, n) {
+  if (n === 5) return i < 2 ? "lg:col-span-3" : "lg:col-span-2";
+  if (n % 2 === 1 && i === n - 1) return "sm:col-span-2 lg:col-span-6";
+  return "lg:col-span-3";
 }
 
 /* ---------- "Full journey" button (landing page only) ---------- */
@@ -74,52 +96,68 @@ function RoleTabs({ roles, value, onChange }) {
   );
 }
 
-/* ---------- One box in the "at a glance" strip ---------- */
-function Glance({ icon: Icon, label, value }) {
+/* ---------- One tile in the "at a glance" row ---------- */
+function Glance({ icon: Icon, label, value, className = "" }) {
   return (
-    <div className="min-w-0 p-4 sm:p-5">
-      <p className="flex items-center gap-2 font-mono text-[10px] uppercase leading-4 tracking-[0.2em] text-gray-500 dark:text-white/45">
-        <Icon className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
-        {label}
-      </p>
-      <p className="mt-1.5 break-words text-lg font-semibold leading-6 sm:text-xl sm:leading-7">
-        {value}
-      </p>
+    <div
+      className={`flex min-w-0 items-center gap-3.5 rounded-2xl border border-black/10 bg-white p-4 shadow-sm dark:border-white/15 dark:bg-darkHover ${className}`}
+    >
+      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-amber-400/15 text-amber-600 dark:text-amber-400">
+        <Icon className="h-5 w-5" />
+      </span>
+      <div className="min-w-0">
+        <p className="font-mono text-[10px] uppercase leading-4 tracking-[0.2em] text-gray-500 dark:text-white/45">
+          {label}
+        </p>
+        <p className="break-words text-base font-semibold leading-6">{value}</p>
+      </div>
     </div>
   );
 }
 
-/* ---------- One achievement row ---------- */
-function Highlight({ text, index, isLast, reduce }) {
-  const { lead, rest } = splitLead(text);
+/* ---------- One highlight card ---------- */
+function HighlightCard({ text, index, total, reduce }) {
+  const { verb, head, body } = parseHighlight(text);
   return (
     <motion.li
-      initial={reduce ? false : { opacity: 0, y: 14 }}
+      initial={reduce ? false : { opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.4, delay: Math.min(index, 5) * 0.05, ease: "easeOut" }}
-      className={`group relative pl-14 sm:pl-16 ${isLast ? "" : "pb-7"}`}
+      transition={{ duration: 0.4, delay: Math.min(index, 5) * 0.06, ease: "easeOut" }}
+      className={`group relative min-w-0 overflow-hidden rounded-3xl border border-black/10 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-amber-400/70 hover:shadow-xl dark:border-white/15 dark:bg-darkHover sm:p-6 ${spanFor(
+        index,
+        total
+      )}`}
     >
-      {/* Connecting line */}
-      {!isLast && (
-        <span
-          aria-hidden
-          className="absolute bottom-0 left-[19px] top-10 w-0.5 bg-gradient-to-b from-amber-400/70 to-amber-400/20 sm:left-[21px]"
-        />
-      )}
-
-      {/* Node */}
+      {/* Accent line that grows on hover */}
       <span
         aria-hidden
-        className="absolute left-0 top-0 grid h-10 w-10 place-items-center rounded-full border-2 border-amber-400 bg-white font-mono text-sm font-bold text-amber-600 transition-colors duration-300 group-hover:bg-amber-400 group-hover:text-black dark:bg-darkHover dark:text-amber-400 dark:group-hover:text-black sm:h-11 sm:w-11"
+        className="absolute inset-x-0 top-0 h-1 origin-left scale-x-[0.18] bg-amber-400 transition-transform duration-500 group-hover:scale-x-100 motion-reduce:transition-none"
+      />
+
+      {/* Big faint number */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -right-1 -top-3 select-none font-mono text-7xl font-bold leading-none text-amber-400/15 sm:text-8xl"
       >
         {pad(index + 1)}
       </span>
 
-      <p className="text-lg leading-7 text-gray-600 dark:text-white/65 sm:text-xl sm:leading-8">
-        <strong className="font-semibold text-black dark:text-white">{lead}</strong>
-        {rest}
-      </p>
+      <div className="relative">
+        {verb && (
+          <span className="inline-block rounded-full bg-amber-400 px-3 py-0.5 font-mono text-[11px] font-bold uppercase leading-5 tracking-[0.15em] text-black">
+            {verb}
+          </span>
+        )}
+
+        <h4 className={`break-words font-Ovo text-xl leading-snug sm:text-2xl ${verb ? "mt-3" : ""}`}>
+          {head}
+        </h4>
+
+        {body && (
+          <p className="mt-2 text-sm leading-6 text-gray-500 dark:text-white/60">{body}</p>
+        )}
+      </div>
     </motion.li>
   );
 }
@@ -134,6 +172,19 @@ export default function Experience({ preview = false }) {
   const technologies = exp.technologies ?? [];
   // Add `report: "/your-file.pdf"` to an entry in assets.js to give it its own document
   const report = exp.report ?? "/report.pdf";
+
+  // At-a-glance tiles (Tooling only shows when the role has tools)
+  const glance = [
+    { icon: Building2, label: "Company", value: exp.company },
+    { icon: MapPin, label: "Site", value: exp.location },
+    { icon: CalendarDays, label: "Duration", value: exp.period },
+    { icon: ListChecks, label: "Highlights", value: `${pad(achievements.length)} completed` },
+    ...(technologies.length > 0
+      ? [{ icon: Wrench, label: "Tooling", value: `${pad(technologies.length)} items` }]
+      : []),
+  ];
+  // On phones the company tile is full width, and an odd last tile fills the row
+  const restCount = glance.length - 1;
 
   return (
     <section id="experience" className="w-full py-14 sm:py-20 lg:py-24">
@@ -156,83 +207,93 @@ export default function Experience({ preview = false }) {
             animate={{ opacity: 1, y: 0 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
             transition={{ duration: 0.25 }}
-            className="mt-5 overflow-hidden rounded-3xl border border-black/10 bg-white shadow-xl dark:border-white/15 dark:bg-darkHover"
+            className="mt-5 space-y-4"
           >
-            {/* Top bar */}
-            <div className="flex items-center justify-between gap-3 border-b border-black/10 bg-black/[0.03] px-5 py-3 dark:border-white/15 dark:bg-white/5 sm:px-8">
-              <p className="min-w-0 truncate font-mono text-[11px] uppercase leading-5 tracking-[0.2em] text-gray-600 dark:text-white/60">
-                Route sheet · EXP-{pad(roleIndex + 1)}
-              </p>
-              <span className="shrink-0 rounded border-2 border-emerald-500 px-2 py-0.5 font-mono text-[11px] font-bold uppercase leading-4 tracking-widest text-emerald-600 dark:text-emerald-400">
-                Completed
-              </span>
-            </div>
+            {/* ===== Top tile: the role ===== */}
+            <div className="relative overflow-hidden rounded-3xl border border-black/10 bg-gradient-to-br from-amber-400/15 via-white to-white p-6 shadow-lg dark:border-white/15 dark:from-amber-400/10 dark:via-darkHover dark:to-darkHover sm:p-8 lg:p-10">
+              <Cog
+                aria-hidden
+                strokeWidth={1}
+                className="pointer-events-none absolute -bottom-20 -right-16 h-72 w-72 text-amber-400/15 sm:h-96 sm:w-96"
+              />
 
-            {/* At a glance */}
-            <div className="grid grid-cols-2 border-b border-black/10 dark:border-white/15 lg:grid-cols-4 [&>*:nth-child(2n)]:border-l [&>*:nth-child(n+3)]:border-t lg:[&>*:nth-child(n+3)]:border-t-0 lg:[&>*:nth-child(n+2)]:border-l [&>*]:border-black/10 dark:[&>*]:border-white/15">
-              <Glance icon={MapPin} label="Site" value={exp.location} />
-              <Glance icon={CalendarDays} label="Duration" value={exp.period} />
-              <Glance icon={ListChecks} label="Highlights" value={`${pad(achievements.length)} completed`} />
-              <Glance icon={Wrench} label="Tooling" value={`${pad(technologies.length)} items`} />
-            </div>
-
-            {/* Body */}
-            <div className="grid gap-10 p-5 sm:p-8 lg:grid-cols-12 lg:gap-14">
-              {/* Left: who / what */}
-              <div className="min-w-0 lg:col-span-5">
-                <p className="font-mono text-[11px] uppercase leading-5 tracking-[0.2em] text-amber-600 dark:text-amber-400">
-                  {exp.company}
+              <div className="relative flex flex-wrap items-center justify-between gap-3">
+                <p className="font-mono text-[11px] uppercase leading-5 tracking-[0.2em] text-gray-600 dark:text-white/60">
+                  Route sheet · EXP-{pad(roleIndex + 1)}
                 </p>
-                <h3 className="mt-2 break-words font-Ovo text-3xl leading-tight sm:text-4xl lg:text-5xl">
-                  {exp.role}
-                </h3>
-                <p className="mt-4 text-base leading-7 text-gray-600 dark:text-white/65">
+                <span className="rounded border-2 border-emerald-500 px-2 py-0.5 font-mono text-[11px] font-bold uppercase leading-4 tracking-widest text-emerald-600 dark:text-emerald-400">
+                  Completed
+                </span>
+              </div>
+
+              <h3 className="relative mt-5 break-words font-Ovo text-3xl leading-[1.1] sm:text-5xl lg:text-6xl">
+                {exp.role}
+              </h3>
+
+              <div className="relative mt-5 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
+                <p className="max-w-2xl text-base leading-7 text-gray-600 dark:text-white/70 sm:text-lg sm:leading-8">
                   {exp.description}
                 </p>
-
-                {technologies.length > 0 && (
-                  <ul className="mt-5 flex flex-wrap gap-2">
-                    {technologies.map((tech) => (
-                      <li
-                        key={tech}
-                        className="rounded-full border border-black/15 px-3 py-1 text-xs font-medium leading-5 text-gray-700 transition-colors duration-300 hover:border-amber-400 hover:bg-amber-400/15 dark:border-white/20 dark:text-white/80"
-                      >
-                        {tech}
-                      </li>
-                    ))}
-                  </ul>
-                )}
 
                 <a
                   href={report}
                   download
-                  className="group mt-6 inline-flex items-center gap-2 text-sm font-medium"
+                  className="group inline-flex w-fit shrink-0 items-center gap-2.5 rounded-full bg-black px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-amber-400 hover:text-black hover:shadow-[0_12px_30px_-10px_rgba(202,138,4,0.8)] dark:bg-white dark:text-black dark:hover:bg-amber-400"
                 >
-                  <span className="relative">
-                    Download full report
-                    <span className="absolute -bottom-1 left-0 h-px w-full bg-current opacity-30 transition-opacity duration-300 group-hover:opacity-100" />
-                  </span>
-                  <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  Download report
+                  <Download className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
                 </a>
               </div>
 
-              {/* Right: the highlights, all visible at once */}
-              <div className="min-w-0 lg:col-span-7">
-                <p className="font-mono text-[11px] uppercase leading-5 tracking-[0.2em] text-gray-500 dark:text-white/45">
-                  Key highlights
-                </p>
-                <ol className="mt-5">
-                  {achievements.map((item, i) => (
-                    <Highlight
-                      key={item}
-                      text={item}
-                      index={i}
-                      isLast={i === achievements.length - 1}
-                      reduce={reduce}
-                    />
+              {technologies.length > 0 && (
+                <ul className="relative mt-6 flex flex-wrap gap-2">
+                  {technologies.map((tech) => (
+                    <li
+                      key={tech}
+                      className="rounded-full border border-black/15 bg-white/60 px-3 py-1 text-xs font-medium leading-5 text-gray-700 dark:border-white/20 dark:bg-white/5 dark:text-white/80"
+                    >
+                      {tech}
+                    </li>
                   ))}
-                </ol>
-              </div>
+                </ul>
+              )}
+            </div>
+
+            {/* ===== At a glance ===== */}
+            <div className="grid grid-cols-2 gap-3 lg:flex lg:gap-4">
+              {glance.map((g, i) => (
+                <Glance
+                  key={g.label}
+                  icon={g.icon}
+                  label={g.label}
+                  value={g.value}
+                  className={`${
+                    i === 0
+                      ? "col-span-2 lg:flex-[1.8]"
+                      : i === glance.length - 1 && restCount % 2 === 1
+                      ? "col-span-2 lg:col-span-1 lg:flex-1"
+                      : "lg:flex-1"
+                  }`}
+                />
+              ))}
+            </div>
+
+            {/* ===== Highlights ===== */}
+            <div>
+              <p className="mb-3 mt-6 font-mono text-[11px] uppercase leading-5 tracking-[0.2em] text-gray-500 dark:text-white/45">
+                Key highlights · {pad(achievements.length)}
+              </p>
+              <ol className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6">
+                {achievements.map((item, i) => (
+                  <HighlightCard
+                    key={item}
+                    text={item}
+                    index={i}
+                    total={achievements.length}
+                    reduce={reduce}
+                  />
+                ))}
+              </ol>
             </div>
           </motion.article>
         </AnimatePresence>
