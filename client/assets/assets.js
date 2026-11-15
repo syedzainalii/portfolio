@@ -333,17 +333,15 @@ export const aboutParagraphs = [
 ];
 
 export const skillCategories = [
+
     {
-        title: 'Programming',
-        icon: 'code',
-        accent: '#38bdf8',
+        title: 'CAD',
+        icon: 'box',
+        accent: '#34d399',
         skills: [
-            { name: 'React/Next.js', level: 60 },
-            { name: 'TypeScript', level: 60 },
-            { name: 'Matlab', level: 60 },
-            { name: 'Numpy', level: 40 },
-            { name: 'Pandas', level: 40 },
-            { name: 'Matplotlib', level: 40 },
+            { name: 'Solidworks', level: 70 },
+            { name: 'Catia', level: 20 },
+            { name: 'AutoCAD', level: 60 },
         ],
     },
     {
@@ -357,14 +355,18 @@ export const skillCategories = [
             { name: 'Simulink', level: 80 },
         ],
     },
+
     {
-        title: 'CAD',
-        icon: 'box',
-        accent: '#34d399',
+        title: 'Programming',
+        icon: 'code',
+        accent: '#38bdf8',
         skills: [
-            { name: 'Solidworks', level: 70 },
-            { name: 'Catia', level: 20 },
-            { name: 'AutoCAD', level: 60 },
+            { name: 'React/Next.js', level: 60 },
+            { name: 'TypeScript', level: 60 },
+            { name: 'Matlab', level: 60 },
+            { name: 'Numpy', level: 40 },
+            { name: 'Pandas', level: 40 },
+            { name: 'Matplotlib', level: 40 },
         ],
     },
     {
