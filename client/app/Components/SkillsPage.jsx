@@ -12,9 +12,6 @@ const skillIcons = {
   wrench: Wrench,
 };
 
-// Width of each board on large screens (12-column bento)
-const SPANS = ["lg:col-span-7", "lg:col-span-5", "lg:col-span-4", "lg:col-span-4", "lg:col-span-4"];
-
 const pad = (n) => String(n).padStart(2, "0");
 
 function levelOf(n) {
@@ -25,75 +22,50 @@ function levelOf(n) {
   return { label: "Basic", pips: 1 };
 }
 
-// strong = solid, mid = outlined, low = dashed and faded
-function tierOf(n) {
-  if (n >= 70) return "strong";
-  if (n >= 55) return "mid";
-  return "low";
-}
-
-/* ---------- One hanging tool tag ---------- */
-function Tag({ skill, accent, dim }) {
+/* ---------- One tool row: the fill behind it is the skill level ---------- */
+function ToolRow({ skill, accent, dim }) {
   const lvl = levelOf(skill.level);
-  const tier = tierOf(skill.level);
-
-  const style =
-    tier === "strong"
-      ? { backgroundColor: accent, borderColor: accent, color: "#111" }
-      : tier === "mid"
-      ? { backgroundColor: `${accent}26`, borderColor: accent }
-      : { borderColor: `${accent}99`, borderStyle: "dashed" };
 
   return (
     <li
-      className={`relative min-w-0 rounded-2xl border-2 px-4 pb-3 pt-6 transition-all duration-300 motion-reduce:transition-none ${
-        dim ? "opacity-20 grayscale" : "hover:-translate-y-1 hover:shadow-lg"
-      } ${tier === "low" ? "text-gray-600 dark:text-white/65" : ""}`}
-      style={style}
+      className={`relative overflow-hidden rounded-xl border border-black/10 bg-black/[0.03] transition-all duration-300 dark:border-white/15 dark:bg-white/[0.04] motion-reduce:transition-none ${
+        dim ? "opacity-25 grayscale" : "hover:-translate-y-0.5 hover:shadow-md"
+      }`}
     >
-      {/* Peg hole */}
+      {/* The level fill */}
       <span
         aria-hidden
-        className="absolute left-3.5 top-2.5 h-2.5 w-2.5 rounded-full bg-white ring-1 ring-black/25 dark:bg-darkHover dark:ring-white/30"
+        className="absolute inset-y-0 left-0"
+        style={{
+          width: `${skill.level}%`,
+          backgroundColor: `${accent}33`,
+          borderRight: `3px solid ${accent}`,
+        }}
       />
 
-      <p className="break-words font-Ovo text-lg leading-6">{skill.name}</p>
+      <div className="relative flex items-center justify-between gap-3 px-4 py-3.5">
+        <p className="min-w-0 break-words text-lg font-medium leading-6">{skill.name}</p>
 
-      <div className="mt-2 flex items-center gap-2">
-        <span aria-hidden className="flex gap-0.5">
-          {[0, 1, 2, 3, 4].map((p) => (
-            <span
-              key={p}
-              className="h-1.5 w-1.5 rounded-full"
-              style={{
-                backgroundColor: tier === "strong" ? "#111" : accent,
-                opacity: p < lvl.pips ? 1 : 0.22,
-              }}
-            />
-          ))}
-        </span>
-        <span className="font-mono text-[10px] uppercase leading-4 tracking-[0.12em]">
-          {lvl.label}
-        </span>
+        <div className="flex shrink-0 items-center gap-3">
+          <span aria-hidden className="hidden gap-1 sm:flex">
+            {[0, 1, 2, 3, 4].map((p) => (
+              <span
+                key={p}
+                className="h-2 w-2 rounded-full"
+                style={{
+                  backgroundColor: accent,
+                  opacity: p < lvl.pips ? 1 : 0.2,
+                }}
+              />
+            ))}
+          </span>
+          <span className="w-[5.5rem] text-right text-sm font-medium leading-5">{lvl.label}</span>
+          <span className="w-9 text-right font-mono text-xs tabular-nums text-gray-500 dark:text-white/55">
+            {skill.level}%
+          </span>
+        </div>
       </div>
     </li>
-  );
-}
-
-/* ---------- Legend swatch ---------- */
-function Swatch({ kind, label }) {
-  const base = "inline-block h-4 w-8 rounded-md border-2";
-  const style =
-    kind === "strong"
-      ? { backgroundColor: "#fbbf24", borderColor: "#fbbf24" }
-      : kind === "mid"
-      ? { backgroundColor: "#fbbf2426", borderColor: "#fbbf24" }
-      : { borderColor: "#fbbf2499", borderStyle: "dashed" };
-  return (
-    <span className="inline-flex items-center gap-2 text-sm leading-5 text-gray-600 dark:text-white/65">
-      <span aria-hidden className={base} style={style} />
-      {label}
-    </span>
   );
 }
 
@@ -131,8 +103,8 @@ export default function SkillsExplorer() {
           My Technical Skills
         </h1>
         <p className="mt-5 max-w-2xl text-base leading-7 text-gray-600 dark:text-white/65 sm:text-lg sm:leading-8">
-          Every discipline has its own board, and every tool hangs on it. The more solid the tag,
-          the stronger the skill.
+          Grouped by discipline, strongest first. The longer the fill behind a tool, the stronger
+          the skill.
         </p>
       </header>
 
@@ -154,46 +126,29 @@ export default function SkillsExplorer() {
         ))}
       </dl>
 
-      {/* ===== Controls + legend ===== */}
-      <div className="mt-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex flex-wrap gap-2">
-          <button type="button" aria-pressed={!strongOnly} onClick={() => setStrongOnly(false)} className={chip(!strongOnly)}>
-            All levels
-          </button>
-          <button type="button" aria-pressed={strongOnly} onClick={() => setStrongOnly(true)} className={chip(strongOnly)}>
-            Advanced and above
-          </button>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-2" aria-label="How to read the tags">
-          <Swatch kind="strong" label="Advanced +" />
-          <Swatch kind="mid" label="Proficient" />
-          <Swatch kind="low" label="Learning" />
-        </div>
+      {/* ===== Level toggle ===== */}
+      <div className="mt-6 flex flex-wrap gap-2">
+        <button type="button" aria-pressed={!strongOnly} onClick={() => setStrongOnly(false)} className={chip(!strongOnly)}>
+          All levels
+        </button>
+        <button type="button" aria-pressed={strongOnly} onClick={() => setStrongOnly(true)} className={chip(strongOnly)}>
+          Advanced and above
+        </button>
       </div>
 
-      {/* ===== Boards ===== */}
-      <div className="mt-8 grid gap-5 lg:grid-cols-12">
+      {/* ===== Boards: two even columns with no gaps ===== */}
+      <div className="mt-8 columns-1 gap-5 lg:columns-2">
         {zones.map((z) => (
           <section
             key={z.title}
             aria-labelledby={`board-${z.index}`}
-            className={`relative min-w-0 overflow-hidden rounded-3xl border border-black/10 bg-white p-5 shadow-sm dark:border-white/15 dark:bg-darkHover sm:p-7 ${
-              SPANS[z.index] ?? "lg:col-span-6"
-            }`}
-            style={{
-              backgroundImage:
-                "radial-gradient(circle, rgba(120,120,120,0.22) 1.2px, transparent 1.5px)",
-              backgroundSize: "22px 22px",
-            }}
+            className="relative mb-5 break-inside-avoid overflow-hidden rounded-3xl border border-black/10 bg-white p-5 shadow-sm dark:border-white/15 dark:bg-darkHover sm:p-7"
           >
             {/* Colour wash from the corner */}
             <div
               aria-hidden
               className="pointer-events-none absolute inset-0"
-              style={{
-                background: `radial-gradient(70% 50% at 0% 0%, ${z.accent}22, transparent 70%)`,
-              }}
+              style={{ background: `radial-gradient(70% 45% at 0% 0%, ${z.accent}22, transparent 70%)` }}
             />
 
             {/* Board header */}
@@ -216,7 +171,10 @@ export default function SkillsExplorer() {
               </div>
 
               <div className="shrink-0 text-right">
-                <p className="font-mono text-3xl font-semibold leading-8 tabular-nums sm:text-4xl sm:leading-9" style={{ color: z.accent }}>
+                <p
+                  className="font-mono text-3xl font-semibold leading-8 tabular-nums sm:text-4xl sm:leading-9"
+                  style={{ color: z.accent }}
+                >
                   {z.avg}
                   <span className="text-base">%</span>
                 </p>
@@ -227,14 +185,9 @@ export default function SkillsExplorer() {
             </header>
 
             {/* Tools */}
-            <ul className="relative mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-[repeat(auto-fill,minmax(9.5rem,1fr))]">
+            <ul className="relative mt-6 space-y-2.5">
               {z.skills.map((s) => (
-                <Tag
-                  key={s.name}
-                  skill={s}
-                  accent={z.accent}
-                  dim={strongOnly && s.level < 70}
-                />
+                <ToolRow key={s.name} skill={s} accent={z.accent} dim={strongOnly && s.level < 70} />
               ))}
             </ul>
           </section>
