@@ -1,59 +1,89 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { skillCategories } from "@/assets/assets";
 
 /*
-  Skills grouped by strength grade, like a materials data sheet:
-  Tungsten (expert) at the top down to Copper (basic) at the bottom.
-  Everything is visible without hovering, so a quick skim shows the strongest skills first.
+  Skills as a workshop of gears. A bigger gear with more teeth means a stronger skill.
+  Gears turn slowly (bigger ones slower, neighbours in opposite directions).
 */
 
-const BRUSHED = "repeating-linear-gradient(90deg, rgba(255,255,255,0.07) 0 1px, transparent 1px 3px)";
+const levelOf = (n) =>
+  n >= 85 ? "Expert" : n >= 70 ? "Advanced" : n >= 55 ? "Proficient" : n >= 35 ? "Intermediate" : "Basic";
 
-const GRADES = [
-  { key: "expert", label: "Expert", min: 85, material: "Tungsten", bg: "linear-gradient(135deg,#334155,#0f172a)", fg: "#ffffff" },
-  { key: "advanced", label: "Advanced", min: 70, material: "Titanium", bg: "linear-gradient(135deg,#5b6f8a,#2f3f55)", fg: "#ffffff" },
-  { key: "proficient", label: "Proficient", min: 55, material: "Steel", bg: "linear-gradient(135deg,#cbd5e1,#94a3b8)", fg: "#0f172a" },
-  { key: "intermediate", label: "Intermediate", min: 35, material: "Aluminium", bg: "linear-gradient(135deg,#e2e8f0,#cbd5e1)", fg: "#0f172a" },
-  { key: "basic", label: "Basic", min: 0, material: "Copper", bg: "linear-gradient(135deg,#fdba74,#f59e0b)", fg: "#431407" },
-];
+// "Abaqus" -> "Ab", "Comsol Multiphysics" -> "CM"
+function symbolOf(name) {
+  const w = String(name).split(/[\s/]+/).filter(Boolean);
+  if (w.length === 1) return w[0].charAt(0).toUpperCase() + w[0].charAt(1).toLowerCase();
+  return (w[0].charAt(0) + w[1].charAt(0)).toUpperCase();
+}
 
-const gradeOf = (n) => GRADES.find((g) => n >= g.min);
-const metal = (g) => ({ backgroundImage: `${BRUSHED}, ${g.bg}`, color: g.fg });
+// Outline of a toothed wheel, centred on 0,0 inside a 200 x 200 box
+function gearPath(teeth, ro = 92, ri = 76) {
+  const step = (Math.PI * 2) / teeth;
+  const at = (a, r) => `${(r * Math.cos(a)).toFixed(1)} ${(r * Math.sin(a)).toFixed(1)}`;
+  let d = "";
+  for (let i = 0; i < teeth; i++) {
+    const a = i * step;
+    d += `${i ? "L" : "M"}${at(a, ri)}L${at(a + step * 0.2, ri)}L${at(a + step * 0.32, ro)}L${at(a + step * 0.58, ro)}L${at(a + step * 0.7, ri)}`;
+  }
+  return d + "Z";
+}
+
+function Gear({ g, on }) {
+  const teeth = 8 + Math.round(g.percent / 10);
+  const size = 72 + g.percent * 0.75;
+  return (
+    <svg viewBox="-100 -100 200 200" width={size} height={size} aria-hidden className="overflow-visible">
+      <g
+        style={{
+          transformBox: "fill-box",
+          transformOrigin: "center",
+          animation: `gear-turn ${(teeth * 1.3).toFixed(1)}s linear infinite`,
+          animationDirection: g.index % 2 ? "reverse" : "normal",
+        }}
+      >
+        <path
+          d={gearPath(teeth)}
+          fill={`${g.accent}${on ? "55" : "26"}`}
+          stroke={g.accent}
+          strokeWidth="4"
+          strokeLinejoin="round"
+          style={{ transition: "fill 300ms" }}
+        />
+        <circle r="58" fill="none" stroke={g.accent} strokeOpacity="0.45" strokeWidth="2" />
+        <circle r="10" fill="none" stroke={g.accent} strokeWidth="3" />
+      </g>
+      <text textAnchor="middle" dominantBaseline="central" y="2" fontSize="44" fill={g.accent} className="font-Ovo">
+        {g.symbol}
+      </text>
+    </svg>
+  );
+}
 
 export default function SkillsPage() {
   const [cat, setCat] = useState("all");
-  const [ready, setReady] = useState(false);
+  const [picked, setPicked] = useState(null);
 
-  // Let the level bars grow from zero once, right after the page appears
-  useEffect(() => {
-    const id = requestAnimationFrame(() => setReady(true));
-    return () => cancelAnimationFrame(id);
-  }, []);
-
-  const all = useMemo(
-    () =>
-      skillCategories.flatMap((c) =>
+  const gears = useMemo(() => {
+    let i = 0;
+    return skillCategories
+      .flatMap((c) =>
         c.skills.map((s) => ({
           id: `${c.title}-${s.name}`,
           name: s.name,
           percent: s.level,
           category: c.title,
           accent: c.accent,
+          symbol: symbolOf(s.name),
         }))
-      ),
-    []
-  );
+      )
+      .sort((a, b) => b.percent - a.percent)
+      .map((g) => ({ ...g, index: i++ }));
+  }, []);
 
-  const filtered = all.filter((s) => cat === "all" || s.category === cat);
-  const groups = GRADES.map((g) => ({
-    ...g,
-    items: filtered.filter((s) => gradeOf(s.percent).key === g.key).sort((a, b) => b.percent - a.percent),
-  }));
-
-  const jump = (key) =>
-    document.getElementById(`grade-${key}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const shown = gears.filter((g) => cat === "all" || g.category === cat);
+  const sel = shown.find((g) => g.id === picked) ?? null;
 
   const chip = (on) =>
     `min-h-11 shrink-0 whitespace-nowrap rounded-full border px-4 py-2 text-sm font-medium leading-5 transition-colors duration-200 lg:min-h-0 lg:py-1.5 ${
@@ -64,17 +94,20 @@ export default function SkillsPage() {
 
   return (
     <div>
-      {/* Summary */}
-      <p className="max-w-2xl text-base leading-7 text-gray-600 dark:text-white/70 sm:text-lg sm:leading-8">
-        {filtered.length} skills across {skillCategories.length} disciplines, sorted by strength.
-        The strongest are at the top.
-      </p>
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            @keyframes gear-turn { to { transform: rotate(360deg); } }
+            @media (prefers-reduced-motion: reduce) { svg g[style*="gear-turn"] { animation: none !important; } }
+          `,
+        }}
+      />
 
       {/* Discipline filter */}
       <div
         role="group"
         aria-label="Filter by discipline"
-        className="-mx-1 mt-6 flex gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         <button type="button" aria-pressed={cat === "all"} onClick={() => setCat("all")} className={chip(cat === "all")}>
           All skills
@@ -93,68 +126,59 @@ export default function SkillsPage() {
         ))}
       </div>
 
-      {/* Jump bar: how many skills sit in each grade, tap to go there */}
-      <nav aria-label="Jump to a strength grade" className="mt-6 grid grid-cols-5 gap-1.5 sm:gap-2">
-        {groups.map((g) => (
-          <button
-            key={g.key}
-            type="button"
-            disabled={g.items.length === 0}
-            onClick={() => jump(g.key)}
-            style={metal(g)}
-            className="rounded-xl px-1 py-3 text-center outline-none transition-transform duration-200 hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-amber-400 disabled:opacity-30 disabled:hover:translate-y-0 motion-reduce:transition-none"
-          >
-            <span className="block font-Ovo text-2xl leading-7 tabular-nums sm:text-3xl sm:leading-9">{g.items.length}</span>
-            <span className="block truncate text-xs font-medium leading-4 sm:text-sm sm:leading-5">{g.label}</span>
-          </button>
-        ))}
-      </nav>
-
-      {/* Grades */}
-      <div className="mt-10 space-y-10 pb-10">
-        {groups
-          .filter((g) => g.items.length > 0)
-          .map((g) => (
-            <section key={g.key} id={`grade-${g.key}`} aria-labelledby={`h-${g.key}`} className="scroll-mt-28">
-              <div style={metal(g)} className="flex items-center justify-between gap-4 rounded-2xl px-5 py-4 shadow-sm">
-                <div className="min-w-0">
-                  <h2 id={`h-${g.key}`} className="font-Ovo text-3xl leading-9 sm:text-4xl sm:leading-10">
-                    {g.label}
-                  </h2>
-                  <p className="text-sm leading-5 opacity-80">{g.material} grade, {g.min}% and above</p>
-                </div>
-                <p className="shrink-0 text-sm font-medium leading-5">
-                  {g.items.length} {g.items.length === 1 ? "skill" : "skills"}
-                </p>
-              </div>
-
-              <ul className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {g.items.map((s) => (
-                  <li
-                    key={s.id}
-                    className="rounded-xl border border-black/10 bg-white p-4 dark:border-white/15 dark:bg-darkHover"
-                    style={{ borderLeft: `6px solid ${s.accent}` }}
-                  >
-                    <div className="flex items-baseline justify-between gap-3">
-                      <p className="min-w-0 break-words text-base font-semibold leading-6 sm:text-lg">{s.name}</p>
-                      <p className="shrink-0 font-Ovo text-2xl leading-none tabular-nums">
-                        {s.percent}
-                        <span className="text-sm">%</span>
-                      </p>
-                    </div>
-                    <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-black/10 dark:bg-white/15">
-                      <span
-                        className="block h-full rounded-full transition-[width] duration-700 ease-out motion-reduce:transition-none"
-                        style={{ width: ready ? `${s.percent}%` : "0%", backgroundColor: s.accent }}
-                      />
-                    </div>
-                    {cat === "all" && <p className="mt-2 text-sm leading-5 text-gray-500 dark:text-white/55">{s.category}</p>}
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ))}
+      {/* Readout */}
+      <div
+        aria-live="polite"
+        className="mt-6 flex min-h-[4.5rem] flex-wrap items-center justify-between gap-x-6 gap-y-1 rounded-2xl border border-dashed border-black/25 px-5 py-3 dark:border-white/30"
+      >
+        {sel ? (
+          <>
+            <div className="min-w-0">
+              <p className="break-words font-Ovo text-2xl leading-8">{sel.name}</p>
+              <p className="text-sm leading-6 text-gray-500 dark:text-white/55">{sel.category}</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="h-2 w-28 overflow-hidden rounded-full bg-black/10 dark:bg-white/15">
+                <span className="block h-full rounded-full" style={{ width: `${sel.percent}%`, backgroundColor: sel.accent }} />
+              </span>
+              <span className="text-sm font-medium tabular-nums">
+                {levelOf(sel.percent)}, {sel.percent}%
+              </span>
+            </div>
+          </>
+        ) : (
+          <p className="text-sm leading-6 text-gray-500 dark:text-white/55">
+            Tap a gear to see the skill. A bigger gear with more teeth means a stronger skill.
+          </p>
+        )}
       </div>
+
+      {/* Gears */}
+      <ul className="mt-8 flex flex-wrap items-end justify-center gap-x-5 gap-y-8 pb-10">
+        {shown.map((g) => {
+          const on = sel?.id === g.id;
+          return (
+            <li key={g.id}>
+              <button
+                type="button"
+                aria-pressed={on}
+                aria-label={`${g.name}, ${levelOf(g.percent)}`}
+                onClick={() => setPicked(g.id)}
+                onPointerEnter={(e) => e.pointerType === "mouse" && setPicked(g.id)}
+                onFocus={() => setPicked(g.id)}
+                className={`group flex flex-col items-center gap-2 rounded-2xl p-2 outline-none transition-transform duration-300 focus-visible:ring-2 focus-visible:ring-amber-400 motion-reduce:transition-none ${
+                  on ? "scale-110" : "hover:scale-105"
+                }`}
+              >
+                <Gear g={g} on={on} />
+                <span className={`max-w-[7rem] break-words text-center text-sm font-medium leading-4 ${on ? "" : "text-gray-600 dark:text-white/70"}`}>
+                  {g.name}
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }

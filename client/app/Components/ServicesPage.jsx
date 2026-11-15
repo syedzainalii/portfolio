@@ -86,8 +86,6 @@ export default function ServicesPage() {
         }}
       />
 
-      <h1 className="mb-6 break-words font-Ovo text-4xl leading-[1.05] sm:mb-10 sm:text-6xl">Services</h1>
-
       <div className="grid items-start gap-5 lg:grid-cols-[20rem_1fr] lg:gap-10">
         {/* ===== Phones and tablets: swipeable pills ===== */}
         <div
